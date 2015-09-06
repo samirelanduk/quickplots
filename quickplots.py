@@ -48,10 +48,47 @@ class PieChart(Chart):
         self.value_format = value_format
 
 
-
     def _generate(self):
         fig = Chart._generate(self)
 
         fig.axes[0].pie(self.values, labels=self.labels, colors=self.colors, autopct=self.value_format, startangle=90)
         fig.axes[0].axis("equal")
+        return fig
+
+
+
+class AxisChart(Chart):
+
+    def __init__(self, xlabel=None, xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
+        Chart.__init__(self, title=title)
+
+        self.xlabel = xlabel
+        self.xticks = xticks
+        self.xticklabels = xticklabels
+        self.xlim = xlim
+        self.ylabel = ylabel
+        self.yticks = yticks
+        self.yticklabels = yticklabels
+        self.ylim = ylim
+        self.grid = grid
+
+
+    def _generate(self):
+        fig = Chart._generate(self)
+        if self.xlabel is not None:
+            fig.axes[0].set_xlabel(self.xlabel)
+        if self.xticks is not None:
+            fig.axes[0].set_xticks(self.xticks)
+        if self.xticklabels is not None:
+            fig.axes[0].set_xticklabels(self.xticklabels)
+        fig.axes[0].set_xlim(self.xlim)
+        if self.ylabel is not None:
+            fig.axes[0].set_ylabel(self.ylabel)
+        if self.yticks is not None:
+            fig.axes[0].set_yticks(self.yticks)
+        if self.yticklabels is not None:
+            fig.axes[0].set_yticklabels(self.yticklabels)
+        fig.axes[0].set_ylim(self.ylim)
+        fig.axes[0].grid(self.grid)
+        
         return fig
