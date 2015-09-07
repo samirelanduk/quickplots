@@ -60,7 +60,7 @@ class PieChart(Chart):
 class AxisChart(Chart):
     """A generic axis-based chart.
 
-    This class is the parent class of all chart tyoes which have a y and x axis
+    This class is the parent class of all chart types which have a y and x axis
     (line charts, scatter plots etc.) but not things like pie charts, which
     inherit directly from class Chart."""
 
@@ -96,4 +96,22 @@ class AxisChart(Chart):
         fig.axes[0].set_ylim(self.ylim)
         fig.axes[0].grid(self.grid)
 
+        return fig
+
+
+
+class LineChart(AxisChart):
+
+    def __init__(self, xdata, ydata, line_color=None, line_width=1, xlabel=None, xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
+        AxisChart.__init__(self)
+
+        self.xdata = xdata
+        self.ydata = ydata
+        self.line_color = line_color
+        self.line_width = line_width
+
+
+    def _generate(self):
+        fig = AxisChart._generate(self)
+        fig.axes[0].plot(self.xdata, self.ydata, color=self.line_color, linewidth=self.line_width)
         return fig
