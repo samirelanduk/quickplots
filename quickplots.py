@@ -120,12 +120,13 @@ class LineChart(AxisChart):
 
 class BarChart(AxisChart):
 
-    def __init__(self, xdata, ydata, width=0.8, fill_color=None, line_width=None, edge_color=None, xlabel=None, xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
+    def __init__(self, xdata, ydata, width=0.8, align="center", fill_color=None, line_width=None, edge_color=None, xlabel=None, xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
         AxisChart.__init__(self)
 
         self.xdata = xdata
         self.ydata = ydata
         self.width = width
+        self.align = align
         self.fill_color = fill_color
         self.line_width = line_width
         self.edge_color = edge_color
@@ -133,5 +134,5 @@ class BarChart(AxisChart):
 
     def _generate(self):
         fig = AxisChart._generate(self)
-        fig.axes[0].bar(self.xdata, self.ydata, width=self.width, color=self.fill_color, linewidth=self.line_width, edgecolor=self.edge_color)
+        fig.axes[0].bar(self.xdata, self.ydata, width=self.width, align=self.align, color=self.fill_color, linewidth=self.line_width, edgecolor=self.edge_color)
         return fig
