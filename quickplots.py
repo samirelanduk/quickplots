@@ -103,7 +103,7 @@ class AxisChart(Chart):
 class LineChart(AxisChart):
 
     def __init__(self, xdata, ydata, line_color=None, line_width=1, xlabel=None, xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
-        AxisChart.__init__(self)
+        AxisChart.__init__(self, xlabel=xlabel, xticks=xticks, xticklabels=xticklabels, xlim=xlim, ylabel=ylabel, yticks=yticks, yticklabels=yticklabels, ylim=ylim, grid=grid, title=title)
 
         self.xdata = xdata
         self.ydata = ydata
@@ -121,7 +121,7 @@ class LineChart(AxisChart):
 class BarChart(AxisChart):
 
     def __init__(self, xdata, ydata, width=0.8, align="center", fill_color=None, line_width=None, edge_color=None, xlabel=None, xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
-        AxisChart.__init__(self)
+        AxisChart.__init__(self, xlabel=xlabel, xticks=xticks, xticklabels=xticklabels, xlim=xlim, ylabel=ylabel, yticks=yticks, yticklabels=yticklabels, ylim=ylim, grid=grid, title=title)
 
         self.xdata = xdata
         self.ydata = ydata
@@ -135,4 +135,25 @@ class BarChart(AxisChart):
     def _generate(self):
         fig = AxisChart._generate(self)
         fig.axes[0].bar(self.xdata, self.ydata, width=self.width, align=self.align, color=self.fill_color, linewidth=self.line_width, edgecolor=self.edge_color)
+        return fig
+
+
+
+class ScatterChart(AxisChart):
+
+    def __init__(self, xdata, ydata, marker="x", color=None, edge_color=None, edge_width=1, area=3, xlabel=None, xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
+        AxisChart.__init__(self, xlabel=xlabel, xticks=xticks, xticklabels=xticklabels, xlim=xlim, ylabel=ylabel, yticks=yticks, yticklabels=yticklabels, ylim=ylim, grid=grid, title=title)
+
+        self.xdata = xdata
+        self.ydata = ydata
+        self.marker = marker
+        self.color = color
+        self.edge_color = edge_color
+        self.edge_width = edge_width
+        self.area = area
+
+
+    def _generate(self):
+        fig = AxisChart._generate(self)
+        fig.axes[0].scatter(self.xdata, self.ydata, marker=self.marker, c=self.color, edgecolor=self.edge_color, linewidth=self.edge_width, s=self.area)
         return fig
