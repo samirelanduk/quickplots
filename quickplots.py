@@ -227,8 +227,11 @@ class MultiSeriesAxisChart(AxisChart):
 
 
     def _paint_axes(self, axes):
+        AxisChart._paint_axes(self, axes)
+
         for chart in self.charts:
             assert isinstance(chart, SingleSeriesAxisChart)
+            chart._paint_axes(axes)
 
 
     def _generate(self):
