@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 COLORS = ["FF0000", "00FF00", "0000FF"]
 
@@ -15,6 +16,28 @@ class ChartCanvas:
     def __init__(self, title="", window_title=""):
         self.title = title
         self.window_title = window_title
+
+
+
+    def show(self):
+        self._generate().show()
+
+
+    def save(self, path):
+        self._generate().show()
+
+
+    def render_svg(self):
+        pass
+
+
+    def _generate(self):
+        """Get a Matplotlib representation of this object"""
+        fig = plt.figure()
+        fig.canvas.set_window_title(self.window_title)
+        fig.title = self.title
+        return fig
+
 
 
 
@@ -88,7 +111,7 @@ class AxisChart(Chart):
 
     def __init__(self, x_range=[0,1], x_ticks=[], x_tick_labels=None, x_title="",
      y_range=[0,1], y_ticks=[], y_tick_labels=None, y_title="", grid=True,
-      title="", window_title=""):
+      legend=False, title="", window_title=""):
 
         Chart.__init__(self, title=title, window_title=window_title)
 
