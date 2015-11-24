@@ -1,331 +1,271 @@
-import matplotlib.pyplot as plt
+import random
 
-class Chart:
-    """A generic chart object."""
-
-    def show(self):
-        """Show the chart in a separate window"""
-        self._generate().show()
+COLORS = ["FF0000", "00FF00", "0000FF"]
 
 
-    def save(self, path):
-        """Save the chart to file. This just uses matplotlib's savefig
-        method so all the matplotlib file extensions are supported."""
-        self._generate().savefig(path)
+def generate_random_color():
+    return "%02X%02X%02X" % (
+     random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 
 
-class Figure(Chart):
-    """A figure with multiple charts"""
+class ChartCanvas:
+    """A generic chart - a blank slate, capable of holding anything."""
 
-    def __init__(self, rows, columns, charts):
+    def __init__(self, title="", window_title=""):
+        self.title = title
+        self.window_title = window_title
 
-        self.rows = rows
-        self.columns = columns
+
+
+
+class Figure(ChartCanvas):
+    """A container for multiple charts."""
+
+    def __init__(self, charts, row_num, col_num, title="", window_title=""):
+        ChartCanvas.__init__(self, title=title, window_title=window_title)
+        #Are the dimensions sensible?
+        assert row_num * col_num >= len(charts), \
+         "There are too many charts for the dimensions given."
+
         self.charts = charts
 
 
-    def _generate(self):
-        fig = plt.figure()
-
-        chart_no = 1
-        for chart in self.charts:
-            assert isinstance(chart, SingleChart)
-            plt.subplot(self.rows, self.columns, chart_no)
-            chart._paint_axes(plt)
-            chart_no += 1
-        return fig
 
 
+class Chart(ChartCanvas):
+    """A generic chart, containing a single visualisation."""
 
-class SingleChart(Chart):
-    """A chart with a single plot area"""
+    _can_legend = False
 
-    def __init__(self, title=""):
-
-        self.title = title
-
-
-    def _paint_axes(self, axes):
-        try:
-            axes.set_title(self.title)
-        except AttributeError:
-            axes.title(self.title)
-
-
-    def _generate(self):
-        fig, ax = plt.subplots()
-        SingleChart._paint_axes(self, ax)
-        return fig
+    def __init__(self, legend=False, title="", window_title=""):
+        ChartCanvas.__init__(self, title=title, window_title=window_title)
+        self.legend = legend
 
 
 
-class PieChart(SingleChart):
-    """A pie chart"""
 
-    def __init__(self, values, labels=None, colors=None, value_format=None, title=""):
+class PieChart(Chart):
+    """A pie chart. You know what a pie chart is."""
 
-        #Initialise generic chart info
-        SingleChart.__init__(self, title=title)
+    _can_legend = True
 
-        #Assign the core values of this piechart
-        self.values = values
+    def __init__(self, data, labels=None, colors=None, line_width=1,
+     legend=False, title="", window_title=""):
 
-        #Sort out the colours and labels for each data point
-        self.labels = labels
-        self.colors = colors
+        Chart.__init__(self, legend=legend, title=title, window_title=window_title)
 
-        #Determine how the values should be formatted
-        self.value_format = value_format
+        self.data = data
+
+        #Assign labels (and make sure there are the right amount)
+        if labels is None:
+            self.labels = [""] * len(data)
+        else:
+            assert len(labels) == len(data), "Number of labels does not match data points"
+            self.labels = labels
+
+        #Assign colors (and make sure there are the right amount)
+        if colors is None:
+            if len(data) <= len(COLORS):
+                self.colors = COLORS[:len(data)]
+            else:
+                self.colors = COLORS[:]
+                while len(self.colors) != len(data):
+                    self.colors.append(generate_random_color())
+        else:
+            assert len(colors) == len(data), "Number of colors does not match data points"
+            self.colors = colors
+
+        self.line_width = line_width
 
 
-    def _paint_axes(self, axes):
-        SingleChart._paint_axes(self, axes)
-        axes.pie(self.values, labels=self.labels, colors=self.colors, autopct=self.value_format, startangle=90)
-        axes.axis("equal")
 
 
-    def _generate(self):
-        fig = SingleChart._generate(self)
-        PieChart._paint_axes(self, fig.axes[0])
-        return fig
+class AxisChart(Chart):
+    """A chart with an axis (pretty much anything except pie charts).
 
+    The default axis ranges for a generic axis chart with no data are 0 and 1."""
 
+    def __init__(self, x_range=[0,1], x_ticks=[], x_tick_labels=None, x_title="",
+     y_range=[0,1], y_ticks=[], y_tick_labels=None, y_title="", grid=True,
+      title="", window_title=""):
 
-class AxisChart(SingleChart):
-    """A generic axis-based chart.
+        Chart.__init__(self, title=title, window_title=window_title)
 
-    This class is the parent class of all chart types which have a y and x axis
-    (line charts, scatter plots etc.) but not things like pie charts, which
-    inherit directly from class SingleChart."""
+        self.x_range = x_range
+        self.x_ticks = x_ticks
+        if x_tick_labels is None:
+            self.x_tick_labels = [str(tick) for tick in self.x_ticks]
+        else:
+            self.x_tick_labels = x_tick_labels
+        self.x_title = x_title
 
-    def __init__(self, xlabel=None, xticks=None,
-    xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None,
-    ylim=None, grid=False, title=""):
+        self.y_range = y_range
+        self.y_ticks = y_ticks
+        if y_tick_labels is None:
+            self.y_tick_labels = [str(tick) for tick in self.y_ticks]
+        else:
+            self.y_tick_labels = y_tick_labels
+        self.y_title = y_title
 
-        SingleChart.__init__(self, title=title)
-
-        self.xlabel = xlabel
-        self.xticks = xticks
-        self.xticklabels = xticklabels
-        self.xlim = xlim
-        self.ylabel = ylabel
-        self.yticks = yticks
-        self.yticklabels = yticklabels
-        self.ylim = ylim
         self.grid = grid
 
-
-    def _paint_axes(self, axes):
-        SingleChart._paint_axes(self, axes)
-
-        #Assign title of x-axis
-        if self.xlabel is not None:
-            try:
-                axes.set_xlabel(self.xlabel)
-            except AttributeError:
-                axes.xlabel(self.xlabel)
-
-        #Assign xticks
-        if self.xticks is not None:
-            try:
-                axes.set_xticks(self.xticks)
-            except AttributeError:
-                if self.xticklabels is not None:
-                    axes.xticks(self.xticks, self.xticklabels)
-                else:
-                    axes.xticks(self.xticks)
-        if self.xticklabels is not None:
-            try:
-                axes.set_xticklabels(self.xticklabels)
-            except AttributeError:
-                pass
-
-        #Assign limits of x-axis
-        try:
-            axes.xlim(self.xlim)
-        except AttributeError:
-            axes.set_xlim(self.xlim)
-
-        #Assign title of y-axis
-        if self.ylabel is not None:
-            try:
-                axes.set_ylabel(self.ylabel)
-            except AttributeError:
-                axes.ylabel(self.ylabel)
-
-        #Assign yticks
-        if self.yticks is not None:
-            try:
-                axes.set_yticks(self.yticks)
-            except AttributeError:
-                if self.yticklabels is not None:
-                    axes.yticks(self.yticks, self.yticklabels)
-                else:
-                    axes.yticks(self.yticks)
-        if self.yticklabels is not None:
-            try:
-                axes.set_yticklabels(self.yticklabels)
-            except:
-                pass
-
-        #Assign limits of y-axis
-        try:
-            axes.ylim(self.ylim)
-        except AttributeError:
-            axes.set_ylim(self.ylim)
-
-        #Set the grid
-        axes.grid(self.grid)
-
-
-    def _generate(self):
-        fig = SingleChart._generate(self)
-        AxisChart._paint_axes(self, fig.axes[0])
-        return fig
 
 
 
 class SingleSeriesAxisChart(AxisChart):
-    """This class represents charts with axis which have only one series on them"""
+    """An axis chart with a single series on it.
 
-    def __init__(self, xdata=None, ydata=None, xlabel=None, xticks=None,
-    xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None,
-    ylim=None, grid=False, title=""):
+    The default axis ranges for an axis chart with a series are the series limits."""
 
-        AxisChart.__init__(self, xlabel=xlabel, xticks=xticks,
-        xticklabels=xticklabels, xlim=xlim, ylabel=ylabel, yticks=yticks,
-        yticklabels=yticklabels, ylim=ylim, grid=grid, title=title)
+    _can_legend = True
 
-        self.xdata = xdata
-        self.ydata = ydata
+    def __init__(self, series, series_name = "",
+     x_range=None, x_ticks=[], x_tick_labels=None, x_title="",
+      y_range=None, y_ticks=[], y_tick_labels=None, y_title="", grid=True,
+       legend=False, title="", window_title=""):
 
+       #Don't want to use AxisChart's method for generating x_range, as we can
+       #do better now that we know the series. So, assign these BEFORE calling
+       #the super constructor.
+        if x_range is None:
+            self.x_range = [min(list(zip(*series))[0]), max(list(zip(*series))[0])]
+        else:
+            self.x_range = x_range
 
-    def _paint_axes(self, axes):
-        AxisChart._paint_axes(self, axes)
+        if y_range is None:
+            self.y_range = [min(list(zip(*series))[1]), max(list(zip(*series))[1])]
+        else:
+            self.y_range = y_range
 
+        AxisChart.__init__(self, x_range=self.x_range, y_range=self.y_range,
+         x_ticks=x_ticks, x_tick_labels=x_tick_labels, x_title=x_title,
+          y_ticks=y_ticks, y_tick_labels=y_tick_labels, y_title=y_title, grid=True,
+           legend=legend, title=title, window_title=window_title)
 
-    def _generate(self):
-        fig = AxisChart._generate(self)
-        SingleSeriesAxisChart._paint_axes(self, fig.axes[0])
-        return fig
+        self.series = series
+        self.series_name = series_name
+
 
 
 
 class MultiSeriesAxisChart(AxisChart):
-    """This class represents charts with axis which have only multiple series on them"""
+    """An axis chart with multiple series on it.
 
-    def __init__(self, charts, xlabel=None, xticks=None,
-    xticklabels=None, xlim=None, ylabel=None, yticks=None, yticklabels=None,
-    ylim=None, grid=False, title=""):
+    The default axis ranges for an axis chart with multiple series will be the
+    most extreme limits of its series."""
 
-        AxisChart.__init__(self, xlabel=xlabel, xticks=xticks,
-        xticklabels=xticklabels, xlim=xlim, ylabel=ylabel, yticks=yticks,
-        yticklabels=yticklabels, ylim=ylim, grid=grid, title=title)
-
-        self.charts = charts
+    _can_legend = True
 
 
-    def _paint_axes(self, axes):
-        AxisChart._paint_axes(self, axes)
+    def __init__(self, charts,
+     x_range=None, x_ticks=[], x_tick_labels=None, x_title="",
+      y_range=None, y_ticks=[], y_tick_labels=None, y_title="", grid=True,
+       legend=False, title="", window_title=""):
 
-        for chart in self.charts:
-            assert isinstance(chart, SingleSeriesAxisChart)
-            chart._paint_axes(axes)
+        #Again - don't want to use AxisChart's method for generating x_range,
+        #as we can do better now that we know the series. So, assign these BEFORE
+        #calling the super constructor.
+         if x_range is None:
+             self.x_range = [min([chart.x_range[0] for chart in charts]),
+              max([chart.x_range[1] for chart in charts])]
+         else:
+             self.x_range = x_range
 
+         if y_range is None:
+             self.y_range = [min([chart.y_range[0] for chart in charts]),
+              max([chart.y_range[1] for chart in charts])]
+         else:
+             self.y_range = y_range
 
-    def _generate(self):
-        fig = AxisChart._generate(self)
-        MultiSeriesAxisChart._paint_axes(self, fig.axes[0])
-        return fig
+         AxisChart.__init__(self, x_range=self.x_range, y_range=self.y_range,
+          x_ticks=x_ticks, x_tick_labels=x_tick_labels, x_title=x_title,
+           y_ticks=y_ticks, y_tick_labels=y_tick_labels, y_title=y_title, grid=True,
+            legend=legend, title=title, window_title=window_title)
 
 
 
 
 class LineChart(SingleSeriesAxisChart):
+    """A line chart."""
 
-    def __init__(self, xdata, ydata, line_color=None, line_width=1, xlabel=None,
-    xticks=None, xticklabels=None, xlim=None, ylabel=None, yticks=None,
-    yticklabels=None, ylim=None, grid=False, title=""):
+    _can_legend = True
 
-        SingleSeriesAxisChart.__init__(self, xdata=xdata, ydata=ydata,
-        xlabel=xlabel, xticks=xticks, xticklabels=xticklabels, xlim=xlim,
-        ylabel=ylabel, yticks=yticks, yticklabels=yticklabels, ylim=ylim,
-        grid=grid, title=title)
+    def __init__(self, series, color=None, width=1, style="-",
+     series_name="",
+      x_range=None, x_ticks=[], x_tick_labels=None, x_title="",
+       y_range=None, y_ticks=[], y_tick_labels=None, y_title="", grid=True,
+        legend=False, title="", window_title=""):
 
-        self.line_color = line_color
-        self.line_width = line_width
+        SingleSeriesAxisChart.__init__(self, series=series, series_name=series_name,
+         x_range=x_range, x_ticks=x_ticks, x_tick_labels=x_tick_labels, x_title=x_title,
+          y_range=y_range, y_ticks=y_ticks, y_tick_labels=y_tick_labels, y_title=y_title, grid=True,
+            legend=legend, title=title, window_title=window_title)
 
+        if color is None:
+            self.color = random.choice(COLORS)
+        else:
+            self.color = color
 
-    def _paint_axes(self, axes):
-        SingleSeriesAxisChart._paint_axes(self, axes)
-        axes.plot(self.xdata, self.ydata, color=self.line_color, linewidth=self.line_width)
+        self.width = width
+        self.style = style
 
-
-    def _generate(self):
-        fig = SingleSeriesAxisChart._generate(self)
-        LineChart._paint_axes(self, fig.axes[0])
-        return fig
 
 
 
 class BarChart(SingleSeriesAxisChart):
+    """A bar chart."""
 
-    def __init__(self, xdata, ydata, width=0.8, align="center", fill_color=None,
-    line_width=None, edge_color=None, xlabel=None, xticks=None, xticklabels=None,
-    xlim=None, ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
+    _can_legend = True
 
-        SingleSeriesAxisChart.__init__(self, xdata=xdata, ydata=ydata,
-        xlabel=xlabel, xticks=xticks, xticklabels=xticklabels, xlim=xlim,
-        ylabel=ylabel, yticks=yticks, yticklabels=yticklabels, ylim=ylim,
-        grid=grid, title=title)
+    def __init__(self, series,
+     color=None, bar_width=1, align="center", edge_width=1, edge_color="#000000",
+      series_name="",
+       x_range=None, x_ticks=[], x_tick_labels=None, x_title="",
+        y_range=None, y_ticks=[], y_tick_labels=None, y_title="", grid=True,
+         legend=False, title="", window_title=""):
 
-        self.width = width
+        SingleSeriesAxisChart.__init__(self, series=series, series_name=series_name,
+         x_range=x_range, x_ticks=x_ticks, x_tick_labels=x_tick_labels, x_title=x_title,
+          y_range=y_range, y_ticks=y_ticks, y_tick_labels=y_tick_labels, y_title=y_title, grid=True,
+            legend=legend, title=title, window_title=window_title)
+
+        if color is None:
+            self.color = random.choice(COLORS)
+        else:
+            self.color = color
+
+        self.bar_width = bar_width
         self.align = align
-        self.fill_color = fill_color
-        self.line_width = line_width
+        self.edge_width = edge_width
         self.edge_color = edge_color
 
-
-    def _paint_axes(self, axes):
-        SingleSeriesAxisChart._paint_axes(self, axes)
-        axes.bar(self.xdata, self.ydata, width=self.width, align=self.align,
-        color=self.fill_color, linewidth=self.line_width, edgecolor=self.edge_color)
-
-
-    def _generate(self):
-        fig = SingleSeriesAxisChart._generate(self)
-        BarChart._paint_axes(self, fig.axes[0])
-        return fig
 
 
 
 class ScatterChart(SingleSeriesAxisChart):
+    """A scatter chart."""
 
-    def __init__(self, xdata, ydata, marker="x", color="b", edge_color=None,
-    edge_width=1, area=30, xlabel=None, xticks=None, xticklabels=None, xlim=None,
-    ylabel=None, yticks=None, yticklabels=None, ylim=None, grid=False, title=""):
+    _can_legend = True
 
-        SingleSeriesAxisChart.__init__(self, xdata=xdata, ydata=ydata,
-        xlabel=xlabel, xticks=xticks, xticklabels=xticklabels, xlim=xlim,
-        ylabel=ylabel, yticks=yticks, yticklabels=yticklabels, ylim=ylim,
-        grid=grid, title=title)
+    def __init__(self, series,
+     color=None, marker="x", size=30, edge_width=1, edge_color="#000000",
+      series_name="",
+       x_range=None, x_ticks=[], x_tick_labels=None, x_title="",
+        y_range=None, y_ticks=[], y_tick_labels=None, y_title="", grid=True,
+         legend=False, title="", window_title=""):
+
+        SingleSeriesAxisChart.__init__(self, series=series, series_name=series_name,
+         x_range=x_range, x_ticks=x_ticks, x_tick_labels=x_tick_labels, x_title=x_title,
+          y_range=y_range, y_ticks=y_ticks, y_tick_labels=y_tick_labels, y_title=y_title, grid=True,
+            legend=legend, title=title, window_title=window_title)
+
+        if color is None:
+            self.color = random.choice(COLORS)
+        else:
+            self.color = color
 
         self.marker = marker
-        self.color = color
-        self.edge_color = edge_color
+        self.size = size
         self.edge_width = edge_width
-        self.area = area
-
-
-    def _paint_axes(self, axes):
-        SingleSeriesAxisChart._paint_axes(self, axes)
-        print("Painting scatter")
-        axes.scatter(self.xdata, self.ydata, marker=self.marker, c=self.color,
-        edgecolor=self.edge_color, linewidth=self.edge_width, s=self.area)
-
-
-    def _generate(self):
-        fig = SingleSeriesAxisChart._generate(self)
-        ScatterChart._paint_axes(self, fig.axes[0])
-        return fig
+        self.edge_color = edge_color
