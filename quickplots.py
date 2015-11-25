@@ -1,9 +1,9 @@
 import random
-import matplotlib.pyplot as plt
+from tkinter import *
 
 COLORS = ["FF0000", "00FF00", "0000FF"]
 
-DEFAULT_DIMENSIONS = [300, 200]]
+DEFAULT_DIMENSIONS = [300, 200]
 
 
 def generate_random_color():
@@ -19,6 +19,24 @@ class GenericChart:
         self.title = title
         self.window_title = window_title
         self.dimensions = dimensions
+
+
+    def _generate_window(self):
+        root = Tk()
+        root.title(self.window_title)
+        root.geometry("%ix%i" % (self.dimensions[0], self.dimensions[1]))
+
+        frame = Frame(root)
+        frame.pack()
+        title_label = Label(frame, text=self.title, font=("Helvetica", 20))
+        title_label.pack()
+
+        return root
+
+
+
+    def show(self):
+        self._generate_window()
 
 
 
