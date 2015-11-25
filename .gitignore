@@ -4,3 +4,5 @@ dist
 MANIFEST
 test.py
 .gitignore
+*.pyc
+old_quickplots.txt
