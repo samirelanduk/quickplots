@@ -3,6 +3,5 @@ __pycache__
 dist
 MANIFEST
 test.py
-.gitignore
 *.pyc
 old_quickplots.txt
