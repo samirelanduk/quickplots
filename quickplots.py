@@ -3,13 +3,25 @@ from tkinter import *
 
 COLORS = ["FF0000", "00FF00", "0000FF"]
 
-DEFAULT_DIMENSIONS = [300, 200]
+DEFAULT_DIMENSIONS = [900, 700]
 
 
 def generate_random_color():
     return "%02X%02X%02X" % (
      random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
+
+class PlotCanvas(Canvas):
+
+    def __init__(self, master, chart, **kwargs):
+
+        Canvas.__init__(self, master, **kwargs)
+        self.bind("<Configure>", self.on_resize)
+        self.chart = chart
+
+
+    def on_resize(self, event):
+        self.chart._paint_canvas(self)
 
 
 class GenericChart:
@@ -21,22 +33,21 @@ class GenericChart:
         self.dimensions = dimensions
 
 
-    def _generate_window(self):
+    def _get_window(self):
         root = Tk()
         root.title(self.window_title)
         root.geometry("%ix%i" % (self.dimensions[0], self.dimensions[1]))
 
-        frame = Frame(root)
-        frame.pack()
-        title_label = Label(frame, text=self.title, font=("Helvetica", 20))
+        root.frame = Frame(root, bg="#EEFFEE", borderwidth=1)
+        root.frame.pack(fill=BOTH, expand=YES)
+        title_label = Label(root.frame, text=self.title, font=("Helvetica", 20))
         title_label.pack()
 
         return root
 
 
-
     def show(self):
-        self._generate_window()
+        self._get_window().mainloop()
 
 
 
@@ -56,6 +67,33 @@ class Figure(GenericChart):
         self.row_num = row_num
         self.col_num = col_num
 
+    def _get_window(self):
+        root = GenericChart._get_window(self)
+
+        #Add frame to hold the canvases
+        grid = Frame(root.frame, bg="#FFEEEE")
+        grid.pack(fill=BOTH, expand=YES, padx=(15, 15), pady=(15, 15))
+        for row in range(self.row_num):
+            Grid.rowconfigure(grid, row, weight=1)
+        for col in range(self.col_num):
+            Grid.columnconfigure(grid, col, weight=1)
+
+        #Add the charts
+        for row in range(self.row_num):
+            for col in range(self.col_num):
+                print("%i, %i" % (row, col))
+                if (row * self.col_num) + col < len(self.charts):
+                    this_chart = self.charts[(row * self.col_num) + col]
+                    canvas = PlotCanvas(grid, this_chart, background="#FFFFFF")
+                    canvas.grid(row=row, column=col, sticky=N+S+E+W)
+                    this_chart._paint_canvas(canvas)
+
+
+        return root
+
+    def show(self):
+        self._get_window().mainloop()
+
 
 
 
@@ -69,6 +107,38 @@ class Chart(GenericChart):
         self.chart_title = chart_title
         self.legend = legend
         self.margin = margin
+
+
+    def _paint_canvas(self, canvas):
+        canvas.delete("all")
+        width = canvas.winfo_width()
+        height = canvas.winfo_height()
+        if self.legend:
+            canvas.plot_width = width - 200
+            canvas.create_line(canvas.plot_width, 0, canvas.plot_width, height, dash=(4,4))
+        else:
+            canvas.plot_width = width
+        title = canvas.create_text(
+         canvas.plot_width/2,
+         int(width/25),
+         font="Tahoma %i bold" % int(width/30),
+         text=self.chart_title
+        )
+        bounds = canvas.bbox(title)
+        canvas.create_line(0, bounds[3], canvas.plot_width, bounds[3], dash=(4,4))
+
+
+
+    def _get_window(self):
+        root = GenericChart._get_window(self)
+        canvas = PlotCanvas(root, self, background="#FFFFFF")
+        canvas.pack(fill=BOTH, expand=YES, padx=(self.margin,self.margin), pady=(self.margin/2,self.margin))
+        self._paint_canvas(canvas)
+
+        return root
+
+    def show(self):
+        self._get_window().mainloop()
 
 
 
