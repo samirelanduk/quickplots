@@ -1,13 +1,14 @@
 import random
 from tkinter import *
 
-COLORS = ["FF0000", "00FF00", "0000FF"]
+COLORS = ["#F15854", "#60BD68", "#5DA5DA", "#FAA43A", "#F17CB0", "#B2912F", "#B276B2", "#DECF3F", "#4D4D4D"]
 
 DEFAULT_DIMENSIONS = [900, 700]
+LEGEND_WIDTH = 250
 
 
 def generate_random_color():
-    return "%02X%02X%02X" % (
+    return "#%02X%02X%02X" % (
      random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 
@@ -38,7 +39,7 @@ class GenericChart:
         root.title(self.window_title)
         root.geometry("%ix%i" % (self.dimensions[0], self.dimensions[1]))
 
-        root.frame = Frame(root, bg="#EEFFEE", borderwidth=1)
+        root.frame = Frame(root)
         root.frame.pack(fill=BOTH, expand=YES)
         title_label = Label(root.frame, text=self.title, font=("Helvetica", 20))
         title_label.pack()
@@ -71,7 +72,7 @@ class Figure(GenericChart):
         root = GenericChart._get_window(self)
 
         #Add frame to hold the canvases
-        grid = Frame(root.frame, bg="#FFEEEE")
+        grid = Frame(root.frame)
         grid.pack(fill=BOTH, expand=YES, padx=(15, 15), pady=(15, 15))
         for row in range(self.row_num):
             Grid.rowconfigure(grid, row, weight=1)
@@ -111,31 +112,34 @@ class Chart(GenericChart):
 
     def _paint_canvas(self, canvas):
         canvas.delete("all")
-        width = canvas.winfo_width()
-        height = canvas.winfo_height()
+        canvas.width = canvas.winfo_width()
+        canvas.height = canvas.winfo_height()
         if self.legend:
-            canvas.plot_width = width - 200
-            canvas.create_line(canvas.plot_width, 0, canvas.plot_width, height, dash=(4,4))
+            canvas.plot_width = canvas.width - LEGEND_WIDTH
+            #canvas.create_line(canvas.plot_width, 0, canvas.plot_width, canvas.height, dash=(4,4))
         else:
-            canvas.plot_width = width
+            canvas.plot_width = canvas.width
         title = canvas.create_text(
          canvas.plot_width/2,
-         int(width/25),
-         font="Tahoma %i bold" % int(width/30),
+         int(canvas.width/25),
+         font="Tahoma %i bold" % (int(canvas.plot_width/30) - int(len(self.chart_title)/10)),
          text=self.chart_title
         )
-        bounds = canvas.bbox(title)
-        canvas.create_line(0, bounds[3], canvas.plot_width, bounds[3], dash=(4,4))
+        canvas.title_height = canvas.bbox(title)[3]
+        #canvas.create_line(0, canvas.title_height, canvas.plot_width, canvas.title_height, dash=(4,4))
+        canvas.plot_height = canvas.height - canvas.title_height
+        canvas.plot_center = (canvas.plot_width / 2, (canvas.plot_height / 2) + canvas.title_height)
 
 
 
     def _get_window(self):
         root = GenericChart._get_window(self)
-        canvas = PlotCanvas(root, self, background="#FFFFFF")
-        canvas.pack(fill=BOTH, expand=YES, padx=(self.margin,self.margin), pady=(self.margin/2,self.margin))
-        self._paint_canvas(canvas)
+        root.frame.canvas = PlotCanvas(root.frame, self, background="#FFFFFF")
+        root.frame.canvas.pack(fill=BOTH, expand=YES, padx=(self.margin,self.margin), pady=(self.margin/2,self.margin))
+        self._paint_canvas(root.frame.canvas)
 
         return root
+
 
     def show(self):
         self._get_window().mainloop()
@@ -146,7 +150,7 @@ class Chart(GenericChart):
 class PieChart(Chart):
     """A pie chart. You know what a pie chart is."""
 
-    def __init__(self, data, labels=None, colors=None, line_width=1,
+    def __init__(self, data, labels=None, colors=None, line_width=0,
      chart_title="", legend=False, margin=30,
       title="", window_title="", dimensions=DEFAULT_DIMENSIONS):
 
@@ -175,6 +179,64 @@ class PieChart(Chart):
             self.colors = colors
 
         self.line_width = line_width
+
+    def _paint_canvas(self, canvas):
+        Chart._paint_canvas(self, canvas)
+        radius = min([canvas.plot_width, canvas.plot_height]) - 50
+        if radius > 0:
+
+            #Get start points and extents
+            data_sum = sum(self.data)
+            starts = [360 - ((sum(self.data[:i])/data_sum)*360) + 90 for i,_ in enumerate(self.data, start=1)]
+            extents = [(d/data_sum)*360 for d in self.data]
+
+            for index, _ in enumerate(self.data):
+                canvas.create_arc(
+                 (canvas.plot_width - radius) / 2,
+                 ((canvas.plot_height - radius) / 2) + (canvas.height - canvas.plot_height),
+                 canvas.plot_width - ((canvas.plot_width - radius) / 2),
+                 canvas.height - ((canvas.plot_height - radius) / 2),
+                 start=starts[index],
+                 extent=extents[index],
+                 width=self.line_width,
+                 fill=self.colors[index],
+                 outline="black" if self.line_width > 0 else self.colors[index]
+                )
+
+                canvas.create_rectangle(
+                 (canvas.width - LEGEND_WIDTH) + 10,
+                 80 + (30*index) + 5,
+                 (canvas.width - LEGEND_WIDTH) + 30,
+                 80 + (30*index) + 25,
+                 fill=self.colors[index]
+                )
+
+                canvas.create_text(
+                 (canvas.width - LEGEND_WIDTH) + 35,
+                 80 + (30*index) + 15,
+                 font="Tahoma %i" % 10,
+                 text=self.labels[index],
+                 justify=LEFT,
+                 anchor=W
+                )
+
+            canvas.create_rectangle(
+             (canvas.width - LEGEND_WIDTH) + 2,
+             80,
+             canvas.width - 10,
+             80 + (30 * (len(self.data) - 1)) + 35
+            )
+
+
+    def _get_window(self):
+        root = Chart._get_window(self)
+        self._paint_canvas(root.frame.canvas)
+
+        return root
+
+
+    def show(self):
+        self._get_window().mainloop()
 
 
 
