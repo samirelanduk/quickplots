@@ -4,7 +4,6 @@ from tkinter import *
 COLORS = ["#F15854", "#60BD68", "#5DA5DA", "#FAA43A", "#F17CB0", "#B2912F", "#B276B2", "#DECF3F", "#4D4D4D"]
 
 DEFAULT_DIMENSIONS = [900, 700]
-LEGEND_WIDTH = 250
 
 
 def generate_random_color():
@@ -18,11 +17,64 @@ class PlotCanvas(Canvas):
 
         Canvas.__init__(self, master, **kwargs)
         self.bind("<Configure>", self.on_resize)
+        if isinstance(chart, AxisChart):
+            self.bind("<B1-Motion>", self.on_b1)
+            self.bind("<Button-1>", self.on_b1)
+            self.bind("<ButtonRelease-1>", self.on_bup)
         self.chart = chart
 
 
     def on_resize(self, event):
         self.chart._paint_canvas(self)
+
+
+    def on_b1(self, event):
+        self.chart._paint_canvas(self)
+        if event.x > self.plot_margin and event.x < self.plot_margin + self.plot_width and\
+         event.y > self.title_height + self.plot_top_margin and\
+          event.y < self.title_height + self.plot_top_margin + self.plot_height:
+
+            self.create_line(
+             event.x,
+             self.height - self.plot_margin,
+             event.x,
+             self.title_height + self.plot_top_margin,
+             dash=(1,1),
+             fill="red"
+            )
+            self.create_line(
+             self.plot_margin,
+             event.y,
+             self.plot_margin + self.plot_width,
+             event.y,
+             dash=(1,1),
+             fill="red"
+            )
+            self.create_text(
+             5,
+             self.height - 20,
+             font=("Arial 7"),
+             text="x: %f" %
+              ((((event.x - self.plot_margin) / self.plot_width) *
+               (self.chart.x_limit[1] - self.chart.x_limit[0])) + self.chart.x_limit[0]),
+             justify=LEFT,
+             anchor=W
+            )
+            self.create_text(
+             5,
+             self.height - 10,
+             font=("Arial 7"),
+             text="y: %f" %
+              ((self.chart.y_limit[1] - self.chart.y_limit[0]) -
+               (((event.y - (self.plot_top_margin + self.title_height)) / self.plot_height)
+                * (self.chart.y_limit[1] - self.chart.y_limit[0])) + self.chart.y_limit[0]),
+             justify=LEFT,
+             anchor=W
+            )
+
+    def on_bup(self, event):
+        self.chart._paint_canvas(self)
+
 
 
 class GenericChart:
@@ -92,9 +144,6 @@ class Figure(GenericChart):
 
         return root
 
-    def show(self):
-        self._get_window().mainloop()
-
 
 
 
@@ -112,24 +161,37 @@ class Chart(GenericChart):
 
     def _paint_canvas(self, canvas):
         canvas.delete("all")
+
+        #Get canvas parameters
         canvas.width = canvas.winfo_width()
         canvas.height = canvas.winfo_height()
-        if self.legend:
-            canvas.plot_width = canvas.width - LEGEND_WIDTH
-            #canvas.create_line(canvas.plot_width, 0, canvas.plot_width, canvas.height, dash=(4,4))
-        else:
-            canvas.plot_width = canvas.width
+
+
+        #Get chart parameters
+        canvas.legend_width = 250 if self.legend else 0
+        canvas.chart_width = canvas.width - canvas.legend_width
+
         title = canvas.create_text(
-         canvas.plot_width/2,
+         (canvas.width - canvas.legend_width)/2,
          int(canvas.width/25),
-         font="Tahoma %i bold" % (int(canvas.plot_width/30) - int(len(self.chart_title)/10)),
+         font="Tahoma %i bold" %
+          (int(canvas.chart_width/30) - int(len(self.chart_title)/10)),
          text=self.chart_title
         )
         canvas.title_height = canvas.bbox(title)[3]
-        #canvas.create_line(0, canvas.title_height, canvas.plot_width, canvas.title_height, dash=(4,4))
-        canvas.plot_height = canvas.height - canvas.title_height
-        canvas.plot_center = (canvas.plot_width / 2, (canvas.plot_height / 2) + canvas.title_height)
+        canvas.chart_height = canvas.height - canvas.title_height
 
+        #canvas.create_line(canvas.chart_width, 0, canvas.chart_width, canvas.height, dash=(3,3))
+        #canvas.create_line(0, canvas.title_height, canvas.chart_width, canvas.title_height, dash=(3,3))
+
+
+        #Get plot parameters
+        canvas.plot_margin = 75
+        canvas.plot_top_margin = 10
+        canvas.plot_width = canvas.chart_width - (2 * canvas.plot_margin)
+        canvas.plot_height = canvas.chart_height - (canvas.plot_margin + canvas.plot_top_margin)
+
+        #canvas.create_rectangle(canvas.plot_margin, canvas.height-canvas.plot_margin, canvas.chart_width-canvas.plot_margin, canvas.title_height+canvas.plot_top_margin, dash=(2,2))
 
 
     def _get_window(self):
@@ -139,10 +201,6 @@ class Chart(GenericChart):
         self._paint_canvas(root.frame.canvas)
 
         return root
-
-
-    def show(self):
-        self._get_window().mainloop()
 
 
 
@@ -182,9 +240,15 @@ class PieChart(Chart):
 
     def _paint_canvas(self, canvas):
         Chart._paint_canvas(self, canvas)
-        radius = min([canvas.plot_width, canvas.plot_height]) - 50
+        radius = min([canvas.plot_width, canvas.plot_height])
         if radius > 0:
 
+            #Calculate pie bounds
+            x_start = canvas.plot_margin + ((canvas.plot_width - radius) / 2)
+            x_end = (canvas.chart_width - canvas.plot_margin) - ((canvas.plot_width - radius) / 2)
+            y_start = canvas.title_height + canvas.plot_top_margin + ((canvas.plot_height - radius) / 2)
+            y_end = canvas.height - canvas.plot_margin - ((canvas.plot_height - radius) / 2)
+            #canvas.create_rectangle(x_start, y_start, x_end, y_end, dash=(1,2))
             #Get start points and extents
             data_sum = sum(self.data)
             starts = [360 - ((sum(self.data[:i])/data_sum)*360) + 90 for i,_ in enumerate(self.data, start=1)]
@@ -192,10 +256,10 @@ class PieChart(Chart):
 
             for index, _ in enumerate(self.data):
                 canvas.create_arc(
-                 (canvas.plot_width - radius) / 2,
-                 ((canvas.plot_height - radius) / 2) + (canvas.height - canvas.plot_height),
-                 canvas.plot_width - ((canvas.plot_width - radius) / 2),
-                 canvas.height - ((canvas.plot_height - radius) / 2),
+                 x_start,
+                 y_start,
+                 x_end,
+                 y_end,
                  start=starts[index],
                  extent=extents[index],
                  width=self.line_width,
@@ -203,29 +267,30 @@ class PieChart(Chart):
                  outline="black" if self.line_width > 0 else self.colors[index]
                 )
 
+                if self.legend:
+                    canvas.create_rectangle(
+                     (canvas.width - canvas.legend_width) + 10,
+                     80 + (30*index) + 5,
+                     (canvas.width - canvas.legend_width) + 30,
+                     80 + (30*index) + 25,
+                     fill=self.colors[index]
+                    )
+
+                    canvas.create_text(
+                     (canvas.width - canvas.legend_width) + 35,
+                     80 + (30*index) + 15,
+                     font="Tahoma %i" % 10,
+                     text=self.labels[index],
+                     justify=LEFT,
+                     anchor=W
+                    )
+            if self.legend:
                 canvas.create_rectangle(
-                 (canvas.width - LEGEND_WIDTH) + 10,
-                 80 + (30*index) + 5,
-                 (canvas.width - LEGEND_WIDTH) + 30,
-                 80 + (30*index) + 25,
-                 fill=self.colors[index]
+                 (canvas.width - canvas.legend_width) + 2,
+                 80,
+                 canvas.width - 10,
+                 80 + (30 * (len(self.data) - 1)) + 35
                 )
-
-                canvas.create_text(
-                 (canvas.width - LEGEND_WIDTH) + 35,
-                 80 + (30*index) + 15,
-                 font="Tahoma %i" % 10,
-                 text=self.labels[index],
-                 justify=LEFT,
-                 anchor=W
-                )
-
-            canvas.create_rectangle(
-             (canvas.width - LEGEND_WIDTH) + 2,
-             80,
-             canvas.width - 10,
-             80 + (30 * (len(self.data) - 1)) + 35
-            )
 
 
     def _get_window(self):
@@ -233,11 +298,6 @@ class PieChart(Chart):
         self._paint_canvas(root.frame.canvas)
 
         return root
-
-
-    def show(self):
-        self._get_window().mainloop()
-
 
 
 
@@ -261,6 +321,7 @@ class AxisChart(Chart):
         else:
             assert len(x_tick_labels) == len(x_ticks), "Not one label per x-tick."
             self.x_tick_labels = x_tick_labels
+
         self.x_label = x_label
 
         self.y_limit = y_limit
@@ -273,6 +334,94 @@ class AxisChart(Chart):
         self.y_label = y_label
 
         self.grid = grid
+
+    def _get_x_axis_location(self, value, canvas):
+        x_distance = self.x_limit[1] - self.x_limit[0]
+        val_distance = value - self.x_limit[0]
+        return canvas.plot_margin + ((val_distance / x_distance) * canvas.plot_width)
+
+
+    def _get_y_axis_location(self, value, canvas):
+        y_distance = self.y_limit[1] - self.y_limit[0]
+        val_distance = value - self.y_limit[0]
+        return canvas.height - (canvas.plot_margin + ((val_distance / y_distance) * canvas.plot_height))
+
+    def _paint_canvas(self, canvas):
+        Chart._paint_canvas(self, canvas)
+
+
+        if canvas.plot_width > 0 and canvas.plot_height > 0:
+            canvas.create_rectangle(
+             canvas.plot_margin,
+             canvas.title_height + canvas.plot_top_margin,
+             canvas.chart_width - canvas.plot_margin,
+             canvas.height - canvas.plot_margin
+            )
+
+            for index, xtick in enumerate(self.x_ticks):
+                if xtick >= self.x_limit[0] and xtick <= self.x_limit[1]:
+                    canvas.create_line(
+                     self._get_x_axis_location(xtick, canvas),
+                     canvas.height - canvas.plot_margin,
+                     self._get_x_axis_location(xtick, canvas),
+                     canvas.height - (canvas.plot_margin - 10)
+                    )
+
+                    canvas.create_text(
+                     self._get_x_axis_location(xtick, canvas),
+                     canvas.height - (canvas.plot_margin - 20),
+                     font="Tahoma %i" % 8,
+                     text=self.x_tick_labels[index],
+                    )
+
+                    if self.grid and xtick != self.x_limit[0] and xtick != self.x_limit[1]:
+                        canvas.create_line(
+                         self._get_x_axis_location(xtick, canvas),
+                         canvas.height - canvas.plot_margin,
+                         self._get_x_axis_location(xtick, canvas),
+                         canvas.title_height + canvas.plot_top_margin,
+                         dash=(3,3)
+                        )
+            if self.x_label:
+                canvas.create_text(
+                 canvas.plot_margin + (canvas.plot_width / 2),
+                 (canvas.height - canvas.plot_margin) + 40,
+                 font="Bold",
+                 text=self.x_label
+                )
+
+            for index, ytick in enumerate(self.y_ticks):
+                if ytick >= self.y_limit[0] and ytick <= self.y_limit[1]:
+                    canvas.create_line(
+                     canvas.plot_margin,
+                     self._get_y_axis_location(ytick, canvas),
+                     canvas.plot_margin - 10,
+                     self._get_y_axis_location(ytick, canvas)
+                    )
+
+                    canvas.create_text(
+                     canvas.plot_margin - 15,
+                     self._get_y_axis_location(ytick, canvas),
+                     font="Tahoma %i" % 8,
+                     text=self.y_tick_labels[index],
+                     justify=RIGHT,
+                     anchor=E
+                    )
+
+                    if self.grid and ytick != self.y_limit[0] and ytick != self.y_limit[1]:
+                        canvas.create_line(
+                         canvas.plot_margin,
+                         self._get_y_axis_location(ytick, canvas),
+                         canvas.plot_margin + canvas.plot_width,
+                         self._get_y_axis_location(ytick, canvas),
+                         dash=(3,3)
+                        )
+
+
+    def _generate_window(self):
+        root = Chart._generate_window(self)
+        self._paint_canvas(root.frame.canvas)
+        return root
 
 
 
@@ -293,12 +442,12 @@ class SingleSeriesAxisChart(AxisChart):
        #do better now that we know the series. So, assign these BEFORE calling
        #the super constructor.
         if x_limit is None:
-            self.x_limit = [min(list(zip(*series))[0]), max(list(zip(*series))[0])]
+            self.x_limit = min(list(zip(*series))[0]), max(list(zip(*series))[0])
         else:
             self.x_limit = x_limit
 
         if y_limit is None:
-            self.y_limit = [min(list(zip(*series))[1]), max(list(zip(*series))[1])]
+            self.y_limit = min(list(zip(*series))[1]), max(list(zip(*series))[1])
         else:
             self.y_limit = y_limit
 
