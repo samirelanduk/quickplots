@@ -35,18 +35,18 @@ class PlotCanvas(Canvas):
           event.y < self.title_height + self.plot_top_margin + self.plot_height:
 
             self.create_line(
-             event.x,
+             event.x - 1,
              self.height - self.plot_margin,
-             event.x,
+             event.x - 1,
              self.title_height + self.plot_top_margin,
              dash=(1,1),
              fill="red"
             )
             self.create_line(
              self.plot_margin,
-             event.y,
+             event.y - 1,
              self.plot_margin + self.plot_width,
-             event.y,
+             event.y - 1,
              dash=(1,1),
              fill="red"
             )
@@ -55,7 +55,7 @@ class PlotCanvas(Canvas):
              self.height - 20,
              font=("Arial 7"),
              text="x: %f" %
-              ((((event.x - self.plot_margin) / self.plot_width) *
+              (((((event.x - 1) - self.plot_margin) / self.plot_width) *
                (self.chart.x_limit[1] - self.chart.x_limit[0])) + self.chart.x_limit[0]),
              justify=LEFT,
              anchor=W
@@ -66,7 +66,7 @@ class PlotCanvas(Canvas):
              font=("Arial 7"),
              text="y: %f" %
               ((self.chart.y_limit[1] - self.chart.y_limit[0]) -
-               (((event.y - (self.plot_top_margin + self.title_height)) / self.plot_height)
+               ((((event.y - 1) - (self.plot_top_margin + self.title_height)) / self.plot_height)
                 * (self.chart.y_limit[1] - self.chart.y_limit[0])) + self.chart.y_limit[0]),
              justify=LEFT,
              anchor=W
