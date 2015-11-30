@@ -1,5 +1,6 @@
 import random
 from tkinter import *
+import datetime
 
 COLORS = ["#F15854", "#60BD68", "#5DA5DA", "#FAA43A", "#F17CB0", "#B2912F", "#B276B2", "#DECF3F", "#4D4D4D"]
 
@@ -9,6 +10,60 @@ DEFAULT_DIMENSIONS = [900, 700]
 def generate_random_color():
     return "#%02X%02X%02X" % (
      random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+
+
+class DatetimeDatum:
+    """A datetime in the streets, a number in the sheets"""
+
+    def __init__(self, dt):
+        self.dt = dt
+        self.value = dt.timestamp()
+
+
+    def __repr__(self):
+        return str(self.dt)
+
+
+    def __add__(self, other):
+        return self.value + other
+
+
+    def __radd__(self, other):
+        return self.value + other
+
+
+    def __sub__(self, other):
+        return self.value - other
+
+
+    def __rsub__(self, other):
+        return other - self.value
+
+
+    def __lt__(self, other):
+        return self.value < other
+
+
+    def __le__(self, other):
+        return self.value <= other
+
+
+    def __gt__(self, other):
+        return self.value > other
+
+
+    def __ge__(self, other):
+        return self.value >= other
+
+
+    def __eq__(self, other):
+        return self.value == other
+
+
+    def __ne__(self, other):
+        return self.value != other
+
 
 
 class PlotCanvas(Canvas):
@@ -30,9 +85,9 @@ class PlotCanvas(Canvas):
 
     def on_b1(self, event):
         self.chart._paint_canvas(self)
-        if event.x > self.plot_margin and event.x < self.plot_margin + self.plot_width and\
+        if event.x > self.plot_margin and event.x < self.plot_margin + self.plot_width + 1 and\
          event.y > self.title_height + self.plot_top_margin and\
-          event.y < self.title_height + self.plot_top_margin + self.plot_height:
+          event.y < self.title_height + self.plot_top_margin + self.plot_height + 2:
 
             self.create_line(
              event.x - 1,
@@ -50,13 +105,17 @@ class PlotCanvas(Canvas):
              dash=(1,1),
              fill="red"
             )
+            text =  (((((event.x - 1) - self.plot_margin) / self.plot_width) *
+             (self.chart.x_limit[1] - self.chart.x_limit[0])) + self.chart.x_limit[0])
+            if self.chart.x_is_time:
+                text = datetime.datetime.fromtimestamp(text)
+            else:
+                text = str(text)
             self.create_text(
              5,
              self.height - 20,
              font=("Arial 7"),
-             text="x: %f" %
-              (((((event.x - 1) - self.plot_margin) / self.plot_width) *
-               (self.chart.x_limit[1] - self.chart.x_limit[0])) + self.chart.x_limit[0]),
+             text="x: %s" % text,
              justify=LEFT,
              anchor=W
             )
@@ -314,8 +373,23 @@ class AxisChart(Chart):
         Chart.__init__(self, chart_title=chart_title, legend=legend, margin=margin,
          title=title, window_title=window_title, dimensions=dimensions)
 
+        self.x_is_time = False
         self.x_limit = x_limit
-        self.x_ticks = x_ticks
+        if isinstance(self.x_limit[0], datetime.datetime):
+            self.x_limit[0] = DatetimeDatum(self.x_limit[0])
+            self.x_is_time = True
+        if isinstance(self.x_limit[1], datetime.datetime):
+            self.x_limit[1] = DatetimeDatum(self.x_limit[1])
+            self.x_is_time = True
+
+        self.x_ticks = []
+        for tick in x_ticks:
+            if isinstance(tick, datetime.datetime):
+                self.x_ticks.append(DatetimeDatum(tick))
+                self.x_is_time = True
+            else:
+                self.x_ticks.append(tick)
+
         if x_tick_labels is None:
             self.x_tick_labels = [str(tick) for tick in self.x_ticks]
         else:
@@ -351,6 +425,7 @@ class AxisChart(Chart):
 
 
         if canvas.plot_width > 0 and canvas.plot_height > 0:
+            #Make axix outline
             canvas.create_rectangle(
              canvas.plot_margin,
              canvas.title_height + canvas.plot_top_margin,
@@ -360,6 +435,7 @@ class AxisChart(Chart):
 
             for index, xtick in enumerate(self.x_ticks):
                 if xtick >= self.x_limit[0] and xtick <= self.x_limit[1]:
+                    #xtick is in range
                     canvas.create_line(
                      self._get_x_axis_location(xtick, canvas),
                      canvas.height - canvas.plot_margin,
@@ -417,6 +493,15 @@ class AxisChart(Chart):
                          dash=(3,3)
                         )
 
+            if self.y_label:
+                canvas.create_text(
+                 (canvas.plot_margin - 20) / 2,
+                 canvas.title_height + canvas.plot_top_margin + (canvas.plot_height / 2),
+                 font="Bold 5",
+                 text=self.y_label.replace(" ", "\n"),
+                 justify=RIGHT
+                )
+
 
     def _generate_window(self):
         root = Chart._generate_window(self)
@@ -457,7 +542,11 @@ class SingleSeriesAxisChart(AxisChart):
            chart_title=chart_title, legend=legend, margin=margin,
             title=title, window_title=window_title, dimensions=dimensions)
 
-        self.series = series
+        self.series = []
+        for datum in series:
+            if isinstance(datum[0], datetime.datetime):
+                datum[0] = DatetimeDatum(datum[0])
+            self.series.append(datum)
         self.series_name = series_name
 
 
