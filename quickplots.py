@@ -230,14 +230,7 @@ class Chart(GenericChart):
         canvas.legend_width = 250 if self.legend else 0
         canvas.chart_width = canvas.width - canvas.legend_width
 
-        title = canvas.create_text(
-         (canvas.width - canvas.legend_width)/2,
-         int(canvas.width/25),
-         font="Tahoma %i bold" %
-          (int(canvas.chart_width/30) - int(len(self.chart_title)/10)),
-         text=self.chart_title
-        )
-        canvas.title_height = canvas.bbox(title)[3]
+        canvas.title_height = canvas.height / 10#canvas.bbox(title)[3]
         canvas.chart_height = canvas.height - canvas.title_height
 
         #canvas.create_line(canvas.chart_width, 0, canvas.chart_width, canvas.height, dash=(3,3))
@@ -252,6 +245,41 @@ class Chart(GenericChart):
 
         #canvas.create_rectangle(canvas.plot_margin, canvas.height-canvas.plot_margin, canvas.chart_width-canvas.plot_margin, canvas.title_height+canvas.plot_top_margin, dash=(2,2))
 
+        #Throw some white paint around to block out anything outside the plot bounds
+        if isinstance(self, SingleSeriesAxisChart):
+            self._paint_series(canvas)
+            canvas.create_rectangle(
+             0, 0,
+             canvas.width, canvas.title_height + canvas.plot_top_margin,
+             fill="#FFFFFF",
+             width=0
+            )
+            canvas.create_rectangle(
+             0, canvas.height - canvas.plot_margin,
+             canvas.width, canvas.height,
+             fill="#FFFFFF",
+             width=0
+            )
+            canvas.create_rectangle(
+             0, 0,
+             canvas.plot_margin, canvas.height,
+             fill="#FFFFFF",
+             width=0
+            )
+            canvas.create_rectangle(
+             canvas.width - (canvas.legend_width + canvas.plot_margin), 0,
+             canvas.width, canvas.height,
+             fill="#FFFFFF",
+             width=0
+            )
+
+        title = canvas.create_text(
+         (canvas.width - canvas.legend_width)/2,
+         int(canvas.width/25),
+         font="Tahoma %i bold" %
+          (int(canvas.chart_width/30) - int(len(self.chart_title)/10)),
+         text=self.chart_title
+        )
 
     def _get_window(self):
         root = GenericChart._get_window(self)
@@ -423,7 +451,7 @@ class AxisChart(Chart):
     def _paint_canvas(self, canvas):
         Chart._paint_canvas(self, canvas)
 
-
+        canvas.pie_start = 80
         if canvas.plot_width > 0 and canvas.plot_height > 0:
             #Make axix outline
             canvas.create_rectangle(
@@ -502,7 +530,6 @@ class AxisChart(Chart):
                  justify=RIGHT
                 )
 
-
     def _generate_window(self):
         root = Chart._generate_window(self)
         self._paint_canvas(root.frame.canvas)
@@ -548,6 +575,27 @@ class SingleSeriesAxisChart(AxisChart):
                 datum[0] = DatetimeDatum(datum[0])
             self.series.append(datum)
         self.series_name = series_name
+
+    def _paint_series(self, canvas):
+        canvas.create_rectangle(5, 5, 200, 200)
+
+
+    def _paint_canvas(self, canvas):
+        AxisChart._paint_canvas(self, canvas)
+        if self.legend:
+            canvas.create_text(
+             (canvas.width - canvas.legend_width) + 35,
+             canvas.pie_start + 15,
+             font="Tahoma %i" % 10,
+             text=self.series_name,
+             justify=LEFT,
+             anchor=W
+            )
+
+    def _generate_window(self):
+        root = AxisChart._generate_window(self)
+        self._paint_canvas(root.frame.canvas)
+        return root
 
 
 
@@ -643,6 +691,49 @@ class BarChart(SingleSeriesAxisChart):
         self.align = align
         self.edge_width = edge_width
         self.edge_color = edge_color
+
+
+    def _paint_series(self, canvas):
+        #Get some drawing data
+        widths_in_pixels = (self.bar_width/(self.x_limit[1] - self.x_limit[0]) * canvas.plot_width)
+        centers = [self._get_x_axis_location(val, canvas) for val, _ in self.series]
+        offset = 0
+        if self.align == "left":
+            offset = widths_in_pixels / 2
+        elif self.align == "right":
+            offset = 0 - (widths_in_pixels / 2)
+        centers = [val + offset for val in centers]
+        heights = [self._get_y_axis_location(val, canvas) for _, val in self.series]
+
+        for index, datum in enumerate(self.series):
+            canvas.create_rectangle(
+             centers[index] - (widths_in_pixels / 2),
+             heights[index],
+             centers[index] + (widths_in_pixels / 2),
+             canvas.height - canvas.plot_margin,
+             fill=self.color,
+             width=self.edge_width
+            )
+
+
+
+
+    def _paint_canvas(self, canvas):
+        SingleSeriesAxisChart._paint_canvas(self, canvas)
+        if self.legend:
+            canvas.create_rectangle(
+             (canvas.width - canvas.legend_width) + 10,
+             canvas.pie_start + 5,
+             (canvas.width - canvas.legend_width) + 30,
+             canvas.pie_start + 25,
+             fill=self.color,
+             width=self.edge_width
+            )
+
+    def _generate_window(self):
+        root = SinlgeSeriesAxisChart._generate_window(self)
+        self._paint_canvas(root.frame.canvas)
+        return root
 
 
 
