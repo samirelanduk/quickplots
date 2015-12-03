@@ -333,7 +333,7 @@ class PieChart(Chart):
             #Calculate pie bounds
             x_start = canvas.plot_margin + ((canvas.plot_width - radius) / 2)
             x_end = (canvas.chart_width - canvas.plot_margin) - ((canvas.plot_width - radius) / 2)
-            y_start = canvas.title_height + canvas.plot_top_margin + ((canvas.plot_height - radius) / 2)
+            y_start = canvas.title_height + canvas.plot_margin_top + ((canvas.plot_height - radius) / 2)
             y_end = canvas.height - canvas.plot_margin - ((canvas.plot_height - radius) / 2)
             #canvas.create_rectangle(x_start, y_start, x_end, y_end, dash=(1,2))
             #Get start points and extents
@@ -641,7 +641,7 @@ class MultiSeriesAxisChart(AxisChart):
 class LineChart(SingleSeriesAxisChart):
     """A line chart."""
 
-    def __init__(self, series, color=None, width=1, style="-",
+    def __init__(self, series, color=None, width=2, style="-",
      series_name="",
       x_limit=None, x_ticks=[], x_tick_labels=None, x_label="",
        y_limit=None, y_ticks=[], y_tick_labels=None, y_label="", grid=True,
@@ -661,6 +661,26 @@ class LineChart(SingleSeriesAxisChart):
 
         self.width = width
         self.style = style
+
+
+    def _paint_series(self, canvas):
+
+        if not self.series_drawn:
+            print("painting")
+            for index, datum in enumerate(self.series[:-1]):
+                canvas.create_line(
+                 self._get_x_axis_location(datum[0], canvas),
+                 self._get_y_axis_location(datum[1], canvas),
+                 self._get_x_axis_location(self.series[index+1][0], canvas),
+                 self._get_y_axis_location(self.series[index+1][1], canvas),
+                 width=self.width
+                )
+            self.series_drawn = True
+
+
+    def _paint_canvas(self, canvas):
+        self.series_drawn = False
+        SingleSeriesAxisChart._paint_canvas(self, canvas)
 
 
 
@@ -710,7 +730,7 @@ class BarChart(SingleSeriesAxisChart):
              centers[index] - (widths_in_pixels / 2),
              heights[index],
              centers[index] + (widths_in_pixels / 2),
-             canvas.height - canvas.plot_margin,
+             canvas.height - (canvas.plot_margin - 1),
              fill=self.color,
              width=self.edge_width
             )
