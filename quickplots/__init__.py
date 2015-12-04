@@ -263,7 +263,7 @@ class BarChart(SingleSeriesAxisChart):
 
 
     def _create_legend(self, canvas):
-        Chart._create_legend(self, canvas)
+        SingleSeriesAxisChart._create_legend(self, canvas)
         if self.legend:
             for index, _ in enumerate(self.labels):
                 canvas.create_rectangle(
@@ -273,6 +273,68 @@ class BarChart(SingleSeriesAxisChart):
                  canvas.legend_top_margin + (canvas.legend_row_height*index) + (canvas.legend_row_height / (6/5)),
                  fill=self.color
                 )
+
+
+
+class LineChart(SingleSeriesAxisChart):
+    """A line chart"""
+
+    def __init__(self, *args, color=None, width=2, style="-", **kwargs):
+        SingleSeriesAxisChart.__init__(self, *args, **kwargs)
+
+        if color is None:
+            self.color = random.choice(COLORS)
+        else:
+            self.color = color
+
+        self.width = width
+        self.style = style
+
+
+    def _paint_series(self, canvas):
+        if self.style == "--":
+            dash=(2,0)
+        for index, datum in enumerate(self.series[:-1]):
+            args = [
+             _get_x_position(self, canvas, datum[0]),
+             _get_y_position(self, canvas, datum[1]),
+             _get_x_position(self, canvas, self.series[index+1][0]),
+             _get_y_position(self, canvas, self.series[index+1][1])
+            ]
+
+            kwargs = {
+             "width": self.width,
+             "fill": self.color
+            }
+
+            if self.style == "--":
+                kwargs["dash"] = (6,6)
+
+            canvas.create_line(*args, **kwargs)
+
+
+    def _create_legend(self, canvas):
+        SingleSeriesAxisChart._create_legend(self, canvas)
+        if self.legend:
+            for index, _ in enumerate(self.labels):
+                args = [
+                 (canvas.width - canvas.legend_width) + canvas.legend_x_margin + canvas.legend_padding,
+                 canvas.legend_top_margin + (canvas.legend_row_height*index) + (canvas.legend_row_height / 2),
+                 (canvas.width - canvas.legend_width) + canvas.legend_x_margin + (canvas.legend_row_height / 1.5) + canvas.legend_padding,
+                 canvas.legend_top_margin + (canvas.legend_row_height*index) + (canvas.legend_row_height / 2)
+                ]
+
+                kwargs = {
+                 "width": self.width,
+                 "fill": self.color
+                }
+
+                if self.style == "--":
+                    kwargs["dash"] = (6,6)
+
+                canvas.create_line(*args, **kwargs)
+
+
 
 
 def generate_random_color():
