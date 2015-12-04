@@ -4,6 +4,8 @@ from tkinter import *
 class Chart:
     """Something with a window representation and a single canvas"""
 
+    can_grid = False
+
     def __init__(self, title="", legend=False, window_dimensions=[900, 700],
      window_title="", background_color="#CCCCCC", canvas_margin=50, debug=False):
         self.title = title
@@ -13,6 +15,8 @@ class Chart:
         self.background_color = background_color
         self.canvas_margin = canvas_margin
         self.debug = debug
+
+        self.labels = []
 
 
     def show(self):
@@ -55,6 +59,39 @@ class Chart:
             canvas.legend_padding = 5
 
 
+    def _write_title(self, canvas):
+        canvas.create_text(
+         canvas.chart_width / 2, canvas.title_height / 2,
+         text=self.title,
+         font="bold %i" % (canvas.title_height / 1.5)
+        )
+
+
+    def _draw_grids(self, canvas):
+        pass
+
+
+    def _paint_series(self, canvas):
+        pass
+
+
+    def _draw_plot_bounds(self, canvas):
+        pass
+
+
+    def _create_legend(self, canvas):
+        if self.legend:
+            for index, _ in enumerate(self.labels):
+                canvas.create_text(
+                 (canvas.width - canvas.legend_width) + canvas.legend_x_margin + (2 * canvas.legend_padding) + (canvas.legend_row_height / 1.5),
+                 canvas.legend_top_margin + (canvas.legend_row_height*index) + (canvas.legend_row_height / 2),
+                 font="Tahoma %i" % 10,
+                 text=self.labels[index],
+                 justify=LEFT,
+                 anchor=W
+                )
+
+
     def _debug_lines(self, canvas):
         if self.debug:
             #Title border
@@ -95,24 +132,6 @@ class Chart:
                      dash=(3,3)
                     )
 
-
-    def _write_title(self, canvas):
-        canvas.create_text(
-         canvas.chart_width / 2, canvas.title_height / 2,
-         text=self.title,
-         font="bold %i" % (canvas.title_height / 1.5)
-        )
-
-
-    def _paint_series(self, canvas):
-        pass
-
-
-    def _create_legend(self, canvas):
-        pass
-
-
-
 class ChartCanvas(Canvas):
     """A canvas that has an associated chart, and knows how to draw that chart"""
 
@@ -120,11 +139,45 @@ class ChartCanvas(Canvas):
         Canvas.__init__(self, master, **kwargs)
         self.chart = chart
         self.bind("<Configure>", self.request_repaint)
+        if chart.can_grid:
+            self.bind("<B1-Motion>", self.on_click)
+            self.bind("<Button-1>", self.on_click)
+            self.bind("<ButtonRelease-1>", self.on_unclick)
 
 
     def request_repaint(self, event):
         self.chart._prepare_canvas(self)
-        self.chart._debug_lines(self)
-        self.chart._write_title(self)
+        self.chart._draw_grids(self)
         self.chart._paint_series(self)
+        self.chart._draw_plot_bounds(self)
+        self.chart._write_title(self)
         self.chart._create_legend(self)
+        self.chart._debug_lines(self)
+
+
+    def on_click(self, event):
+        self.request_repaint(self)
+        if event.x > self.plot_margin and event.x < self.plot_margin + self.plot_width + 1 and\
+         event.y > self.title_height + self.plot_margin_top and\
+          event.y < self.title_height + self.plot_margin_top + self.plot_height + 2:
+
+            self.create_line(
+             event.x - 1,
+             self.height - self.plot_margin,
+             event.x - 1,
+             self.title_height + self.plot_margin_top,
+             dash=(1,1),
+             fill="red"
+            )
+            self.create_line(
+             self.plot_margin,
+             event.y - 1,
+             self.plot_margin + self.plot_width,
+             event.y - 1,
+             dash=(1,1),
+             fill="red"
+            )
+
+
+    def on_unclick(self, event):
+        self.request_repaint(self)
