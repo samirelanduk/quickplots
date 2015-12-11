@@ -94,7 +94,9 @@ class AxisChart(Chart):
      y_limit=[0,1], y_ticks=None, y_tick_labels=None, y_label="", grid=True, **kwargs):
         Chart.__init__(self, **kwargs)
 
+        print(x_limit)
         self.x_limit = check_series_for_dates(x_limit)
+        print(self.x_limit)
         self.x_ticks = x_limit if x_ticks is None else check_series_for_dates(x_ticks)
         if x_tick_labels is None:
             self.x_tick_labels = [str(t) for t in self.x_ticks]
@@ -305,25 +307,20 @@ class LineChart(SingleSeriesAxisChart):
 
 
     def _paint_series(self, canvas):
+        coordinates = []
+        for datum in self.series:
+            coordinates.append(_get_x_position(self, canvas, datum[0]))
+            coordinates.append(_get_y_position(self, canvas, datum[1]))
+
+        kwargs = {
+         "width": self.width,
+         "fill": self.color
+        }
+
         if self.style == "--":
-            dash=(2,0)
-        for index, datum in enumerate(self.series[:-1]):
-            args = [
-             _get_x_position(self, canvas, datum[0]),
-             _get_y_position(self, canvas, datum[1]),
-             _get_x_position(self, canvas, self.series[index+1][0]),
-             _get_y_position(self, canvas, self.series[index+1][1])
-            ]
+            kwargs["dash"] = (6,6)
 
-            kwargs = {
-             "width": self.width,
-             "fill": self.color
-            }
-
-            if self.style == "--":
-                kwargs["dash"] = (6,6)
-
-            canvas.create_line(*args, **kwargs)
+        canvas.create_line(*coordinates, **kwargs)
 
 
     def _create_legend(self, canvas):
@@ -339,6 +336,7 @@ class LineChart(SingleSeriesAxisChart):
             kwargs = {
              "width": self.width,
              "fill": self.color
+
             }
 
             if self.style == "--":
@@ -435,6 +433,7 @@ class MultiSeriesAxisChart(AxisChart):
         if "y_limit" not in kwargs or kwargs["y_limit"] is None:
             kwargs["y_limit"] = [min([chart.y_limit[0] for chart in charts]),
             max([chart.y_limit[1] for chart in charts])]
+        print(kwargs)
         AxisChart.__init__(self, **kwargs)
         self.charts = charts
         self.labels = [chart.series_name for chart in self.charts]
