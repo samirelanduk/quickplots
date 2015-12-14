@@ -94,9 +94,7 @@ class AxisChart(Chart):
      y_limit=[0,1], y_ticks=None, y_tick_labels=None, y_label="", grid=True, **kwargs):
         Chart.__init__(self, **kwargs)
 
-        print(x_limit)
         self.x_limit = check_series_for_dates(x_limit)
-        print(self.x_limit)
         self.x_ticks = x_limit if x_ticks is None else check_series_for_dates(x_ticks)
         if x_tick_labels is None:
             self.x_tick_labels = [str(t) for t in self.x_ticks]
@@ -216,9 +214,9 @@ class SingleSeriesAxisChart(AxisChart):
 
     def __init__(self, series, series_name="", **kwargs):
         if "x_limit" not in kwargs or kwargs["x_limit"] is None:
-            kwargs["x_limit"] = min(list(zip(*series))[0]), max(list(zip(*series))[0])
+            kwargs["x_limit"] = [min(list(zip(*series))[0]), max(list(zip(*series))[0])]
         if "y_limit" not in kwargs or kwargs["y_limit"] is None:
-            kwargs["y_limit"] = min(list(zip(*series))[1]), max(list(zip(*series))[1])
+            kwargs["y_limit"] = [min(list(zip(*series))[1]), max(list(zip(*series))[1])]
         AxisChart.__init__(self, **kwargs)
 
         self.series = type(series)([check_series_for_dates(t) for t in series])
@@ -433,7 +431,6 @@ class MultiSeriesAxisChart(AxisChart):
         if "y_limit" not in kwargs or kwargs["y_limit"] is None:
             kwargs["y_limit"] = [min([chart.y_limit[0] for chart in charts]),
             max([chart.y_limit[1] for chart in charts])]
-        print(kwargs)
         AxisChart.__init__(self, **kwargs)
         self.charts = charts
         self.labels = [chart.series_name for chart in self.charts]
