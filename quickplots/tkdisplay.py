@@ -29,13 +29,13 @@ class ChartCanvas(Canvas):
             return font - 0.1
 
 
-    def get_font_size(self, text, width=None, height=None, font_style="Tahoma"):
+    def get_font_size(self, text, width=None, height=None, font_style="Tahoma", max_font_size=1000):
         """Get the font size required to make text fit a bbox"""
         if width is None:
             width  = self.width
         if height is None:
             height = self.height
-        font_size = 100
+        font_size = max_font_size
         t = self.scratch_canvas.create_text(0, 0, text=text, font="%s %i" % (font_style, font_size))
 
         while ((((self.scratch_canvas.bbox(t)[2] - (font_size / 9)) -
@@ -51,7 +51,7 @@ class ChartCanvas(Canvas):
         return font_size
 
 
-    def create_text(self, *args, width=None, height=None, font_style="Tahoma", **kwargs):
+    def create_text(self, *args, width=None, height=None, font_style="Tahoma", max_font_size=1000, **kwargs):
         if width is None and height is None:
             Canvas.create_text(self, *args, **kwargs)
 
@@ -62,7 +62,7 @@ class ChartCanvas(Canvas):
             if height is None:
                 height = self.height
 
-            Canvas.create_text(self, *args, font="%s %i" % (font_style, self.get_font_size(kwargs["text"], width, height, font_style)), **kwargs)
+            Canvas.create_text(self, *args, font="%s %i" % (font_style, self.get_font_size(kwargs["text"], width, height, font_style, max_font_size=max_font_size)), **kwargs)
 
 
     def request_repaint(self, event):
@@ -77,7 +77,8 @@ class ChartCanvas(Canvas):
         four = datetime.datetime.now()
         self.chart._write_title(self)
         five = datetime.datetime.now()
-        self.chart._create_legend(self)
+        self.chart._write_legend_labels(self)
+        self.chart._draw_legend_symbols(self)
         six = datetime.datetime.now()
         self.chart._debug_lines(self)
         end = datetime.datetime.now()
@@ -214,17 +215,19 @@ def _chart_prepare_canvas(chart, canvas):
         canvas.legend_row_width = (canvas.legend_width - (2 * canvas.legend_x_margin))
         canvas.legend_symbol_width = (canvas.legend_row_width * 0.25)
         canvas.legend_text_width = canvas.legend_row_width - canvas.legend_symbol_width
+    canvas.legend_symbols = 0
 
 
 def _chart_write_title(chart, canvas):
     canvas.create_text(
      canvas.chart_width / 2, canvas.title_height / 2,
      text=chart.title,
-     width=canvas.chart_width, height=canvas.title_height
+     width=canvas.chart_width, height=canvas.title_height,
+     max_font_size=32
     )
 
 
-def _chart_create_legend(chart, canvas):
+def _chart_write_legend_labels(chart, canvas):
     if chart.legend:
         for index, _ in enumerate(chart.labels):
             canvas.create_text(
@@ -234,7 +237,8 @@ def _chart_create_legend(chart, canvas):
              justify=LEFT,
              anchor=W,
              width=canvas.legend_text_width,
-             height=canvas.legend_row_height
+             height=canvas.legend_row_height,
+             max_font_size=18
             )
 
 
@@ -315,7 +319,7 @@ def _chart_debug_lines(chart, canvas):
 
 #Pie methods
 def _pie_prepare_canvas(chart, canvas):
-    super(chart.__class__, chart)._prepare_canvas(canvas)
+    _chart_prepare_canvas(chart, canvas)
 
     canvas.radius = min([canvas.plot_width, canvas.plot_height])
     if canvas.radius > 0:
@@ -347,7 +351,7 @@ def _pie_paint_series(chart, canvas):
 
 
 def _pie_create_legend(chart, canvas):
-    super(chart.__class__, chart)._create_legend(canvas)
+    _chart_create_legend(chart, canvas)
     if chart.legend:
         for index, _ in enumerate(chart.data):
             canvas.create_rectangle(
@@ -361,7 +365,7 @@ def _pie_create_legend(chart, canvas):
 
 
 def _pie_debug_lines(chart, canvas):
-    super(chart.__class__, chart)._debug_lines(canvas)
+    _chart_debug_lines(chart, canvas)
     if chart.debug:
         canvas.create_rectangle(canvas.x_start, canvas.y_start,
          canvas.x_end, canvas.y_end, dash=(1,2))
@@ -370,7 +374,7 @@ def _pie_debug_lines(chart, canvas):
 
 #Axis methods
 def _axis_prepare_canvas(chart, canvas):
-    super(chart.__class__, chart)._prepare_canvas(canvas)
+    _chart_prepare_canvas(chart, canvas)
 
     canvas.x_tick_length = canvas.plot_margin_bottom / 3
     canvas.x_tick_label_length = canvas.plot_margin_bottom / 4
@@ -436,7 +440,7 @@ def _axis_draw_plot_bounds(chart, canvas):
         )
 
         #Ticks
-        x_font_size = canvas.get_font_size(sorted([t for t in chart.x_tick_labels], key=lambda k: len(k))[-1], height=canvas.x_tick_label_length)
+        x_font_size = canvas.get_font_size(sorted([t for t in chart.x_tick_labels], key=lambda k: len(k))[-1], height=canvas.x_tick_label_length, max_font_size=10)
         for index, tick in enumerate(chart.x_ticks):
             if tick >= chart.x_limit[0] and tick <= chart.x_limit[1]:
                 canvas.create_line(
@@ -449,7 +453,7 @@ def _axis_draw_plot_bounds(chart, canvas):
                  text=chart.x_tick_labels[index],
                  font="Tahoma %i" % x_font_size
                 )
-        y_font_size = canvas.get_font_size(sorted([t for t in chart.y_tick_labels], key=lambda k: len(k))[-1], width=canvas.y_tick_label_length)
+        y_font_size = canvas.get_font_size(sorted([t for t in chart.y_tick_labels], key=lambda k: len(k))[-1], width=canvas.y_tick_label_length, max_font_size=10)
         for index, tick in enumerate(chart.y_ticks):
             if tick >= chart.y_limit[0] and tick <= chart.y_limit[1]:
                 canvas.create_line(
@@ -461,6 +465,7 @@ def _axis_draw_plot_bounds(chart, canvas):
                  _get_y_position(chart, canvas, tick),
                  text=chart.y_tick_labels[index],
                  font="Tahoma %i" % y_font_size,
+                 max_font_size=20,
                  justify=RIGHT,
                  anchor=E
                 )
@@ -474,7 +479,7 @@ def _axis_draw_plot_bounds(chart, canvas):
 
 
 def _axis_debug_lines(chart, canvas):
-    super(chart.__class__, chart)._debug_lines(canvas)
+    _chart_debug_lines(chart, canvas)
     if chart.debug:
         canvas.create_line(
          canvas.plot_margin_x - canvas.x_tick_length, canvas.title_height + canvas.plot_margin_top,
@@ -488,6 +493,148 @@ def _axis_debug_lines(chart, canvas):
          canvas.chart_width - canvas.plot_margin_x, canvas.height - canvas.x_axis_label_length,
          dash=(1,1)
         )
+
+
+
+#Line chart methods
+
+def _line_paint_series(chart, canvas):
+    coordinates = []
+    for datum in chart.series:
+        coordinates.append(_get_x_position(chart, canvas, datum[0]))
+        coordinates.append(_get_y_position(chart, canvas, datum[1]))
+
+    kwargs = {
+     "width": chart.width,
+     "fill": chart.color
+    }
+
+    if chart.style == "--":
+        kwargs["dash"] = (6,6)
+
+    canvas.create_line(*coordinates, **kwargs)
+
+
+def _line_draw_legend_symbols(chart, canvas):
+    kwargs = {
+     "width": chart.width,
+     "fill": chart.color
+    }
+
+    if chart.style == "--":
+        kwargs["dash"] = (6,6)
+
+    canvas.create_line(
+     canvas.chart_width + canvas.legend_x_margin,
+     canvas.legend_y_margin + ((canvas.legend_symbols + 0.5) * canvas.legend_row_height),
+     canvas.chart_width + canvas.legend_x_margin + canvas.legend_symbol_width,
+     canvas.legend_y_margin + ((canvas.legend_symbols + 0.5) * canvas.legend_row_height),
+     **kwargs
+    )
+    canvas.legend_symbols += 1
+
+
+
+def _bar_paint_series(chart, canvas):
+    widths_in_pixels = (chart.bar_width/(chart.x_limit[1] - chart.x_limit[0]) * canvas.plot_width)
+    centers = [_get_x_position(chart, canvas, val) for val, _ in chart.series]
+    offset = 0
+    if chart.align == "left":
+        offset = widths_in_pixels / 2
+    elif chart.align == "right":
+        offset = 0 - (widths_in_pixels / 2)
+    centers = [val + offset for val in centers]
+    heights = [_get_y_position(chart, canvas, val) for _, val in chart.series]
+
+    for index, datum in enumerate(chart.series):
+        canvas.create_rectangle(
+         centers[index] - (widths_in_pixels / 2),
+         heights[index],
+         centers[index] + (widths_in_pixels / 2),
+         canvas.height - (canvas.plot_margin_bottom - 1),
+         fill=chart.color,
+         width=chart.edge_width
+        )
+
+
+def _bar_draw_legend_symbols(chart, canvas):
+    if chart.legend:
+        canvas.create_rectangle(
+         canvas.chart_width + canvas.legend_x_margin,
+         canvas.legend_y_margin + ((canvas.legend_symbols + 0.2) * canvas.legend_row_height),
+         canvas.chart_width + canvas.legend_x_margin + canvas.legend_symbol_width,
+         canvas.legend_y_margin + ((canvas.legend_symbols + 0.8) * canvas.legend_row_height),
+         fill=chart.color,
+         width=chart.edge_width
+        )
+        canvas.legend_symbols += 1
+
+
+def _scatter_paint_series(chart, canvas):
+    for datum in chart.series:
+        location = (_get_x_position(chart, canvas, datum[0]), _get_y_position(chart, canvas, datum[1]))
+
+        if chart.marker == "o":
+            canvas.create_oval(
+             location[0] - (chart.size / 2), location[1] - (chart.size / 2),
+             location[0] + (chart.size / 2), location[1] + (chart.size / 2),
+             fill=chart.color,
+             width=chart.edge_width,
+             outline=chart.edge_color
+            )
+        elif chart.marker == "x":
+            canvas.create_line(
+             location[0] - (chart.size / 2), location[1] - (chart.size / 2),
+             location[0] + (chart.size / 2), location[1] + (chart.size / 2),
+             fill=chart.edge_color,
+             width=chart.edge_width
+            )
+            canvas.create_line(
+             location[0] - (chart.size / 2), location[1] + (chart.size / 2),
+             location[0] + (chart.size / 2), location[1] - (chart.size / 2),
+             fill=chart.edge_color,
+             width=chart.edge_width
+            )
+
+
+def _scatter_draw_legend_symbols(chart, canvas):
+    if chart.legend:
+        location = (
+         canvas.chart_width + canvas.legend_x_margin + (canvas.legend_symbol_width / 2),
+         canvas.legend_y_margin + ((canvas.legend_symbols + 0.5) * canvas.legend_row_height)
+        )
+        if chart.marker == "o":
+            canvas.create_oval(
+             location[0] - (chart.size / 2), location[1] - (chart.size / 2),
+             location[0] + (chart.size / 2), location[1] + (chart.size / 2),
+             fill=chart.color,
+             width=chart.edge_width,
+             outline=chart.edge_color
+            )
+        elif chart.marker == "x":
+            canvas.create_line(
+             location[0] - (chart.size / 2), location[1] - (chart.size / 2),
+             location[0] + (chart.size / 2), location[1] + (chart.size / 2),
+             fill=chart.edge_color,
+             width=chart.edge_width
+            )
+            canvas.create_line(
+             location[0] - (chart.size / 2), location[1] + (chart.size / 2),
+             location[0] + (chart.size / 2), location[1] - (chart.size / 2),
+             fill=chart.edge_color,
+             width=chart.edge_width
+            )
+        canvas.legend_symbols += 1
+
+
+def _multi_paint_series(chart, canvas):
+    for series in chart.charts:
+        series._paint_series(canvas)
+
+
+def _multi_draw_legend_symbols(chart, canvas):
+    for series in chart.charts:
+        series._draw_legend_symbols(canvas)
 
 
 
@@ -518,7 +665,6 @@ def _get_x_value(chart, canvas, position):
 
 def _get_y_value(chart, canvas, position):
     y_proportion = ((canvas.height - (canvas.plot_margin_bottom - 1)) - position) / canvas.plot_height
-    print(y_proportion)
     y_distance = chart.y_limit[1] - chart.y_limit[0]
     value = (y_proportion * y_distance) + chart.y_limit[0]
     return str(value).rstrip("0").rstrip(".")

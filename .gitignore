@@ -5,3 +5,4 @@ MANIFEST
 test.py
 *.pyc
 old_quickplots.txt
+weight
