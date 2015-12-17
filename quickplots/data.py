@@ -4,7 +4,7 @@ class DatetimeDatum:
     """A datetime in the streets, a number in the sheets"""
 
     def __init__(self, dt):
-        self.dt = datetime.date
+        self.dt = dt
         self.value = dt.timestamp()
 
 
