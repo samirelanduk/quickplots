@@ -1,6 +1,8 @@
 from .data import *
+from . import tkdisplay
+import math
 import random
-from quickplots import tkdisplay
+
 
 COLORS = ["#F15854", "#60BD68", "#5DA5DA", "#FAA43A",
  "#F17CB0", "#B2912F", "#B276B2", "#DECF3F", "#4D4D4D"]
@@ -123,7 +125,7 @@ class SingleSeriesAxisChart(AxisChart):
         if "x_limit" not in kwargs or kwargs["x_limit"] is None:
             kwargs["x_limit"] = [min(list(zip(*series))[0]), max(list(zip(*series))[0])]
         if "y_limit" not in kwargs or kwargs["y_limit"] is None:
-            kwargs["y_limit"] = [min(list(zip(*series))[1]), max(list(zip(*series))[1])]
+            kwargs["y_limit"] = [min(list(zip(*series))[1]), get_limit(max(list(zip(*series))[1]))]
         AxisChart.__init__(self, **kwargs)
 
         self.series = Series(series)
@@ -236,3 +238,8 @@ class MultiSeriesAxisChart(AxisChart):
 def generate_random_color():
     return "#%02X%02X%02X" % (
      random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+
+def get_limit(n):
+    x = 10 ** math.floor(math.log(n, 10))
+    return math.ceil(n / x) * x
