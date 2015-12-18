@@ -516,22 +516,23 @@ def _line_paint_series(chart, canvas):
 
 
 def _line_draw_legend_symbols(chart, canvas):
-    kwargs = {
-     "width": chart.width,
-     "fill": chart.color
-    }
+    if chart.legend:
+        kwargs = {
+         "width": chart.width,
+         "fill": chart.color
+        }
 
-    if chart.style == "--":
-        kwargs["dash"] = (6,6)
+        if chart.style == "--":
+            kwargs["dash"] = (6,6)
 
-    canvas.create_line(
-     canvas.chart_width + canvas.legend_x_margin,
-     canvas.legend_y_margin + ((canvas.legend_symbols + 0.5) * canvas.legend_row_height),
-     canvas.chart_width + canvas.legend_x_margin + canvas.legend_symbol_width,
-     canvas.legend_y_margin + ((canvas.legend_symbols + 0.5) * canvas.legend_row_height),
-     **kwargs
-    )
-    canvas.legend_symbols += 1
+        canvas.create_line(
+         canvas.chart_width + canvas.legend_x_margin,
+         canvas.legend_y_margin + ((canvas.legend_symbols + 0.5) * canvas.legend_row_height),
+         canvas.chart_width + canvas.legend_x_margin + canvas.legend_symbol_width,
+         canvas.legend_y_margin + ((canvas.legend_symbols + 0.5) * canvas.legend_row_height),
+         **kwargs
+        )
+        canvas.legend_symbols += 1
 
 
 
@@ -633,8 +634,9 @@ def _multi_paint_series(chart, canvas):
 
 
 def _multi_draw_legend_symbols(chart, canvas):
-    for series in chart.charts:
-        series._draw_legend_symbols(canvas)
+    if chart.legend:
+        for series in chart.charts:
+            series._draw_legend_symbols(canvas)
 
 
 
