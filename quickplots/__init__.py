@@ -91,7 +91,7 @@ class AxisChart(Chart):
         self.x_label = x_label
 
         self.y_limit = y_limit
-        self.y_ticks = y_limit[:] if y_ticks is None else y_ticks
+        self.y_ticks = self.get_y_ticks() if y_ticks is None else y_ticks
         if y_tick_labels is None:
             self.y_tick_labels = [str(t) for t in self.y_ticks]
         else:
@@ -111,6 +111,22 @@ class AxisChart(Chart):
         self.y_tick_labels = [str(t) for t in self.y_ticks]
 
 
+    def get_y_ticks(self):
+        difference = self.y_limit[1] - self.y_limit[0]
+        l = math.floor(math.log(difference, 10))
+        tick = 10 ** l
+        neg = math.floor(self.y_limit[0] / tick) * tick
+        ticks = [neg + tick]
+        while ticks[-1] + tick <= self.y_limit[1]:
+            ticks.append(ticks[-1] + tick)
+        if self.y_limit[0] not in ticks:
+            ticks.append(self.y_limit[0])
+        if self.y_limit[1] not in ticks:
+            ticks.append(self.y_limit[1])
+        return sorted(ticks)
+
+
+
     _prepare_canvas = tkdisplay._axis_prepare_canvas
     _draw_grids = tkdisplay._axis_draw_grids
     _draw_plot_bounds = tkdisplay._axis_draw_plot_bounds
@@ -121,11 +137,11 @@ class AxisChart(Chart):
 class SingleSeriesAxisChart(AxisChart):
     """An axis chart with a single series on it."""
 
-    def __init__(self, series, series_name="", **kwargs):
+    def __init__(self, series, series_name="", y_limit_zero=True, **kwargs):
         if "x_limit" not in kwargs or kwargs["x_limit"] is None:
             kwargs["x_limit"] = [min(list(zip(*series))[0]), max(list(zip(*series))[0])]
         if "y_limit" not in kwargs or kwargs["y_limit"] is None:
-            kwargs["y_limit"] = [min(list(zip(*series))[1]), get_limit(max(list(zip(*series))[1]))]
+            kwargs["y_limit"] = [0 if y_limit_zero else min(list(zip(*series))[1]), get_limit(max(list(zip(*series))[1]))]
         AxisChart.__init__(self, **kwargs)
 
         self.series = Series(series)
