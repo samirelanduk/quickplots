@@ -243,6 +243,9 @@ class MultiSeriesAxisChart(AxisChart):
             max([chart.y_limit[1] for chart in charts])]
         AxisChart.__init__(self, **kwargs)
         self.charts = charts[:]
+        for chart in self.charts:
+            chart.x_limit = self.x_limit
+            chart.y_limit = self.y_limit
         self.labels = [chart.series_name for chart in self.charts]
 
 

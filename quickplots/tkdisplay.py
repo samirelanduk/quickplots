@@ -38,11 +38,19 @@ class ChartCanvas(Canvas):
         font_size = max_font_size
         t = self.scratch_canvas.create_text(0, 0, text=text, font="%s %i" % (font_style, font_size))
 
-        while ((((self.scratch_canvas.bbox(t)[2] - (font_size / 9)) -
-         (self.scratch_canvas.bbox(t)[0] + (font_size / 20))) > width) or
-          (((self.scratch_canvas.bbox(t)[3] - (font_size / 5)) -
-           (self.scratch_canvas.bbox(t)[1] + (font_size / 5))) > height)) and font_size > 0:
+        margin_right = font_size / 9 if font_size < 12 else 0
+        margin_left = font_size / 20 if font_size < 12 else 0
+        margin_bottom = font_size / 5 if font_size < 12 else 0
+        margin_top = font_size / 5 if font_size < 12 else 0
+        while ((((self.scratch_canvas.bbox(t)[2] - margin_right) -
+         (self.scratch_canvas.bbox(t)[0] + margin_left)) > width) or
+          (((self.scratch_canvas.bbox(t)[3] - margin_bottom) -
+           (self.scratch_canvas.bbox(t)[1] + margin_top)) > height)) and font_size > 0:
             font_size = self.lower_font(font_size)
+            margin_right = font_size / 9 if font_size < 12 else 0
+            margin_left = font_size / 20 if font_size < 12 else 0
+            margin_bottom = font_size / 5 if font_size < 12 else 0
+            margin_top = font_size / 5 if font_size < 12 else 0
             if font_size > 0:
                 self.delete(t)
                 t = self.scratch_canvas.create_text(0, 0, text=text, font="%s %i" % (font_style, font_size))
