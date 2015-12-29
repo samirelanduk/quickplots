@@ -670,11 +670,25 @@ def _get_x_value(chart, canvas, position):
     if isinstance(chart.x_limit[0], DatetimeDatum):
         return str(datetime.datetime.fromtimestamp(value))
     else:
-        return str(value).rstrip("0").rstrip(".")
+        pixel = x_distance / canvas.plot_width
+        resolution = 10 ** round(math.log(pixel, 10))
+        rounded = str(math.ceil(value / resolution) * resolution)
+        if "." in rounded and "00000" in rounded:
+            rounded = rounded[:-1]
+        if "." in rounded:
+            rounded = rounded.rstrip("0").rstrip(".")
+        return rounded
 
 
 def _get_y_value(chart, canvas, position):
     y_proportion = ((canvas.height - (canvas.plot_margin_bottom - 1)) - position) / canvas.plot_height
     y_distance = chart.y_limit[1] - chart.y_limit[0]
     value = (y_proportion * y_distance) + chart.y_limit[0]
-    return str(value).rstrip("0").rstrip(".")
+    pixel = y_distance / canvas.plot_height
+    resolution = 10 ** round(math.log(pixel, 10))
+    rounded = str(math.ceil(value / resolution) * resolution)
+    if "." in rounded and "00000" in rounded:
+        rounded = rounded[:-1]
+    if "." in rounded:
+        rounded = rounded.rstrip("0").rstrip(".")
+    return rounded
