@@ -384,12 +384,12 @@ def _pie_debug_lines(chart, canvas):
 def _axis_prepare_canvas(chart, canvas):
     _chart_prepare_canvas(chart, canvas)
 
-    canvas.x_tick_length = canvas.plot_margin_bottom / 3
-    canvas.x_tick_label_length = canvas.plot_margin_bottom / 4
-    canvas.x_axis_label_length = canvas.plot_margin_bottom / 3
-    canvas.y_tick_length = canvas.plot_margin_x / 4
-    canvas.y_tick_label_length = canvas.plot_margin_x / 2
-    canvas.y_axis_label_length = canvas.plot_margin_x / 4
+    canvas.x_tick_length = canvas.plot_margin_bottom * (3/10)
+    canvas.x_tick_label_length = canvas.plot_margin_bottom * (4/10)
+    canvas.x_axis_label_length = canvas.plot_margin_bottom * (3/10)
+    canvas.y_tick_length = canvas.plot_margin_x * (3/10)
+    canvas.y_tick_label_length = canvas.plot_margin_x * (5/10)
+    canvas.y_axis_label_length = canvas.plot_margin_x * (2/10)
 
 
 def _axis_draw_grids(chart, canvas):
@@ -491,8 +491,8 @@ def _axis_debug_lines(chart, canvas):
     _chart_debug_lines(chart, canvas)
     if chart.debug:
         canvas.create_line(
-         canvas.plot_margin_x - canvas.x_tick_length, canvas.title_height + canvas.plot_margin_top,
-         canvas.plot_margin_x - canvas.x_tick_length, canvas.height - (canvas.x_tick_label_length + canvas.x_axis_label_length),
+         canvas.plot_margin_x - canvas.y_tick_length, canvas.title_height + canvas.plot_margin_top,
+         canvas.plot_margin_x - canvas.y_tick_length, canvas.height - (canvas.x_tick_label_length + canvas.x_axis_label_length),
          canvas.chart_width - canvas.plot_margin_x, canvas.height - (canvas.x_tick_label_length + canvas.x_axis_label_length),
          dash=(1,1)
         )
