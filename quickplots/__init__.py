@@ -79,7 +79,7 @@ class AxisChart(Chart):
     can_grid = True
 
     def __init__(self, x_limit=[0,1], x_ticks=None, x_tick_labels=None, x_label="",
-     y_limit=[0,1], y_ticks=None, y_tick_labels=None, y_label="", grid=True, **kwargs):
+     y_limit=[0,1], y_ticks=None, y_tick_labels=None, y_label="", xgrid=True, ygrid=True, **kwargs):
         Chart.__init__(self, **kwargs)
 
         self.x_limit = DataSequence(x_limit)
@@ -98,7 +98,8 @@ class AxisChart(Chart):
             self.y_tick_labels = y_tick_labels
         self.y_label = y_label
 
-        self.grid = grid
+        self.xgrid = xgrid
+        self.ygrid = ygrid
 
 
     def update_x_tick_labels(self):

@@ -393,7 +393,7 @@ def _axis_prepare_canvas(chart, canvas):
 
 
 def _axis_draw_grids(chart, canvas):
-    if chart.grid:
+    if chart.xgrid:
         for tick in chart.x_ticks:
             if tick >= chart.x_limit[0] and tick <= chart.x_limit[1]:
                 canvas.create_line(
@@ -402,6 +402,7 @@ def _axis_draw_grids(chart, canvas):
                  dash=(2,2)
                 )
 
+    if chart.ygrid:
         for tick in chart.y_ticks:
             if tick >= chart.y_limit[0] and tick <= chart.y_limit[1]:
                 canvas.create_line(
