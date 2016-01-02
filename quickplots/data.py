@@ -5,11 +5,17 @@ class DatetimeDatum:
 
     def __init__(self, dt):
         self.dt = dt
-        self.value = dt.timestamp()
+        if isinstance(self.dt, datetime.datetime):
+            self.value = dt.timestamp()
+        else:
+            self.value = datetime.datetime(year=dt.year, month=dt.month, day=dt.day).timestamp()
 
 
     def __repr__(self):
-        return str(self.dt)
+        if isinstance(self.dt, datetime.datetime):
+            return str(self.dt)
+        else:
+            return self.dt.strftime("%Y-%b-%d")
 
 
     def __add__(self, other):
@@ -90,7 +96,7 @@ def check_value_for_date(value):
         if isinstance(value, datetime.datetime):
             return DatetimeDatum(value)
         else:
-            return DatetimeDatum(datetime.datetime(value.year, value.month, value.day))
+            return DatetimeDatum(datetime.date(value.year, value.month, value.day))
     else:
         return value
 
