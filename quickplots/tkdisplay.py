@@ -667,11 +667,22 @@ def _get_x_value(chart, canvas, position):
     x_proportion = (position - (canvas.plot_margin_x + 1)) / canvas.plot_width
     x_distance = chart.x_limit[1] - chart.x_limit[0]
     value = (x_proportion * x_distance) + chart.x_limit[0]
+    pixel = x_distance / canvas.plot_width
 
     if isinstance(chart.x_limit[0], DatetimeDatum):
-        return str(datetime.datetime.fromtimestamp(value))
+        if pixel > 60 * 60 * 24 * 365.25:
+            return str(datetime.datetime.fromtimestamp(value).year)
+        elif pixel > 60 * 60 * 24 * 30:
+            return datetime.datetime.fromtimestamp(value).strftime("%B %Y")
+        elif pixel >  60 * 60 * 24:
+            return datetime.datetime.fromtimestamp(value).strftime("%d %B %Y")
+        elif pixel > 60:
+            return datetime.datetime.fromtimestamp(value).strftime("%d %b %Y, %H:%M")
+        elif pixel > 1:
+            return datetime.datetime.fromtimestamp(value).strftime("%d %b %Y, %H:%M:%S")
+        else:
+            return str(datetime.datetime.fromtimestamp(value))
     else:
-        pixel = x_distance / canvas.plot_width
         resolution = 10 ** round(math.log(pixel, 10))
         rounded = str(math.ceil(value / resolution) * resolution)
         if "." in rounded and "00000" in rounded:
