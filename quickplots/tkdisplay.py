@@ -358,8 +358,7 @@ def _pie_paint_series(chart, canvas):
             )
 
 
-def _pie_create_legend(chart, canvas):
-    _chart_create_legend(chart, canvas)
+def _pie_draw_legend_symbols(chart, canvas):
     if chart.legend:
         for index, _ in enumerate(chart.data):
             canvas.create_rectangle(

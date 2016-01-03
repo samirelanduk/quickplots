@@ -68,7 +68,7 @@ class PieChart(Chart):
 
     _prepare_canvas = tkdisplay._pie_prepare_canvas
     _paint_series = tkdisplay._pie_paint_series
-    _create_legend = tkdisplay._pie_create_legend
+    _draw_legend_symbols = tkdisplay._pie_draw_legend_symbols
     _debug_lines = tkdisplay._pie_debug_lines
 
 
