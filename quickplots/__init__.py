@@ -102,6 +102,13 @@ class AxisChart(Chart):
         self.ygrid = ygrid
 
 
+    def __setattr__(self, name, value):
+        if name == "x_limit":
+            Chart.__setattr__(self, "x_limit", DataSequence(value))
+        else:
+            Chart.__setattr__(self, name, value)
+
+
     def update_x_tick_labels(self):
         """Reset all x tick labels to be str of x ticks"""
         self.x_tick_labels = [str(t) for t in self.x_ticks]

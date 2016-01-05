@@ -637,6 +637,9 @@ def _scatter_draw_legend_symbols(chart, canvas):
 
 
 def _multi_paint_series(chart, canvas):
+    for c in chart.charts:
+        c.x_limit = chart.x_limit
+        c.y_limit = chart.y_limit
     for series in chart.charts:
         series._paint_series(canvas)
 
