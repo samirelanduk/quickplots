@@ -105,11 +105,13 @@ class AxisChart(Chart):
     def __setattr__(self, name, value):
         if name == "x_limit":
             Chart.__setattr__(self, "x_limit", DataSequence(value))
+
         elif name == "x_ticks" or name == "y_ticks":
             if isinstance(value[0], collections.Sequence) and not isinstance(value[0], str):
                 Chart.__setattr__(self, name, TickSequence([Tick(t, v) for t, v in value]))
             else:
                 Chart.__setattr__(self, name, TickSequence([Tick(t) for t in value]))
+
         else:
             Chart.__setattr__(self, name, value)
 
@@ -147,9 +149,16 @@ class SingleSeriesAxisChart(AxisChart):
             kwargs["y_limit"] = [0 if y_limit_zero else min(list(zip(*series))[1]), get_limit(max(list(zip(*series))[1]))]
         AxisChart.__init__(self, **kwargs)
 
-        self.series = Series(series)
+        self.series = series
         self.series_name = series_name
         self.labels = [self.series_name]
+
+
+    def __setattr__(self, name, value):
+        if name == "series":
+            AxisChart.__setattr__(self, "series", Series(value))
+        else:
+            AxisChart.__setattr__(self, name, value)
 
 
     def generate_moving_average(self, n, keep_axis_limits=False):

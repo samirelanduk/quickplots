@@ -111,13 +111,16 @@ class Series(list):
             assert len(datum) == 2
         list.__init__(self, series)
 
+
     def __setitem__(self, key, datum):
         assert len(datum) == 2
         list.__setitem__(self, key, check_series_for_dates(datum))
 
+
     def append(self, datum):
         assert len(datum) == 2
         list.append(self, check_series_for_dates(item))
+
 
 
 def check_value_for_date(value):
