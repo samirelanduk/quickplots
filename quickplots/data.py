@@ -1,4 +1,5 @@
 import datetime
+import collections
 
 class DatetimeDatum:
     """A datetime in the streets, a number in the sheets"""
@@ -70,6 +71,34 @@ class DataSequence(list):
 
     def append(self, item):
         list.append(self, check_value_for_date(item))
+
+
+
+class Tick:
+
+    def __init__(self, value, label=None):
+        self.value = check_value_for_date(value)
+        self.label = str(self.value) if label is None else label
+
+
+    def __repr__(self):
+        return "%s (%s)" % (str(self.value), self.label)
+
+
+class TickSequence(list):
+
+    def __setitem__(self, key, value):
+        if isinstance(value, collections.Sequence) and not isinstance(value, str):
+            list.__setitem__(self, key, Tick(value[0], value[1]))
+        else:
+            list.__setitem__(self, key, Tick(value))
+
+
+    def append(self, value):
+        if isinstance(value, collections.Sequence) and not isinstance(value, str):
+            list.append(self, Tick(value[0], value[1]))
+        else:
+            list.append(self, Tick(value))
 
 
 

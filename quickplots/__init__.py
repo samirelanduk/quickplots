@@ -82,20 +82,20 @@ class AxisChart(Chart):
      y_limit=[0,1], y_ticks=None, y_tick_labels=None, y_label="", xgrid=True, ygrid=True, **kwargs):
         Chart.__init__(self, **kwargs)
 
-        self.x_limit = DataSequence(x_limit)
-        self.x_ticks = DataSequence(self.x_limit[:]) if x_ticks is None else DataSequence(x_ticks)
+        self.x_limit = x_limit
+        x_ticks = self.x_limit[:] if x_ticks is None else x_ticks
         if x_tick_labels is None:
-            self.x_tick_labels = [str(t) for t in self.x_ticks]
+            self.x_ticks = x_ticks
         else:
-            self.x_tick_labels = x_tick_labels
+            self.x_ticks = zip(x_ticks, x_tick_labels)
         self.x_label = x_label
 
         self.y_limit = y_limit
-        self.y_ticks = self.get_y_ticks() if y_ticks is None else y_ticks
+        y_ticks = self.y_limit[:] if y_ticks is None else y_ticks
         if y_tick_labels is None:
-            self.y_tick_labels = [str(t) for t in self.y_ticks]
+            self.y_ticks = y_ticks
         else:
-            self.y_tick_labels = y_tick_labels
+            self.y_ticks = zip(y_ticks, y_tick_labels)
         self.y_label = y_label
 
         self.xgrid = xgrid
@@ -105,18 +105,13 @@ class AxisChart(Chart):
     def __setattr__(self, name, value):
         if name == "x_limit":
             Chart.__setattr__(self, "x_limit", DataSequence(value))
+        elif name == "x_ticks" or name == "y_ticks":
+            if isinstance(value[0], collections.Sequence) and not isinstance(value[0], str):
+                Chart.__setattr__(self, name, TickSequence([Tick(t, v) for t, v in value]))
+            else:
+                Chart.__setattr__(self, name, TickSequence([Tick(t) for t in value]))
         else:
             Chart.__setattr__(self, name, value)
-
-
-    def update_x_tick_labels(self):
-        """Reset all x tick labels to be str of x ticks"""
-        self.x_tick_labels = [str(t) for t in self.x_ticks]
-
-
-    def update_y_tick_labels(self):
-        """Reset all y tick labels to be str of y ticks"""
-        self.y_tick_labels = [str(t) for t in self.y_ticks]
 
 
     def get_y_ticks(self):
@@ -172,9 +167,7 @@ class SingleSeriesAxisChart(AxisChart):
             kwargs["x_limit"] = self.x_limit
             kwargs["y_limit"] = self.y_limit
             kwargs["x_ticks"] = self.x_ticks
-            kwargs["x_tick_labels"] = self.x_tick_labels
             kwargs["y_ticks"] = self.y_ticks
-            kwargs["y_tick_labels"] = self.y_tick_labels
         return LineChart(series, color="#000000", **kwargs)
 
 

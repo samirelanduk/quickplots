@@ -394,19 +394,19 @@ def _axis_prepare_canvas(chart, canvas):
 def _axis_draw_grids(chart, canvas):
     if chart.xgrid:
         for tick in chart.x_ticks:
-            if tick >= chart.x_limit[0] and tick <= chart.x_limit[1]:
+            if tick.value >= chart.x_limit[0] and tick.value <= chart.x_limit[1]:
                 canvas.create_line(
-                 _get_x_position(chart, canvas, tick), canvas.height - canvas.plot_margin_bottom,
-                 _get_x_position(chart, canvas, tick), canvas.title_height + canvas.plot_margin_top,
+                 _get_x_position(chart, canvas, tick.value), canvas.height - canvas.plot_margin_bottom,
+                 _get_x_position(chart, canvas, tick.value), canvas.title_height + canvas.plot_margin_top,
                  dash=(2,2)
                 )
 
     if chart.ygrid:
         for tick in chart.y_ticks:
-            if tick >= chart.y_limit[0] and tick <= chart.y_limit[1]:
+            if tick.value >= chart.y_limit[0] and tick.value <= chart.y_limit[1]:
                 canvas.create_line(
-                 canvas.plot_margin_x, _get_y_position(chart, canvas, tick),
-                 canvas.chart_width - canvas.plot_margin_x, _get_y_position(chart, canvas, tick),
+                 canvas.plot_margin_x, _get_y_position(chart, canvas, tick.value),
+                 canvas.chart_width - canvas.plot_margin_x, _get_y_position(chart, canvas, tick.value),
                  dash=(2,2)
                 )
 
@@ -448,30 +448,30 @@ def _axis_draw_plot_bounds(chart, canvas):
         )
 
         #Ticks
-        x_font_size = canvas.get_font_size(sorted([t for t in chart.x_tick_labels], key=lambda k: len(k))[-1], height=canvas.x_tick_label_length, max_font_size=10)
+        x_font_size = canvas.get_font_size(sorted([t.label for t in chart.x_ticks], key=lambda k: len(k))[-1], height=canvas.x_tick_label_length, max_font_size=10)
         for index, tick in enumerate(chart.x_ticks):
-            if tick >= chart.x_limit[0] and tick <= chart.x_limit[1]:
+            if tick.value >= chart.x_limit[0] and tick.value <= chart.x_limit[1]:
                 canvas.create_line(
-                 _get_x_position(chart, canvas, tick), canvas.height - canvas.plot_margin_bottom,
-                 _get_x_position(chart, canvas, tick), (canvas.height - canvas.plot_margin_bottom) + (canvas.x_tick_length * 0.8)
+                 _get_x_position(chart, canvas, tick.value), canvas.height - canvas.plot_margin_bottom,
+                 _get_x_position(chart, canvas, tick.value), (canvas.height - canvas.plot_margin_bottom) + (canvas.x_tick_length * 0.8)
                 )
                 canvas.create_text(
-                 _get_x_position(chart, canvas, tick),
+                 _get_x_position(chart, canvas, tick.value),
                  canvas.height - (canvas.x_axis_label_length + (canvas.x_tick_label_length / 2)),
-                 text=chart.x_tick_labels[index],
+                 text=tick.label,
                  font="Tahoma %i" % x_font_size
                 )
-        y_font_size = canvas.get_font_size(sorted([t for t in chart.y_tick_labels], key=lambda k: len(k))[-1], width=canvas.y_tick_label_length, max_font_size=10)
+        y_font_size = canvas.get_font_size(sorted([t.label for t in chart.y_ticks], key=lambda k: len(k))[-1], width=canvas.y_tick_label_length, max_font_size=10)
         for index, tick in enumerate(chart.y_ticks):
-            if tick >= chart.y_limit[0] and tick <= chart.y_limit[1]:
+            if tick.value >= chart.y_limit[0] and tick.value <= chart.y_limit[1]:
                 canvas.create_line(
-                 canvas.plot_margin_x, _get_y_position(chart, canvas, tick),
-                 canvas.plot_margin_x - (0.8 * canvas.y_tick_length), _get_y_position(chart, canvas, tick)
+                 canvas.plot_margin_x, _get_y_position(chart, canvas, tick.value),
+                 canvas.plot_margin_x - (0.8 * canvas.y_tick_length), _get_y_position(chart, canvas, tick.value)
                 )
                 canvas.create_text(
                  canvas.y_axis_label_length + canvas.y_tick_label_length,
-                 _get_y_position(chart, canvas, tick),
-                 text=chart.y_tick_labels[index],
+                 _get_y_position(chart, canvas, tick.value),
+                 text=tick.label,
                  font="Tahoma %i" % y_font_size,
                  max_font_size=20,
                  justify=RIGHT,
