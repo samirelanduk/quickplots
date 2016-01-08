@@ -1,10 +1,10 @@
 from distutils.core import setup
 
 setup(name="quickplots",
-      version="0.0.1",
-      description="Matplotlib wrapper",
-      long_description="An object-oriented wrapper for the powerful matplotlib library.",
-      url="https://github.com/samirelanduk/quickplots",
+      version="1.0.0",
+      description="A simple plotting library",
+      long_description="A Python plotting library with simplicty and intuition as its primary goals",
+      url="https://quickplots.readthedocs.org",
       author="Sam Ireland",
       author_email="sam.ireland.uk@gmail.com",
       classifiers=["Development Status :: 4 - Beta",
