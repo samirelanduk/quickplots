@@ -91,7 +91,7 @@ class AxisChart(Chart):
         self.x_label = x_label
 
         self.y_limit = y_limit
-        y_ticks = self.y_limit[:] if y_ticks is None else y_ticks
+        y_ticks = self.get_y_ticks() if y_ticks is None else y_ticks
         if y_tick_labels is None:
             self.y_ticks = y_ticks
         else:
