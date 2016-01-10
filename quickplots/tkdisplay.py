@@ -383,12 +383,12 @@ def _pie_debug_lines(chart, canvas):
 def _axis_prepare_canvas(chart, canvas):
     _chart_prepare_canvas(chart, canvas)
 
-    canvas.x_tick_length = canvas.plot_margin_bottom * (3/10)
+    canvas.x_tick_length = canvas.plot_margin_bottom * (1.5/10)
     canvas.x_tick_label_length = canvas.plot_margin_bottom * (4/10)
-    canvas.x_axis_label_length = canvas.plot_margin_bottom * (3/10)
-    canvas.y_tick_length = canvas.plot_margin_x * (3/10)
-    canvas.y_tick_label_length = canvas.plot_margin_x * (5/10)
-    canvas.y_axis_label_length = canvas.plot_margin_x * (2/10)
+    canvas.x_axis_label_length = canvas.plot_margin_bottom * (3.5/10)
+    canvas.y_tick_length = canvas.plot_margin_x * (1.5/10)
+    canvas.y_tick_label_length = canvas.plot_margin_x * (4/10)
+    canvas.y_axis_label_length = canvas.plot_margin_x * (3.5/10)
 
 
 def _axis_draw_grids(chart, canvas):
