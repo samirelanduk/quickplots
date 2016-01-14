@@ -2,6 +2,7 @@ from .data import *
 from . import tkdisplay
 import math
 import random
+import copy
 
 
 COLORS = ["#F15854", "#60BD68", "#5DA5DA", "#FAA43A",
@@ -87,7 +88,7 @@ class AxisChart(Chart):
         if x_tick_labels is None:
             self.x_ticks = x_ticks
         else:
-            self.x_ticks = zip(x_ticks, x_tick_labels)
+            self.x_ticks = list(zip(x_ticks, x_tick_labels))
         self.x_label = x_label
 
         self.y_limit = y_limit
@@ -161,10 +162,12 @@ class SingleSeriesAxisChart(AxisChart):
             AxisChart.__setattr__(self, name, value)
 
 
-    def generate_moving_average(self, n, keep_axis_limits=False):
+    def generate_moving_average(self, n, keep_axis_limits=False, use_start=False):
         xs, ys = list(zip(*self.series))
         new_y = [sum(ys[i-(n-1):i+1]) / n for i,_ in enumerate(ys[n-1:], start=n-1)]
-        new_x = xs[n-1:]
+        if use_start:
+            new_y = [sum(ys[:x]) / n for x in range(1, n)] + new_y
+        new_x = xs[0 if use_start else n-1:]
         series = list(zip(new_x, new_y))
         kwargs = {
          "series_name": self.series_name + " moving average",
@@ -245,6 +248,7 @@ class MultiSeriesAxisChart(AxisChart):
     """An axis chart with multiple series on it."""
 
     def __init__(self, charts, **kwargs):
+        self.charts = [copy.copy(c) for c in charts]
         if "x_limit" not in kwargs or kwargs["x_limit"] is None:
             kwargs["x_limit"] = [min([chart.x_limit[0] for chart in charts]),
             max([chart.x_limit[1] for chart in charts])]
@@ -252,15 +256,20 @@ class MultiSeriesAxisChart(AxisChart):
             kwargs["y_limit"] = [min([chart.y_limit[0] for chart in charts]),
             max([chart.y_limit[1] for chart in charts])]
         AxisChart.__init__(self, **kwargs)
-        self.charts = charts[:]
-        for chart in self.charts:
-            chart.x_limit = self.x_limit
-            chart.y_limit = self.y_limit
         self.labels = [chart.series_name for chart in self.charts]
+
+
+    def __setattr__(self, name, value):
+        AxisChart.__setattr__(self, name, value)
+        if name == "x_limit" or name == "y_limit" or name == "legend":
+            for chart in self.charts:
+                AxisChart.__setattr__(chart, name, value)
+
 
 
     _paint_series = tkdisplay._multi_paint_series
     _draw_legend_symbols = tkdisplay._multi_draw_legend_symbols
+
 
 
 
