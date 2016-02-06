@@ -23,11 +23,19 @@ class QuickplotsCanvas:
         self.chart._write_title()
         self.chart._write_legend_labels()
         self.chart._paint_legend_symbols()
-        '''self.chart._paint_debug_lines()'''
+        self.chart._paint_debug_lines()
 
 
     def create_text(self, *args, **kwargs):
         self.graphics.append(TextGraphic(*args, **kwargs))
+
+
+    def create_line(self, *args, **kwargs):
+        self.graphics.append(LineGraphic(*args, **kwargs))
+
+
+    def create_rectangle(self, *args, **kwargs):
+        self.graphics.append(RectangleGraphic(*args, **kwargs))
 
 
     def draw_to_tkinter(self, tkinter_canvas):
@@ -77,23 +85,23 @@ class GenericRectangle:
 class TextGraphic(GenericRectangle):
 
     def __init__(self, *args, text="", max_font_size=100, **kwargs):
-        Rectangle.__init__(self, *args, **kwargs)
+        GenericRectangle.__init__(self, *args, **kwargs)
         self.text = text
         self.max_font_size = max_font_size
 
 
     def __repr__(self):
-        return '"%s" - %s' % (self.text, Rectangle.__repr__(self))
+        return '"%s" - %s' % (self.text, GenericRectangle.__repr__(self))
 
 
 
 class RectangleGraphic(GenericRectangle):
 
     def __init__(self, *args, line_width=1, line_style="-", **kwargs):
-        Rectangle.__init__(self, *args, **kwargs)
+        GenericRectangle.__init__(self, *args, **kwargs)
         self.line_width = line_width
         self.line_style = line_style
 
 
     def __repr__(self):
-        return 'Rectangle - %s' % (self.text, Rectangle.__repr__(self))
+        return 'Rectangle - %s' % GenericRectangle.__repr__(self)

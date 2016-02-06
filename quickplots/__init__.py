@@ -36,11 +36,11 @@ class Chart:
     _write_title = painters._chart_write_title
     _write_legend_labels = painters._chart_write_legend_labels
     _paint_legend_symbols = painters._empty
-    '''_debug_lines = tkdisplay._chart_debug_lines
+    _paint_debug_lines = painters._chart_debug_lines
 
 
 
-class PieChart(Chart):
+'''class PieChart(Chart):
     """A pie chart."""
 
     def __init__(self, data, colors=None, labels=None, **kwargs):

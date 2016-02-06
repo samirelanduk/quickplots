@@ -64,3 +64,55 @@ def _chart_write_legend_labels(chart):
              text=chart.legend_labels[index],
              max_font_size=18
             )
+
+
+def _chart_debug_lines(chart):
+    canvas = chart.canvas
+    if chart.debug:
+        #Title border
+        canvas.create_line(
+         0, canvas.title_height,
+         canvas.chart_width, canvas.title_height,
+         style="."
+        )
+
+        #Legend border
+        canvas.create_line(
+         canvas.chart_width, 0,
+         canvas.chart_width, canvas.height,
+         style="."
+        )
+
+        #Plot border
+        canvas.create_rectangle(
+         canvas.plot_margin_left,
+         canvas.title_height + canvas.plot_margin_top,
+         canvas.width - (canvas.legend_width + canvas.plot_margin_right),
+         canvas.height - canvas.plot_margin_bottom,
+         line_style="--"
+        )
+
+        #Legend borders
+        if chart.legend:
+            canvas.create_rectangle(
+             canvas.chart_width + canvas.legend_x_margin,
+             canvas.legend_y_margin,
+             canvas.width - canvas.legend_x_margin,
+             canvas.height - canvas.legend_y_margin,
+             line_style="--"
+            )
+            for index, label in enumerate(chart.legend_labels, start=1):
+                canvas.create_line(
+                 canvas.chart_width + canvas.legend_x_margin,
+                 canvas.legend_y_margin + (index * canvas.legend_row_height),
+                 canvas.width - canvas.legend_x_margin,
+                 canvas.legend_y_margin + (index * canvas.legend_row_height),
+                 style="--"
+                )
+            canvas.create_line(
+             canvas.chart_width + canvas.legend_x_margin + canvas.legend_symbol_width,
+             canvas.legend_y_margin,
+             canvas.chart_width + canvas.legend_x_margin + canvas.legend_symbol_width,
+             canvas.height - canvas.legend_y_margin,
+             style="--"
+            )
