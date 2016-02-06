@@ -25,7 +25,7 @@ class Chart:
         self.canvas_margin = canvas_margin
         self.debug = debug
 
-        self.legend_labels = []
+        self.legend_labels = ["One", "two"]
         self.canvas = canvas.QuickplotsCanvas(self)
 
 
@@ -34,9 +34,9 @@ class Chart:
     _paint_series = painters._empty
     _paint_plot_bounds = painters._empty
     _write_title = painters._chart_write_title
-    '''_write_legend_labels = tkdisplay._chart_write_legend_labels
-    _draw_legend_symbols = tkdisplay._empty
-    _debug_lines = tkdisplay._chart_debug_lines
+    _write_legend_labels = painters._chart_write_legend_labels
+    _paint_legend_symbols = painters._empty
+    '''_debug_lines = tkdisplay._chart_debug_lines
 
 
 

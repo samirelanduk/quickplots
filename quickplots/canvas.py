@@ -21,9 +21,9 @@ class QuickplotsCanvas:
         self.chart._paint_series()
         self.chart._paint_plot_bounds()
         self.chart._write_title()
-        '''self.chart._write_legend_labels()
+        self.chart._write_legend_labels()
         self.chart._paint_legend_symbols()
-        self.chart._paint_debug_lines()'''
+        '''self.chart._paint_debug_lines()'''
 
 
     def create_text(self, *args, **kwargs):

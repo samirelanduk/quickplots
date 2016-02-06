@@ -48,3 +48,19 @@ def _chart_write_title(chart):
      text=chart.title,
      max_font_size=32
     )
+
+
+def _chart_write_legend_labels(chart):
+    canvas = chart.canvas
+    if chart.legend:
+        for index, _ in enumerate(chart.legend_labels):
+            canvas.create_text(
+             canvas.chart_width + canvas.legend_x_margin +\
+              canvas.legend_symbol_width + (canvas.legend_text_width / 25),
+             canvas.legend_y_margin + (canvas.legend_row_height*index) + (
+              canvas.legend_row_height / 2),
+             canvas.legend_text_width * (24/25),
+             canvas.legend_row_height,
+             text=chart.legend_labels[index],
+             max_font_size=18
+            )
