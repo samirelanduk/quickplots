@@ -30,11 +30,11 @@ class Chart:
 
 
     _prepare_canvas = painters._chart_prepare_canvas
-    '''_draw_grids = tkdisplay._empty
-    _paint_series = tkdisplay._empty
-    _draw_plot_bounds = tkdisplay._empty
-    _write_title = tkdisplay._chart_write_title
-    _write_legend_labels = tkdisplay._chart_write_legend_labels
+    _paint_grids = painters._empty
+    _paint_series = painters._empty
+    _paint_plot_bounds = painters._empty
+    _write_title = painters._chart_write_title
+    '''_write_legend_labels = tkdisplay._chart_write_legend_labels
     _draw_legend_symbols = tkdisplay._empty
     _debug_lines = tkdisplay._chart_debug_lines
 

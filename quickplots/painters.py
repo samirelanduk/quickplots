@@ -1,4 +1,4 @@
-def empty(chart):
+def _empty(chart):
     pass
 
 
@@ -36,3 +36,15 @@ def _chart_prepare_canvas(chart):
         canvas.legend_symbol_width = (canvas.legend_row_width * 0.25)
         canvas.legend_text_width = canvas.legend_row_width - canvas.legend_symbol_width
     canvas.legend_symbols = 0
+
+
+def _chart_write_title(chart):
+    canvas = chart.canvas
+    canvas.create_text(
+     0,
+     0,
+     canvas.width - canvas.legend_width,
+     canvas.title_height,
+     text=chart.title,
+     max_font_size=32
+    )
