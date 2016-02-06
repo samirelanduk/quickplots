@@ -34,7 +34,28 @@ class QuickplotsCanvas:
         pass
 
 
-class Rectangle:
+class LineGraphic:
+
+    def __init__(self, start_x, start_y, end_x, end_y, width=1, style="-"):
+        self.start_x = start_x
+        self.start_y = start_y
+        self.end_x = end_x
+        self.end_y = end_y
+        self.width = width
+        self.style = style
+
+
+    def __repr__(self):
+        return "Line from (%i, %i) to (%i, %i)" % (
+         self.start_x,
+         self.start_y,
+         self.end_x,
+         self.end_y
+        )
+
+
+
+class GenericRectangle:
 
     def __init__(self, x, y, width, height):
         self.x = x
@@ -53,7 +74,7 @@ class Rectangle:
 
 
 
-class TextGraphic(Rectangle):
+class TextGraphic(GenericRectangle):
 
     def __init__(self, *args, text="", max_font_size=100, **kwargs):
         Rectangle.__init__(self, *args, **kwargs)
@@ -63,3 +84,16 @@ class TextGraphic(Rectangle):
 
     def __repr__(self):
         return '"%s" - %s' % (self.text, Rectangle.__repr__(self))
+
+
+
+class RectangleGraphic(GenericRectangle):
+
+    def __init__(self, *args, line_width=1, line_style="-", **kwargs):
+        Rectangle.__init__(self, *args, **kwargs)
+        self.line_width = line_width
+        self.line_style = line_style
+
+
+    def __repr__(self):
+        return 'Rectangle - %s' % (self.text, Rectangle.__repr__(self))

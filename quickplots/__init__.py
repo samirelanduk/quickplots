@@ -25,7 +25,7 @@ class Chart:
         self.canvas_margin = canvas_margin
         self.debug = debug
 
-        self.legend_labels = ["One", "two"]
+        self.legend_labels = []
         self.canvas = canvas.QuickplotsCanvas(self)
 
 
