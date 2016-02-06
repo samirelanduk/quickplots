@@ -1,5 +1,6 @@
 from .data import *
-from . import tkdisplay
+from . import painters
+from . import canvas
 import math
 import random
 import copy
@@ -24,12 +25,12 @@ class Chart:
         self.canvas_margin = canvas_margin
         self.debug = debug
 
-        self.labels = []
+        self.legend_labels = []
+        self.canvas = canvas.QuickplotsCanvas(self)
 
 
-    show = tkdisplay.show
-    _prepare_canvas = tkdisplay._chart_prepare_canvas
-    _draw_grids = tkdisplay._empty
+    _prepare_canvas = painters._chart_prepare_canvas
+    '''_draw_grids = tkdisplay._empty
     _paint_series = tkdisplay._empty
     _draw_plot_bounds = tkdisplay._empty
     _write_title = tkdisplay._chart_write_title
@@ -280,4 +281,4 @@ def generate_random_color():
 
 def get_limit(n):
     x = 10 ** math.floor(math.log(n, 10))
-    return math.ceil(n / x) * x
+    return math.ceil(n / x) * x'''
