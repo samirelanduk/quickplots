@@ -8,3 +8,4 @@ old_quickplots.txt
 weight
 .DS_Store
 *.docx
+quickplots/tkdisplay.py
