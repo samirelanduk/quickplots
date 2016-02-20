@@ -15,18 +15,25 @@ class Chart:
 
     can_grid = False
 
-    def __init__(self, title="", legend=False, window_dimensions=[900, 700],
-     window_title="", background_color="#CCCCCC", canvas_margin=50, debug=False):
+    def __init__(self, title="", legend=False, background_color="#CCCCCC", debug=False):
         self.title = title
         self.legend = legend
-        self.window_dimensions = window_dimensions
-        self.window_title = window_title
         self.background_color = background_color
-        self.canvas_margin = canvas_margin
         self.debug = debug
 
         self.legend_labels = []
         self.canvas = canvas.QuickplotsCanvas(self)
+
+
+    def _paint_to_canvas(self):
+        self._prepare_canvas()
+        self._paint_grids()
+        self._paint_series()
+        self._paint_plot_bounds()
+        self._write_title()
+        self._write_legend_labels()
+        self._paint_legend_symbols()
+        self._paint_debug_lines()
 
 
     _prepare_canvas = painters._chart_prepare_canvas
