@@ -11,7 +11,7 @@ COLORS = ["#F15854", "#60BD68", "#5DA5DA", "#FAA43A",
 
 
 class Chart:
-    """Something with a window representation and a single canvas"""
+    """A generic chart."""
 
     can_grid = False
 
@@ -34,6 +34,11 @@ class Chart:
         self._write_legend_labels()
         self._paint_legend_symbols()
         self._paint_debug_lines()
+
+
+    def show(self, window_dimensions=[800, 700], window_title="QuickPlots"):
+        from . import tkdisplay
+        tkdisplay.show(self, window_dimensions, window_title)
 
 
     _prepare_canvas = painters._chart_prepare_canvas
