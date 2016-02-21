@@ -47,6 +47,13 @@ class Chart:
         return svgdisplay.produce_svg(self, dimensions)
 
 
+    def save(self, path, dimensions=[800, 600], type="svg"):
+        data = self.produce_image(dimensions, type)
+        f = open(path, "w" if isinstance(data, str) else "wb")
+        f.write(data)
+        f.close()
+
+
     _prepare_canvas = painters._chart_prepare_canvas
     _paint_grids = painters._empty
     _paint_series = painters._empty
