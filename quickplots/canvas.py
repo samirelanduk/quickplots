@@ -1,3 +1,5 @@
+from . import tkdisplay
+
 class QuickplotsCanvas:
     """A generic canvas, associated with a chart."""
 
@@ -31,19 +33,25 @@ class QuickplotsCanvas:
         self.graphics.append(RectangleGraphic(*args, **kwargs))
 
 
-    def draw_to_tkinter(self, tkinter_canvas):
-        pass
+    def paint_to_tkinter(self, tkinter_canvas):
+        tkinter_canvas.delete("all")
+        width = tkinter_canvas.winfo_width()
+        height = tkinter_canvas.winfo_height()
+        self.request_repaint(width, height)
+        for graphic in self.graphics:
+            graphic.paint_to_tkinter(tkinter_canvas)
 
 
 class LineGraphic:
 
-    def __init__(self, start_x, start_y, end_x, end_y, width=1, style="-"):
+    def __init__(self, start_x, start_y, end_x, end_y, width=1, style="-", color="#000000"):
         self.start_x = start_x
         self.start_y = start_y
         self.end_x = end_x
         self.end_y = end_y
         self.width = width
         self.style = style
+        self.color = color
 
 
     def __repr__(self):
@@ -53,6 +61,9 @@ class LineGraphic:
          self.end_x,
          self.end_y
         )
+
+
+    paint_to_tkinter = tkdisplay._line_paint
 
 
 
@@ -75,26 +86,40 @@ class GenericRectangle:
 
 
 
-class TextGraphic(GenericRectangle):
+class TextGraphic:
 
-    def __init__(self, *args, text="", max_font_size=100, **kwargs):
-        GenericRectangle.__init__(self, *args, **kwargs)
+    def __init__(self, x, y, horizontal_align="center", vertical_align="center",
+     text="", font="Tahoma", font_size=24, color="#000000"):
+        self.x = x
+        self.y = y
+        self.horizontal_align = horizontal_align
+        self.vertical_align = vertical_align
         self.text = text
-        self.max_font_size = max_font_size
+        self.font = font
+        self.font_size = font_size
+        self.color = color
 
 
     def __repr__(self):
-        return '"%s" - %s' % (self.text, GenericRectangle.__repr__(self))
+        return '"%s" - (%i, %i)' % (self.text, self.x, self.y)
+
+
+    paint_to_tkinter = tkdisplay._text_paint
 
 
 
 class RectangleGraphic(GenericRectangle):
 
-    def __init__(self, *args, line_width=1, line_style="-", **kwargs):
+    def __init__(self, *args, line_width=1, line_style="-", line_color="#000000", fill_color="", **kwargs):
         GenericRectangle.__init__(self, *args, **kwargs)
         self.line_width = line_width
         self.line_style = line_style
+        self.line_color = line_color
+        self.fill_color = fill_color
 
 
     def __repr__(self):
         return 'Rectangle - %s' % GenericRectangle.__repr__(self)
+
+
+    paint_to_tkinter = tkdisplay._rectangle_paint

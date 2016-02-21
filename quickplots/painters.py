@@ -41,12 +41,9 @@ def _chart_prepare_canvas(chart):
 def _chart_write_title(chart):
     canvas = chart.canvas
     canvas.create_text(
-     0,
-     0,
-     canvas.width - canvas.legend_width,
-     canvas.title_height,
-     text=chart.title,
-     max_font_size=32
+     (canvas.width - canvas.legend_width) / 2,
+     canvas.title_height / 2,
+     text=chart.title
     )
 
 
@@ -59,10 +56,9 @@ def _chart_write_legend_labels(chart):
               canvas.legend_symbol_width + (canvas.legend_text_width / 25),
              canvas.legend_y_margin + (canvas.legend_row_height*index) + (
               canvas.legend_row_height / 2),
-             canvas.legend_text_width * (24/25),
-             canvas.legend_row_height,
+             horizontal_align="left",
              text=chart.legend_labels[index],
-             max_font_size=18
+             font_size=16
             )
 
 

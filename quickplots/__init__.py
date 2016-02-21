@@ -15,7 +15,7 @@ class Chart:
 
     can_grid = False
 
-    def __init__(self, title="", legend=False, background_color="#CCCCCC", debug=False):
+    def __init__(self, title="", legend=False, background_color="#F0F0F0", debug=False):
         self.title = title
         self.legend = legend
         self.background_color = background_color
@@ -36,9 +36,10 @@ class Chart:
         self._paint_debug_lines()
 
 
-    def show(self, window_dimensions=[800, 700], window_title="QuickPlots"):
+    def show(self, window_dimensions=[800, 600], window_title="QuickPlots",
+     background_color="#999999", canvas_margin=40):
         from . import tkdisplay
-        tkdisplay.show(self, window_dimensions, window_title)
+        tkdisplay.show(self, window_dimensions, window_title, background_color, canvas_margin)
 
 
     _prepare_canvas = painters._chart_prepare_canvas
