@@ -44,6 +44,7 @@ class Chart:
 
     def produce_image(self, dimensions=[800, 600], type="svg"):
         from . import svgdisplay
+        return svgdisplay.produce_svg(self, dimensions)
 
 
     _prepare_canvas = painters._chart_prepare_canvas
