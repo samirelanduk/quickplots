@@ -42,6 +42,10 @@ class Chart:
         tkdisplay.show(self, window_dimensions, window_title, background_color, canvas_margin)
 
 
+    def produce_image(self, dimensions=[800, 600], type="svg"):
+        from . import svgdisplay
+
+
     _prepare_canvas = painters._chart_prepare_canvas
     _paint_grids = painters._empty
     _paint_series = painters._empty
