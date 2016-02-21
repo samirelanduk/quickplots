@@ -1,7 +1,7 @@
 from tkinter import *
 
 
-def show(chart, window_dimensions, window_title, background_color, canvas_margin):
+def show(chart, window_dimensions, window_title, frame_color, canvas_margin):
     """Take a chart and create a window representation, using Tkinter."""
 
     #Make the window
@@ -10,7 +10,7 @@ def show(chart, window_dimensions, window_title, background_color, canvas_margin
     root.geometry("%ix%i" % (window_dimensions[0], window_dimensions[1]))
 
     #Make the background
-    root.background = Frame(root, background=background_color, bd=0)
+    root.background = Frame(root, background=frame_color, bd=0)
     root.background.pack(fill=BOTH, expand=YES)
 
     #Make the canvas
@@ -56,7 +56,7 @@ def _line_paint(graphic, tkinter_canvas):
 def _rectangle_paint(graphic, tkinter_canvas):
     tkinter_canvas.create_rectangle(
      graphic.x, graphic.y,
-     graphic.width, graphic.height,
+     graphic.x + graphic.width, graphic.y + graphic.height,
      width=graphic.line_width,
      dash=TKINTER_LINE_STYLES.get(graphic.line_style),
      outline=graphic.line_color,

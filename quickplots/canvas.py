@@ -1,4 +1,5 @@
 from . import tkdisplay
+from . import svgdisplay
 
 class QuickplotsCanvas:
     """A generic canvas, associated with a chart."""
@@ -64,6 +65,7 @@ class LineGraphic:
 
 
     paint_to_tkinter = tkdisplay._line_paint
+    to_svg = svgdisplay._line_paint
 
 
 
@@ -105,12 +107,13 @@ class TextGraphic:
 
 
     paint_to_tkinter = tkdisplay._text_paint
+    to_svg = svgdisplay._text_paint
 
 
 
 class RectangleGraphic(GenericRectangle):
 
-    def __init__(self, *args, line_width=1, line_style="-", line_color="#000000", fill_color="", **kwargs):
+    def __init__(self, *args, line_width=1, line_style="-", line_color="#000000", fill_color=None, **kwargs):
         GenericRectangle.__init__(self, *args, **kwargs)
         self.line_width = line_width
         self.line_style = line_style
@@ -123,3 +126,4 @@ class RectangleGraphic(GenericRectangle):
 
 
     paint_to_tkinter = tkdisplay._rectangle_paint
+    to_svg = svgdisplay._rectangle_paint

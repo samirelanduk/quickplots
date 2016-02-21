@@ -10,3 +10,5 @@ weight
 *.docx
 quickplots/OLDtkdisplay.py
 design
+*.html
+*.svg

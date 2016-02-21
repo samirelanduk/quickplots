@@ -37,6 +37,13 @@ def _chart_prepare_canvas(chart):
         canvas.legend_text_width = canvas.legend_row_width - canvas.legend_symbol_width
     canvas.legend_symbols = 0
 
+    #Paint the background
+    canvas.create_rectangle(
+     0, 0, canvas.width, canvas.height,
+     fill_color=chart.background_color,
+     line_width=0
+    )
+
 
 def _chart_write_title(chart):
     canvas = chart.canvas
@@ -83,8 +90,8 @@ def _chart_debug_lines(chart):
         canvas.create_rectangle(
          canvas.plot_margin_left,
          canvas.title_height + canvas.plot_margin_top,
-         canvas.width - (canvas.legend_width + canvas.plot_margin_right),
-         canvas.height - canvas.plot_margin_bottom,
+         canvas.plot_width,
+         canvas.plot_height,
          line_style="--"
         )
 
@@ -93,8 +100,8 @@ def _chart_debug_lines(chart):
             canvas.create_rectangle(
              canvas.chart_width + canvas.legend_x_margin,
              canvas.legend_y_margin,
-             canvas.width - canvas.legend_x_margin,
-             canvas.height - canvas.legend_y_margin,
+             canvas.legend_row_width,
+             canvas.height - (2 * canvas.legend_y_margin),
              line_style="--"
             )
             for index, label in enumerate(chart.legend_labels, start=1):
