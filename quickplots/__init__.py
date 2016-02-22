@@ -15,9 +15,12 @@ class Chart:
 
     can_grid = False
 
-    def __init__(self, title="", legend=False, background_color="#FFFFFF", debug=False):
+    def __init__(self, title="", title_font_size=None, legend=False,
+     legend_font_size=None,background_color="#FFFFFF", debug=False):
         self.title = title
+        self.title_font_size = title_font_size
         self.legend = legend
+        self.legend_font_size = legend_font_size
         self.background_color = background_color
         self.debug = debug
 

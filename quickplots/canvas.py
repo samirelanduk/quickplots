@@ -1,5 +1,6 @@
 from . import tkdisplay
 from . import svgdisplay
+from . import textsize
 
 class QuickplotsCanvas:
     """A generic canvas, associated with a chart."""
@@ -98,7 +99,9 @@ class TextGraphic:
         self.vertical_align = vertical_align
         self.text = text
         self.font = font
-        self.font_size = font_size
+        self.font_size = font_size if isinstance(
+         font_size, int) else textsize.get_font_size(
+          text, font_size[0], font_size[1])
         self.color = color
 
 

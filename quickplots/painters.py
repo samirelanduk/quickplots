@@ -50,7 +50,9 @@ def _chart_write_title(chart):
     canvas.create_text(
      (canvas.width - canvas.legend_width) / 2,
      canvas.title_height / 2,
-     text=chart.title
+     text=chart.title,
+     font_size=chart.title_font_size if chart.title_font_size else (
+      canvas.chart_width, canvas.title_height)
     )
 
 
@@ -65,7 +67,8 @@ def _chart_write_legend_labels(chart):
               canvas.legend_row_height / 2),
              horizontal_align="left",
              text=chart.legend_labels[index],
-             font_size=16
+             font_size=chart.legend_font_size if chart.legend_font_size else (
+              canvas.legend_text_width, canvas.legend_row_height)
             )
 
 
