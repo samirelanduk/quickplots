@@ -165,3 +165,6 @@ class ArcGraphic(CircleGraphic):
 
     def __repr__(self):
         return 'Arc - (%i, %i)' % (self.x, self.y)
+
+
+    paint_to_tkinter = tkdisplay._arc_paint

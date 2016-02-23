@@ -106,3 +106,17 @@ def _circle_paint(graphic, tkinter):
      outline=graphic.line_color,
      fill=graphic.fill_color
     )
+
+
+def _arc_paint(graphc, tkinter):
+    tkinter_canvas.create_oval(
+     graphic.x - graphic.radius, graphic.y - graphic.radius,
+     graphic.x + graphic.radius, graphic.y + graphic.radius,
+     start=graphic.end - 90 if graphic.clockwise else graphic.start - 90,
+     extent=graphic.end - graphic.start,
+     style=PIESLICE if graphic.show_radii else ARC,
+     width=graphic.line_width,
+     dash=TKINTER_LINE_STYLES.get(graphic.line_style),
+     outline=graphic.line_color,
+     fill=graphic.fill_color
+    )
