@@ -130,3 +130,20 @@ class RectangleGraphic(GenericRectangle):
 
     paint_to_tkinter = tkdisplay._rectangle_paint
     to_svg = svgdisplay._rectangle_paint
+
+
+
+class CircleGraphic:
+
+    def __init__(self, x, y, radius, line_width=1, line_style="-", line_color="#000000", fill_color=None):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.line_width = line_width
+        self.line_style = line_style
+        self.line_color = line_color
+        self.fill_color = fill_color
+
+
+    def __repr__(self):
+        return 'Cicle - (%i, %i)' % (self.x, self.y)
