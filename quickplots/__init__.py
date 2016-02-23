@@ -68,35 +68,35 @@ class Chart:
 
 
 
-'''class PieChart(Chart):
+class PieChart(Chart):
     """A pie chart."""
 
-    def __init__(self, data, colors=None, labels=None, **kwargs):
+    def __init__(self, series, colors=None, labels=None, **kwargs):
         Chart.__init__(self, **kwargs)
 
         self.data = data
 
         #Assign labels (and make sure there are the right amount)
         if labels is None:
-            self.labels = [""] * len(data)
+            self.labels = [""] * len(series)
         else:
-            assert len(labels) == len(data), "Number of labels does not match data points"
+            assert len(labels) == len(series), "Number of labels does not match data points"
             self.labels = labels
 
         #Assign colors (and make sure there are the right amount)
         if colors is None:
-            if len(data) <= len(COLORS):
-                self.colors = COLORS[:len(data)]
+            if len(series) <= len(COLORS):
+                self.colors = COLORS[:len(series)]
             else:
                 self.colors = COLORS[:]
-                while len(self.colors) != len(data):
+                while len(self.colors) != len(series):
                     self.colors.append(generate_random_color())
         else:
             assert len(colors) == len(data), "Number of colors does not match data points"
             self.colors = colors
 
 
-    _prepare_canvas = tkdisplay._pie_prepare_canvas
+    '''_prepare_canvas = tkdisplay._pie_prepare_canvas
     _paint_series = tkdisplay._pie_paint_series
     _draw_legend_symbols = tkdisplay._pie_draw_legend_symbols
     _debug_lines = tkdisplay._pie_debug_lines
@@ -302,11 +302,14 @@ class MultiSeriesAxisChart(AxisChart):
 
 
 
-def generate_random_color():
-    return "#%02X%02X%02X" % (
-     random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 
 def get_limit(n):
     x = 10 ** math.floor(math.log(n, 10))
     return math.ceil(n / x) * x'''
+
+
+
+def generate_random_color():
+    return "#%02X%02X%02X" % (
+     random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
