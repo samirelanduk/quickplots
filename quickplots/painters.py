@@ -122,3 +122,12 @@ def _chart_debug_lines(chart):
              canvas.height - canvas.legend_y_margin,
              style="--"
             )
+
+
+###############################################################################
+
+def _pie_prepare_canvas(chart):
+    canvas = chart.canvas
+    _chart_prepare_canvas(chart)
+
+    canvas.radius = min([canvas.plot_width, canvas.plot_height])
