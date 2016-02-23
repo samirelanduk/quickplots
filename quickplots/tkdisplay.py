@@ -95,3 +95,14 @@ def _text_paint(graphic, tkinter_canvas):
      font=(graphic.font, graphic.font_size),
      fill=graphic.color
     )
+
+
+def _circle_paint(graphic, tkinter):
+    tkinter_canvas.create_oval(
+     graphic.x - graphic.radius, graphic.y - graphic.radius,
+     graphic.x + graphic.radius, graphic.y + graphic.radius,
+     width=graphic.line_width,
+     dash=TKINTER_LINE_STYLES.get(graphic.line_style),
+     outline=graphic.line_color,
+     fill=graphic.fill_color
+    )

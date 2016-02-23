@@ -149,6 +149,9 @@ class CircleGraphic:
         return 'Cicle - (%i, %i)' % (self.x, self.y)
 
 
+    paint_to_tkinter = tkdisplay._circle_paint
+
+
 
 class ArcGraphic(CircleGraphic):
 
