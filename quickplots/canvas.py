@@ -147,3 +147,18 @@ class CircleGraphic:
 
     def __repr__(self):
         return 'Cicle - (%i, %i)' % (self.x, self.y)
+
+
+
+class ArcGraphic(CircleGraphic):
+
+    def __init__(self, start, stop, *args, clockwise=True, show_radii=True, **kwargs):
+        CircleGraphic.__init__(self, *args, **kwargs)
+        self.start = start
+        self.stop = stop
+        self.clockwise = clockwise
+        self.show_radii = show_radii
+
+
+    def __repr__(self):
+        return 'Arc - (%i, %i)' % (self.x, self.y)
