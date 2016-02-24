@@ -130,4 +130,30 @@ def _pie_prepare_canvas(chart):
     canvas = chart.canvas
     _chart_prepare_canvas(chart)
 
-    canvas.radius = min([canvas.plot_width, canvas.plot_height])
+    canvas.radius = min([canvas.plot_width, canvas.plot_height]) / 2
+    canvas.center_x = canvas.plot_margin_left + (canvas.plot_width / 2)
+    canvas.center_y = canvas.title_height + canvas.plot_margin_top + (canvas.plot_height / 2)
+    print(canvas.center_x)
+    print(canvas.center_y)
+
+
+def _pie_paint_series(chart):
+    canvas = chart.canvas
+    if canvas.radius > 0:
+        data_sum = sum(chart.series)
+        starts = [0] + [(sum(chart.series[:index]) / data_sum) * 360 for index, _ in enumerate(chart.series[1:], start=1)]
+        ends = [start + ((chart.series[index] / data_sum) * 360) for index, start in enumerate(starts)]
+        print(starts)
+        print(ends)
+
+        for index, _ in enumerate(chart.series):
+            canvas = chart.canvas
+            canvas.create_arc(
+             start=starts[index],
+             end=ends[index],
+             x=canvas.center_x,
+             y=canvas.center_y,
+             radius=canvas.radius,
+             line_width=1,
+             fill_color=chart.colors[index],
+            )

@@ -97,7 +97,7 @@ def _text_paint(graphic, tkinter_canvas):
     )
 
 
-def _circle_paint(graphic, tkinter):
+def _circle_paint(graphic, tkinter_canvas):
     tkinter_canvas.create_oval(
      graphic.x - graphic.radius, graphic.y - graphic.radius,
      graphic.x + graphic.radius, graphic.y + graphic.radius,
@@ -108,12 +108,12 @@ def _circle_paint(graphic, tkinter):
     )
 
 
-def _arc_paint(graphc, tkinter):
-    tkinter_canvas.create_oval(
+def _arc_paint(graphic, tkinter_canvas):
+    tkinter_canvas.create_arc(
      graphic.x - graphic.radius, graphic.y - graphic.radius,
      graphic.x + graphic.radius, graphic.y + graphic.radius,
-     start=graphic.end - 90 if graphic.clockwise else graphic.start - 90,
-     extent=graphic.end - graphic.start,
+     start=graphic.end - 90 if graphic.end <=270 else graphic.end + 270,
+     extent=graphic.end - graphic.start if graphic.end > graphic.start else graphic.end + (360 - graphic.start),
      style=PIESLICE if graphic.show_radii else ARC,
      width=graphic.line_width,
      dash=TKINTER_LINE_STYLES.get(graphic.line_style),

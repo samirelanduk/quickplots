@@ -74,7 +74,7 @@ class PieChart(Chart):
     def __init__(self, series, colors=None, labels=None, **kwargs):
         Chart.__init__(self, **kwargs)
 
-        self.data = data
+        self.series = series
 
         #Assign labels (and make sure there are the right amount)
         if labels is None:
@@ -96,9 +96,9 @@ class PieChart(Chart):
             self.colors = colors
 
 
-    '''_prepare_canvas = tkdisplay._pie_prepare_canvas
-    _paint_series = tkdisplay._pie_paint_series
-    _draw_legend_symbols = tkdisplay._pie_draw_legend_symbols
+    _prepare_canvas = painters._pie_prepare_canvas
+    _paint_series = painters._pie_paint_series
+    '''_draw_legend_symbols = tkdisplay._pie_draw_legend_symbols
     _debug_lines = tkdisplay._pie_debug_lines
 
 

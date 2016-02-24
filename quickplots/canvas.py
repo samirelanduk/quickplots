@@ -35,6 +35,14 @@ class QuickplotsCanvas:
         self.graphics.append(RectangleGraphic(*args, **kwargs))
 
 
+    def create_circle(self, *args, **kwargs):
+        self.graphics.append(CircleGraphic(*args, **kwargs))
+
+
+    def create_arc(self, *args, **kwargs):
+        self.graphics.append(ArcGraphic(*args, **kwargs))
+
+
     def paint_to_tkinter(self, tkinter_canvas):
         tkinter_canvas.delete("all")
         width = tkinter_canvas.winfo_width()
@@ -155,10 +163,10 @@ class CircleGraphic:
 
 class ArcGraphic(CircleGraphic):
 
-    def __init__(self, start, stop, *args, clockwise=True, show_radii=True, **kwargs):
+    def __init__(self, start, end, *args, clockwise=True, show_radii=True, **kwargs):
         CircleGraphic.__init__(self, *args, **kwargs)
         self.start = start
-        self.stop = stop
+        self.end = end
         self.clockwise = clockwise
         self.show_radii = show_radii
 
