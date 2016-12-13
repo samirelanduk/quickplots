@@ -15,11 +15,28 @@ class ChartCreationTests(TestCase):
         self.assertEqual(chart._title, "Chart Title")
 
 
+    def test_title_must_be_str(self):
+        with self.assertRaises(TypeError):
+            Chart(title=100)
+
+
     def test_can_create_chart_with_width(self):
         chart = Chart(width=100)
         self.assertEqual(chart._width, 100)
 
 
+    def test_width_must_be_numeric(self):
+        with self.assertRaises(TypeError):
+            Chart(width="100")
+        Chart(width=100.6)
+
+
     def test_can_create_chart_with_height(self):
         chart = Chart(height=100)
         self.assertEqual(chart._height, 100)
+
+
+    def test_height_must_be_numeric(self):
+        with self.assertRaises(TypeError):
+            Chart(height="100")
+        Chart(height=100.6)
