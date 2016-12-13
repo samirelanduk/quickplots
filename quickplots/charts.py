@@ -1,4 +1,4 @@
 class Chart:
 
-    def __init__(self):
-        self._title = ""
+    def __init__(self, title=""):
+        self._title = title
