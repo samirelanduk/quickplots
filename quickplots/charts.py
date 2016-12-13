@@ -18,8 +18,13 @@ class Chart:
         return "<Chart (%i×%i)>" % (self._width, self._height)
 
 
-    def title(self):
-        return self._title
+    def title(self, title=None):
+        if title is None:
+            return self._title
+        else:
+            if not isinstance(title, str):
+                raise TypeError("title must be str, not '%s'" % str(title))
+            self._title = title
 
 
     def width(self):

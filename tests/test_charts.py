@@ -55,3 +55,15 @@ class ChartPropertiesTests(TestCase):
         self.assertIs(chart.title(), chart._title)
         self.assertIs(chart.width(), chart._width)
         self.assertIs(chart.height(), chart._height)
+
+
+    def test_can_update_title(self):
+        chart = Chart(title="Title", width=50, height=30)
+        chart.title("New Title")
+        self.assertEqual(chart.title(), "New Title")
+
+
+    def test_set_title_must_be_str(self):
+        chart = Chart(title="Title", width=50, height=30)
+        with self.assertRaises(TypeError):
+            chart.title(100)
