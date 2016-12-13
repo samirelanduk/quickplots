@@ -103,3 +103,10 @@ class CanvasTests(TestCase):
         chart = Chart(title="Title", width=50, height=30)
         canvas = chart.create()
         self.assertIsInstance(canvas, Canvas)
+
+
+    def test_canvas_dimensions_match_chart(self):
+        chart = Chart(title="Title", width=50, height=30)
+        canvas = chart.create()
+        self.assertEqual(canvas.width(), chart.width())
+        self.assertEqual(canvas.height(), chart.height())
