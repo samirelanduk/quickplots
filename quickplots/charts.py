@@ -12,3 +12,7 @@ class Chart:
         if not isinstance(height, int) and not isinstance(height, float):
             raise TypeError("height must be numeric, not '%s'" % str(height))
         self._height = height
+
+
+    def __repr__(self):
+        return "<Chart (%i×%i)>" % (self._width, self._height)

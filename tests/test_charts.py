@@ -40,3 +40,8 @@ class ChartCreationTests(TestCase):
         with self.assertRaises(TypeError):
             Chart(height="100")
         Chart(height=100.6)
+
+
+    def test_chart_repr(self):
+        chart = Chart(title="Title", width=50, height=30)
+        self.assertEqual(str(chart), "<Chart (50×30)>")
