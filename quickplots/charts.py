@@ -16,3 +16,15 @@ class Chart:
 
     def __repr__(self):
         return "<Chart (%i×%i)>" % (self._width, self._height)
+
+
+    def title(self):
+        return self._title
+
+
+    def width(self):
+        return self._width
+
+
+    def height(self):
+        return self._height

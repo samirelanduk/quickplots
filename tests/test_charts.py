@@ -45,3 +45,13 @@ class ChartCreationTests(TestCase):
     def test_chart_repr(self):
         chart = Chart(title="Title", width=50, height=30)
         self.assertEqual(str(chart), "<Chart (50×30)>")
+
+
+
+class ChartPropertiesTests(TestCase):
+
+    def test_basic_properties(self):
+        chart = Chart(title="Title", width=50, height=30)
+        self.assertIs(chart.title(), chart._title)
+        self.assertIs(chart.width(), chart._width)
+        self.assertIs(chart.height(), chart._height)
