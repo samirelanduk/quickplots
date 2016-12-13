@@ -67,3 +67,29 @@ class ChartPropertiesTests(TestCase):
         chart = Chart(title="Title", width=50, height=30)
         with self.assertRaises(TypeError):
             chart.title(100)
+
+
+    def test_can_update_width(self):
+        chart = Chart(title="Title", width=50, height=30)
+        chart.width(1000)
+        self.assertEqual(chart.width(), 1000)
+
+
+    def test_set_width_must_be_numeric(self):
+        chart = Chart(title="Title", width=50, height=30)
+        with self.assertRaises(TypeError):
+            chart.width("100")
+        chart.width(100.5)
+
+
+    def test_can_update_height(self):
+        chart = Chart(title="Title", width=50, height=30)
+        chart.height(1000)
+        self.assertEqual(chart.height(), 1000)
+
+
+    def test_set_height_must_be_numeric(self):
+        chart = Chart(title="Title", width=50, height=30)
+        with self.assertRaises(TypeError):
+            chart.height("100")
+        chart.height(100.5)
