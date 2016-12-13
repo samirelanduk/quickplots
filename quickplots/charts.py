@@ -1,3 +1,5 @@
+from omnicanvas import Canvas
+
 class Chart:
 
     def __init__(self, title="", width=700, height=500):
@@ -43,3 +45,7 @@ class Chart:
             if not isinstance(height, int) and not isinstance(height, float):
                 raise TypeError("height must be numeric, not '%s'" % str(height))
             self._height = height
+
+
+    def create(self):
+        return Canvas(100, 100)

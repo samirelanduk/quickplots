@@ -1,5 +1,6 @@
 from unittest import TestCase
 from quickplots.charts import Chart
+from omnicanvas import Canvas
 
 class ChartCreationTests(TestCase):
 
@@ -93,3 +94,12 @@ class ChartPropertiesTests(TestCase):
         with self.assertRaises(TypeError):
             chart.height("100")
         chart.height(100.5)
+
+
+
+class CanvasTests(TestCase):
+
+    def test_chart_can_create_canvas(self):
+        chart = Chart(title="Title", width=50, height=30)
+        canvas = chart.create()
+        self.assertIsInstance(canvas, Canvas)
