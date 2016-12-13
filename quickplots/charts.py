@@ -48,4 +48,6 @@ class Chart:
 
 
     def create(self):
-        return Canvas(self.width(), self.height())
+        canvas = Canvas(self.width(), self.height())
+        canvas.add_text(0, 0, self.title())
+        return canvas

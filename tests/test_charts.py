@@ -1,6 +1,7 @@
 from unittest import TestCase
 from quickplots.charts import Chart
 from omnicanvas import Canvas
+from omnicanvas.graphics import Text
 
 class ChartCreationTests(TestCase):
 
@@ -99,14 +100,22 @@ class ChartPropertiesTests(TestCase):
 
 class CanvasTests(TestCase):
 
+    def setUp(self):
+        self.chart = Chart(title="Title", width=50, height=30)
+
+
     def test_chart_can_create_canvas(self):
-        chart = Chart(title="Title", width=50, height=30)
-        canvas = chart.create()
+        canvas = self.chart.create()
         self.assertIsInstance(canvas, Canvas)
 
 
     def test_canvas_dimensions_match_chart(self):
-        chart = Chart(title="Title", width=50, height=30)
-        canvas = chart.create()
-        self.assertEqual(canvas.width(), chart.width())
-        self.assertEqual(canvas.height(), chart.height())
+        canvas = self.chart.create()
+        self.assertEqual(canvas.width(), self.chart.width())
+        self.assertEqual(canvas.height(), self.chart.height())
+
+
+    def test_canvas_has_title(self):
+        canvas = self.chart.create()
+        self.assertIsInstance(canvas.graphics()[0], Text)
+        self.assertEqual(canvas.graphics()[0].text(), self.chart.title())
