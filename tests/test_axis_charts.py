@@ -4,14 +4,14 @@ from quickplots.charts import AxisChart, Chart
 from omnicanvas import Canvas
 from omnicanvas.graphics import Text, Rectangle
 
-class ChartCreationTests(TestCase):
+class AxisChartCreationTests(TestCase):
 
     def test_can_create_axis_chart(self):
         chart = AxisChart()
         self.assertIsInstance(chart, Chart)
         self.assertEqual(chart._all_series, [])
-        self.assertEqual(chart._display_width, 0.8)
-        self.assertEqual(chart._display_height, 0.8)
+        self.assertEqual(chart._horizontal_padding, 0.1)
+        self.assertEqual(chart._vertical_padding, 0.1)
 
 
     @patch("quickplots.charts.Chart.__init__")
@@ -25,6 +25,15 @@ class ChartCreationTests(TestCase):
         self.assertEqual(str(chart), "<AxisChart (0 series)>")
         chart._all_series.append("dummy series")
         self.assertEqual(str(chart), "<AxisChart (1 series)>")
+
+
+
+class AxisChartPropertyTests(TestCase):
+
+    def test_basic_properties(self):
+        chart = AxisChart()
+        self.assertEqual(chart.horizontal_padding(), chart._horizontal_padding)
+        self.assertEqual(chart.vertical_padding(), chart._vertical_padding)
 
 
 

@@ -62,12 +62,20 @@ class AxisChart(Chart):
     def __init__(self, *args, **kwargs):
         Chart.__init__(self, *args, **kwargs)
         self._all_series = []
-        self._display_width = 0.8
-        self._display_height = 0.8
+        self._horizontal_padding = 0.1
+        self._vertical_padding = 0.1
 
 
     def __repr__(self):
         return "<AxisChart (%i series)>" % len(self._all_series)
+
+
+    def horizontal_padding(self):
+        return self._horizontal_padding
+
+
+    def vertical_padding(self):
+        return self._vertical_padding
 
 
     def create(self):
