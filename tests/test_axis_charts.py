@@ -9,6 +9,8 @@ class AxisChartCreationTests(TestCase):
     def test_can_create_axis_chart(self):
         chart = AxisChart()
         self.assertIsInstance(chart, Chart)
+        self.assertEqual(chart._x_label, "")
+        self.assertEqual(chart._y_label, "")
         self.assertEqual(chart._all_series, [])
         self.assertEqual(chart._horizontal_padding, 0.1)
         self.assertEqual(chart._vertical_padding, 0.1)
@@ -18,6 +20,20 @@ class AxisChartCreationTests(TestCase):
     def test_axis_chart_uses_chart_initialisation(self, mock):
         chart = AxisChart()
         self.assertTrue(mock.called)
+
+
+    def test_can_create_axis_chart_with_axis_labels(self):
+        chart = AxisChart(x_label="Input")
+        self.assertEqual(chart._x_label, "Input")
+        chart = AxisChart(y_label="Output")
+        self.assertEqual(chart._y_label, "Output")
+
+
+    def test_axis_labels_must_be_string(self):
+        with self.assertRaises(TypeError):
+            AxisChart(x_label=1)
+        with self.assertRaises(TypeError):
+            AxisChart(y_label=1)
 
 
     def test_repr(self):

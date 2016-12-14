@@ -58,8 +58,16 @@ class Chart:
 
 class AxisChart(Chart):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, x_label="", y_label="", **kwargs):
         Chart.__init__(self, *args, **kwargs)
+
+        if not isinstance(x_label, str):
+            raise TypeError("x_label must be str, not '%s'" % str(x_label))
+        self._x_label = x_label
+        if not isinstance(y_label, str):
+            raise TypeError("y_label must be str, not '%s'" % str(y_label))
+        self._y_label = y_label
+
         self._all_series = []
         self._horizontal_padding = 0.1
         self._vertical_padding = 0.1
