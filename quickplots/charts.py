@@ -57,4 +57,10 @@ class Chart:
 
 
 class AxisChart(Chart):
-    pass
+
+    def __init__(self):
+        self._all_series = []
+
+
+    def __repr__(self):
+        return "<AxisChart (%i series)>" % len(self._all_series)
