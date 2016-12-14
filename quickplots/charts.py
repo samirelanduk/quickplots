@@ -51,7 +51,7 @@ class Chart:
         canvas = Canvas(self.width(), self.height())
         canvas.add_text(
          self.width() / 2, 0, self.title(),
-         vertical_align="bottom"
+         vertical_align="bottom", name="title"
         )
         canvas._title_graphic = canvas.graphics()[-1]
         return canvas
@@ -70,6 +70,6 @@ class AxisChart(Chart):
 
     def create(self):
         canvas = Chart.create(self)
-        canvas.add_rectangle(0, 0, 10, 10)
+        canvas.add_rectangle(0, 0, 10, 10, name="axes")
         canvas._axes_graphic = canvas.graphics()[-1]
         return canvas

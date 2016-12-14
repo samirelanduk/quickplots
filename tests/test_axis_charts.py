@@ -34,9 +34,11 @@ class AxisChartCanvasTests(TestCase):
 
     def test_can_create_basic_canvas(self):
         canvas = self.chart.create()
-        self.assertEqual(canvas._title_graphic.text(), "Test AxisChart")
+        title = canvas.get_graphic_by_name("title")
+        self.assertEqual(title.text(), "Test AxisChart")
 
 
     def test_chart_has_axes(self):
         canvas = self.chart.create()
-        self.assertIsInstance(canvas._axes_graphic, Rectangle)
+        axes = canvas.get_graphic_by_name("axes")
+        self.assertIsInstance(axes, Rectangle)

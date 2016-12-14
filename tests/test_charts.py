@@ -117,11 +117,13 @@ class CanvasTests(TestCase):
 
     def test_canvas_has_title(self):
         canvas = self.chart.create()
-        self.assertIsInstance(canvas._title_graphic, Text)
-        self.assertEqual(canvas._title_graphic.text(), self.chart.title())
+        title = canvas.get_graphic_by_name("title")
+        self.assertIsInstance(title, Text)
+        self.assertEqual(title.text(), self.chart.title())
 
 
     def test_title_is_centered_properly(self):
         canvas = self.chart.create()
-        self.assertEqual(canvas._title_graphic.x(), self.chart.width() / 2)
-        self.assertEqual(canvas._title_graphic.vertical_align(), "bottom")
+        title = canvas.get_graphic_by_name("title")
+        self.assertEqual(title.x(), self.chart.width() / 2)
+        self.assertEqual(title.vertical_align(), "bottom")
