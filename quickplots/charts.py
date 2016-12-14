@@ -70,12 +70,30 @@ class AxisChart(Chart):
         return "<AxisChart (%i series)>" % len(self._all_series)
 
 
-    def horizontal_padding(self):
-        return self._horizontal_padding
+    def horizontal_padding(self, padding=None):
+        if padding is None:
+            return self._horizontal_padding
+        else:
+            if not isinstance(padding, float):
+                raise TypeError("padding must be float, not '%s'" % str(padding))
+            if not 0 < padding < 0.5:
+                raise ValueError(
+                 "padding must be between 0 and 0.5 (not inclusive), not '%s'" % str(padding)
+                )
+            self._horizontal_padding = padding
 
 
-    def vertical_padding(self):
-        return self._vertical_padding
+    def vertical_padding(self, padding=None):
+        if padding is None:
+            return self._vertical_padding
+        else:
+            if not isinstance(padding, float):
+                raise TypeError("padding must be float, not '%s'" % str(padding))
+            if not 0 < padding < 0.5:
+                raise ValueError(
+                 "padding must be between 0 and 0.5 (not inclusive), not '%s'" % str(padding)
+                )
+            self._vertical_padding = padding
 
 
     def create(self):

@@ -36,6 +36,30 @@ class AxisChartPropertyTests(TestCase):
         self.assertEqual(chart.vertical_padding(), chart._vertical_padding)
 
 
+    def test_can_update_padding(self):
+        chart = AxisChart()
+        chart.horizontal_padding(0.4)
+        self.assertEqual(chart.horizontal_padding(), 0.4)
+        chart.vertical_padding(0.3)
+        self.assertEqual(chart.vertical_padding(), 0.3)
+
+
+    def test_padding_must_be_float(self):
+        chart = AxisChart()
+        with self.assertRaises(TypeError):
+            chart.horizontal_padding(10)
+        with self.assertRaises(TypeError):
+            chart.vertical_padding(10)
+
+
+    def test_padding_must_be_between_0_and_half(self):
+        chart = AxisChart()
+        with self.assertRaises(ValueError):
+            chart.horizontal_padding(0.0)
+        with self.assertRaises(ValueError):
+            chart.vertical_padding(0.5)
+
+
 
 class AxisChartCanvasTests(TestCase):
 
