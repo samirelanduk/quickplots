@@ -49,5 +49,8 @@ class Chart:
 
     def create(self):
         canvas = Canvas(self.width(), self.height())
-        canvas.add_text(0, 0, self.title())
+        canvas.add_text(
+         self.width() / 2, 0, self.title(),
+         vertical_align="bottom"
+        )
         return canvas
