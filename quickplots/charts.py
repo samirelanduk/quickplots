@@ -54,3 +54,7 @@ class Chart:
          vertical_align="bottom"
         )
         return canvas
+
+
+class AxisChart(Chart):
+    pass
