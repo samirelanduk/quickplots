@@ -77,6 +77,24 @@ class AxisChart(Chart):
         return "<AxisChart (%i series)>" % len(self._all_series)
 
 
+    def x_label(self, x_label=None):
+        if x_label is None:
+            return self._x_label
+        else:
+            if not isinstance(x_label, str):
+                raise TypeError("x_label must be str, not '%s'" % str(x_label))
+            self._x_label = x_label
+
+
+    def y_label(self, y_label=None):
+        if y_label is None:
+            return self._y_label
+        else:
+            if not isinstance(y_label, str):
+                raise TypeError("y_label must be str, not '%s'" % str(y_label))
+            self._y_label = y_label
+
+
     def horizontal_padding(self, padding=None):
         if padding is None:
             return self._horizontal_padding

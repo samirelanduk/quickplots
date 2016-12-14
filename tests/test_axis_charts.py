@@ -50,6 +50,24 @@ class AxisChartPropertyTests(TestCase):
         chart = AxisChart()
         self.assertEqual(chart.horizontal_padding(), chart._horizontal_padding)
         self.assertEqual(chart.vertical_padding(), chart._vertical_padding)
+        self.assertIs(chart.x_label(), chart._x_label)
+        self.assertIs(chart.y_label(), chart._y_label)
+
+
+    def test_can_update_axis_labels(self):
+        chart = AxisChart()
+        chart.x_label("Input")
+        self.assertEqual(chart.x_label(), "Input")
+        chart.y_label("Output")
+        self.assertEqual(chart.y_label(), "Output")
+
+
+    def test_set_axis_labels_must_be_str(self):
+        chart = AxisChart()
+        with self.assertRaises(TypeError):
+            chart.x_label(1)
+        with self.assertRaises(TypeError):
+            chart.y_label(1)
 
 
     def test_can_update_padding(self):
