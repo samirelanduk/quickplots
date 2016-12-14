@@ -65,3 +65,8 @@ class AxisChart(Chart):
 
     def __repr__(self):
         return "<AxisChart (%i series)>" % len(self._all_series)
+
+
+    def create(self):
+        canvas = Chart.create(self)
+        return canvas

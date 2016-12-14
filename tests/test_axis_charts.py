@@ -1,6 +1,8 @@
 from unittest import TestCase
 from unittest.mock import patch
 from quickplots.charts import AxisChart, Chart
+from omnicanvas import Canvas
+from omnicanvas.graphics import Text
 
 class ChartCreationTests(TestCase):
 
@@ -21,3 +23,18 @@ class ChartCreationTests(TestCase):
         self.assertEqual(str(chart), "<AxisChart (0 series)>")
         chart._all_series.append("dummy series")
         self.assertEqual(str(chart), "<AxisChart (1 series)>")
+
+
+
+class AxisChartCanvasTests(TestCase):
+
+    def setUp(self):
+        self.chart = AxisChart(title="Test AxisChart")
+
+
+    def test_can_create_basic_canvas(self):
+        canvas = self.chart.create()
+        text_already_present = [
+         g.text() for g in canvas.graphics() if isinstance(g, Text)
+        ]
+        self.assertIn("Test AxisChart", text_already_present)
