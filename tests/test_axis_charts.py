@@ -77,3 +77,20 @@ class AxisChartCanvasTests(TestCase):
         canvas = self.chart.create()
         axes = canvas.get_graphic_by_name("axes")
         self.assertIsInstance(axes, Rectangle)
+
+
+    def test_axes_respect_padding(self):
+        canvas = self.chart.create()
+        axes = canvas.get_graphic_by_name("axes")
+        self.assertEqual(axes.x(), 70)
+        self.assertEqual(axes.y(), 50)
+        self.assertEqual(axes.width(), 560)
+        self.assertEqual(axes.height(), 400)
+        self.chart.horizontal_padding(0.4)
+        self.chart.vertical_padding(0.01)
+        canvas = self.chart.create()
+        axes = canvas.get_graphic_by_name("axes")
+        self.assertEqual(axes.x(), 280)
+        self.assertEqual(axes.y(), 5)
+        self.assertEqual(axes.width(), 140)
+        self.assertEqual(axes.height(), 490)
