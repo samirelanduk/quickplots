@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 from quickplots.charts import AxisChart, Chart
 
 class ChartCreationTests(TestCase):
@@ -7,6 +8,12 @@ class ChartCreationTests(TestCase):
         chart = AxisChart()
         self.assertIsInstance(chart, Chart)
         self.assertEqual(chart._all_series, [])
+
+
+    @patch("quickplots.charts.Chart.__init__")
+    def test_axis_chart_uses_chart_initialisation(self, mock):
+        chart = AxisChart()
+        self.assertTrue(mock.called)
 
 
     def test_repr(self):

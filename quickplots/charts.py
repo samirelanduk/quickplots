@@ -58,7 +58,8 @@ class Chart:
 
 class AxisChart(Chart):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        Chart.__init__(self, *args, **kwargs)
         self._all_series = []
 
 
