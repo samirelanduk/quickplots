@@ -10,6 +10,8 @@ class ChartCreationTests(TestCase):
         chart = AxisChart()
         self.assertIsInstance(chart, Chart)
         self.assertEqual(chart._all_series, [])
+        self.assertEqual(chart._display_width, 0.8)
+        self.assertEqual(chart._display_height, 0.8)
 
 
     @patch("quickplots.charts.Chart.__init__")

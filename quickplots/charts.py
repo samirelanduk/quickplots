@@ -62,6 +62,8 @@ class AxisChart(Chart):
     def __init__(self, *args, **kwargs):
         Chart.__init__(self, *args, **kwargs)
         self._all_series = []
+        self._display_width = 0.8
+        self._display_height = 0.8
 
 
     def __repr__(self):
