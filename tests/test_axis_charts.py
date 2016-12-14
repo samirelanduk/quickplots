@@ -94,3 +94,10 @@ class AxisChartCanvasTests(TestCase):
         self.assertEqual(axes.y(), 5)
         self.assertEqual(axes.width(), 140)
         self.assertEqual(axes.height(), 490)
+        canvas.save("temp.svg")
+
+
+    def test_axes_have_transparent_interior(self):
+        canvas = self.chart.create()
+        axes = canvas.get_graphic_by_name("axes")
+        self.assertEqual(axes.opacity(), 0)

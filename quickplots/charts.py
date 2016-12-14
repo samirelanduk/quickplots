@@ -102,6 +102,7 @@ class AxisChart(Chart):
          self.vertical_padding() * canvas.height(),
          canvas.width() - (2 * self.horizontal_padding() * canvas.width()),
          canvas.height() - (2 * self.vertical_padding() * canvas.height()),
-         name="axes"
+         name="axes",
+         opacity=0
         )
         return canvas
