@@ -36,11 +36,16 @@ class SeriesCreationTests(TestCase):
             Series((1, 1), (2, 4), (3, 9), (4,))
 
 
-    '''def test_can_create_series_as_seperate_x_and_y_values(self):
+    def test_can_create_series_as_seperate_x_and_y_values(self):
         series = Series((1, 2, 3), (1, 4, 9))
         self.assertEqual(series._data, [(1, 1), (2, 4), (3, 9)])
 
 
+    def test_seperate_xy_lists_must_be_of_equal_length(self):
+        with self.assertRaises(ValueError):
+            Series((1, 2, 3), (1, 4, 9, 16))
+
+
     def test_data_interpreted_as_xy_points_when_ambiguous(self):
         series = Series((1, 1), (2, 4))
-        self.assertEqual(series._data, [(1, 1), (2, 4)])'''
+        self.assertEqual(series._data, [(1, 1), (2, 4)])

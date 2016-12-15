@@ -4,6 +4,17 @@ class Series:
         self._data = []
         if len(data) == 0:
             raise ValueError("Cannot create Series with no data")
+
+        if len(data) == 2:
+            if len(data[0]) != len(data[1]):
+                raise ValueError(
+                 "x and y data sequences are of unequal lenth (%i and %i)" % (
+                  len(data[0]), len(data[1])
+                 )
+                )
+            if len(data[0]) != 2:
+                data = list(zip(data[0], data[1]))
+
         for point in data:
             if not isinstance(point, list) and not isinstance(point, tuple):
                 raise TypeError(
