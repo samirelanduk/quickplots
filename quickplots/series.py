@@ -2,6 +2,8 @@ class Series:
 
     def __init__(self, *data):
         self._data = []
+        if len(data) == 0:
+            raise ValueError("Cannot create Series with no data")
         for point in data:
             if not isinstance(point, list) and not isinstance(point, tuple):
                 raise TypeError(

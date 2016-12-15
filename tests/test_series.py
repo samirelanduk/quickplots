@@ -24,6 +24,11 @@ class SeriesCreationTests(TestCase):
         Series((1, 1), (2, 4), (3, 7.8))
 
 
+    def test_must_be_at_least_one_data_point(self):
+        with self.assertRaises(ValueError):
+            Series()
+
+
     def test_all_points_must_be_of_length_two(self):
         with self.assertRaises(ValueError):
             Series((1, 1), (2, 4), (3, 9), (4, 16, 10))
