@@ -7,9 +7,13 @@ class Series:
                 raise TypeError(
                  "Data must be give as lists or tuples, not '%s'" % str(point)
                 )
-            elif len(point) != 2:
+            for value in point:
+                if not isinstance(value, int) and not isinstance(value, float):
+                    raise TypeError(
+                     "Data point %s contains non-numeric data" % str(point)
+                    )
+            if len(point) != 2:
                 raise ValueError(
                  "Data points must be of length 2, which %s is not" % str(point)
                 )
-            else:
-                self._data.append(tuple(point))
+            self._data.append(tuple(point))
