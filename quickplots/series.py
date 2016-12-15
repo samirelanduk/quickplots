@@ -43,3 +43,7 @@ class Series:
 
     def data(self):
         return list(self._data)
+
+
+    def add_data_point(self, x, y):
+        self._data.append((x, y))

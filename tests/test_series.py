@@ -84,3 +84,15 @@ class SeriesPropertyTests(TestCase):
         series = Series((1, 1), (2, 4), (3, 9))
         series.data().append("bad")
         self.assertEqual(series.data(), [(1, 1), (2, 4), (3, 9)])
+
+
+
+class SeriesDataManipulationTests(TestCase):
+
+    def setUp(self):
+        self.series = Series((1, 1), (2, 4), (3, 9))
+
+
+    def test_can_add_data_point(self):
+        self.series.add_data_point(4, 16)
+        self.assertEqual(self.series.data(), [(1, 1), (2, 4), (3, 9), (4, 16)])
