@@ -18,6 +18,13 @@ class SeriesCreationTests(TestCase):
             Series([1, 1], (2, 4), [3, 9], set([8, 9]))
 
 
+    def test_all_points_must_be_of_length_two(self):
+        with self.assertRaises(ValueError):
+            Series((1, 1), (2, 4), (3, 9), (4, 16, 10))
+        with self.assertRaises(ValueError):
+            Series((1, 1), (2, 4), (3, 9), (4,))
+            
+
     '''def test_can_create_series_as_seperate_x_and_y_values(self):
         series = Series((1, 2, 3), (1, 4, 9))
         self.assertEqual(series._data, [(1, 1), (2, 4), (3, 9)])
