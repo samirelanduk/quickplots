@@ -49,3 +49,19 @@ class SeriesCreationTests(TestCase):
     def test_data_interpreted_as_xy_points_when_ambiguous(self):
         series = Series((1, 1), (2, 4))
         self.assertEqual(series._data, [(1, 1), (2, 4)])
+
+
+    def test_can_provide_xy_lists_as_lists(self):
+        series = Series([1, 2, 3], [1, 4, 9])
+        self.assertEqual(series._data, [(1, 1), (2, 4), (3, 9)])
+
+
+    def test_xy_lists_can_only_be_lists_or_tuples(self):
+        with self.assertRaises(TypeError):
+            Series([1, 2, 3], set([1, 4, 9]))
+
+
+    def test_xy_list_values_must_be_numeric(self):
+        with self.assertRaises(TypeError):
+            Series((1, 2, 3), (1, 4, "9"))
+        Series((1, 2, 3), (1, 4, 9.5))

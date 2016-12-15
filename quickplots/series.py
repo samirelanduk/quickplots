@@ -12,6 +12,11 @@ class Series:
                   len(data[0]), len(data[1])
                  )
                 )
+            for series in data:
+                if not isinstance(series, list) and not isinstance(series, tuple):
+                    raise TypeError(
+                     "Data must be give as lists or tuples, not '%s'" % str(series)
+                    )
             if len(data[0]) != 2:
                 data = list(zip(data[0], data[1]))
 
