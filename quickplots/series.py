@@ -55,3 +55,9 @@ class Series:
         self._data.append((x, y))
         if x < current_last_x:
             self._data = sorted(self._data, key=lambda k: k[0])
+
+
+    def remove_data_point(self, x, y):
+        if len(self._data) == 1:
+            raise ValueError("You cannot remove a Series' last data point")
+        self._data.remove((x, y))

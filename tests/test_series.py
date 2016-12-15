@@ -124,3 +124,15 @@ class SeriesDataManipulationTests(TestCase):
     def test_series_will_not_resort_list_needlessly(self, mock):
         self.series.add_data_point(4, 16)
         self.assertEqual(mock.call_count, 0)
+
+
+    def test_can_remove_data_point(self):
+        self.series.remove_data_point(1, 1)
+        self.assertEqual(self.series.data(), [(2, 4), (3, 9)])
+
+
+    def test_cannot_remove_last_data_point(self):
+        self.series.remove_data_point(1, 1)
+        self.series.remove_data_point(2, 4)
+        with self.assertRaises(ValueError):
+            self.series.remove_data_point(3, 9)
