@@ -123,6 +123,7 @@ class AxisChart(Chart):
 
     def create(self):
         canvas = Chart.create(self)
+
         canvas.add_rectangle(
          self.horizontal_padding() * canvas.width(),
          self.vertical_padding() * canvas.height(),
@@ -131,4 +132,7 @@ class AxisChart(Chart):
          name="axes",
          opacity=0
         )
+
+        if self.x_label(): canvas.add_text(0, 0, self.x_label(), name="x_label")
+        if self.y_label(): canvas.add_text(0, 0, self.y_label(), name="y_label")
         return canvas

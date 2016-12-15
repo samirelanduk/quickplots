@@ -135,3 +135,21 @@ class AxisChartCanvasTests(TestCase):
         canvas = self.chart.create()
         axes = canvas.get_graphic_by_name("axes")
         self.assertEqual(axes.opacity(), 0)
+
+
+    def test_empty_axis_labels_do_not_have_canvas_text(self):
+        canvas = self.chart.create()
+        self.assertEqual(canvas.get_graphic_by_name("x_label"), None)
+        self.assertEqual(canvas.get_graphic_by_name("y_label"), None)
+
+
+    def test_axis_labels_do_have_text_on_canvas(self):
+        self.chart.x_label("Input")
+        self.chart.y_label("Output")
+        canvas = self.chart.create()
+        x_label = canvas.get_graphic_by_name("x_label")
+        y_label = canvas.get_graphic_by_name("y_label")
+        self.assertIsInstance(x_label, Text)
+        self.assertIsInstance(y_label, Text)
+        self.assertEqual(x_label.text(), "Input")
+        self.assertEqual(y_label.text(), "Output")
