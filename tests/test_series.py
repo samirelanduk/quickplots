@@ -65,3 +65,8 @@ class SeriesCreationTests(TestCase):
         with self.assertRaises(TypeError):
             Series((1, 2, 3), (1, 4, "9"))
         Series((1, 2, 3), (1, 4, 9.5))
+
+
+    def test_series_repr(self):
+        series = Series((1, 1), (2, 4), (3, 9))
+        self.assertEqual(str(series), "<Series (3 data points)>")

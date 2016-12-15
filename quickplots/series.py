@@ -35,3 +35,7 @@ class Series:
                  "Data points must be of length 2, which %s is not" % str(point)
                 )
             self._data.append(tuple(point))
+
+
+    def __repr__(self):
+        return "<Series (%i data points)>" % len(self._data)
