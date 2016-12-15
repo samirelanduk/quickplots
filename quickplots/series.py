@@ -35,6 +35,7 @@ class Series:
                  "Data points must be of length 2, which %s is not" % str(point)
                 )
             self._data.append(tuple(point))
+        self._data = sorted(self._data, key=lambda k: k[0])
 
 
     def __repr__(self):
@@ -50,4 +51,7 @@ class Series:
             raise TypeError("x value must be numeric, not '%s'" % str(x))
         if not isinstance(y, float) and not isinstance(y, int):
             raise TypeError("y value must be numeric, not '%s'" % str(y))
+        current_last_x = self._data[-1][0]
         self._data.append((x, y))
+        if x < current_last_x:
+            self._data = sorted(self._data, key=lambda k: k[0])

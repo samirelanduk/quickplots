@@ -1,5 +1,7 @@
 from unittest import TestCase
+from unittest.mock import patch
 from quickplots.series import Series
+import builtins
 
 class SeriesCreationTests(TestCase):
 
@@ -72,6 +74,13 @@ class SeriesCreationTests(TestCase):
         self.assertEqual(str(series), "<Series (3 data points)>")
 
 
+    def test_data_will_be_sorted_by_x_value(self):
+        series = Series((3, 9), (2, 4), (5, 25), (4, 16))
+        self.assertEqual(series._data, [(2, 4), (3, 9), (4, 16), (5, 25)])
+        series = Series((2, 3, 4, 5), (4, 9, 16, 25))
+        self.assertEqual(series._data, [(2, 4), (3, 9), (4, 16), (5, 25)])
+
+
 
 class SeriesPropertyTests(TestCase):
 
@@ -104,3 +113,14 @@ class SeriesDataManipulationTests(TestCase):
         with self.assertRaises(TypeError):
             self.series.add_data_point(4, "16")
         self.series.add_data_point(4.1, 16.9)
+
+
+    def test_new_data_point_will_be_inserted_at_correct_position(self):
+        self.series.add_data_point(1.5, 2.25)
+        self.assertEqual(self.series.data(), [(1, 1), (1.5, 2.25), (2, 4), (3, 9)])
+
+
+    @patch("builtins.sorted")
+    def test_series_will_not_resort_list_needlessly(self, mock):
+        self.series.add_data_point(4, 16)
+        self.assertEqual(mock.call_count, 0)
