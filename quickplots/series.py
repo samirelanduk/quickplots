@@ -46,4 +46,8 @@ class Series:
 
 
     def add_data_point(self, x, y):
+        if not isinstance(x, float) and not isinstance(x, int):
+            raise TypeError("x value must be numeric, not '%s'" % str(x))
+        if not isinstance(y, float) and not isinstance(y, int):
+            raise TypeError("y value must be numeric, not '%s'" % str(y))
         self._data.append((x, y))

@@ -96,3 +96,11 @@ class SeriesDataManipulationTests(TestCase):
     def test_can_add_data_point(self):
         self.series.add_data_point(4, 16)
         self.assertEqual(self.series.data(), [(1, 1), (2, 4), (3, 9), (4, 16)])
+
+
+    def test_added_data_must_be_numeric(self):
+        with self.assertRaises(TypeError):
+            self.series.add_data_point("4", 16)
+        with self.assertRaises(TypeError):
+            self.series.add_data_point(4, "16")
+        self.series.add_data_point(4.1, 16.9)
