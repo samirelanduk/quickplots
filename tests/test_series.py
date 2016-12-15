@@ -70,3 +70,17 @@ class SeriesCreationTests(TestCase):
     def test_series_repr(self):
         series = Series((1, 1), (2, 4), (3, 9))
         self.assertEqual(str(series), "<Series (3 data points)>")
+
+
+
+class SeriesPropertyTests(TestCase):
+
+    def test_basic_properties(self):
+        series = Series((1, 1), (2, 4), (3, 9))
+        self.assertEqual(series.data(), series._data)
+
+
+    def test_series_data_is_read_only(self):
+        series = Series((1, 1), (2, 4), (3, 9))
+        series.data().append("bad")
+        self.assertEqual(series.data(), [(1, 1), (2, 4), (3, 9)])

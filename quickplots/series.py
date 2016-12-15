@@ -39,3 +39,7 @@ class Series:
 
     def __repr__(self):
         return "<Series (%i data points)>" % len(self._data)
+
+
+    def data(self):
+        return list(self._data)
