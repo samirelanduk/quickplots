@@ -133,6 +133,20 @@ class AxisChart(Chart):
          opacity=0
         )
 
-        if self.x_label(): canvas.add_text(0, 0, self.x_label(), name="x_label")
-        if self.y_label(): canvas.add_text(0, 0, self.y_label(), name="y_label")
+        if self.x_label():
+            canvas.add_text(
+             canvas.width() / 2,
+             canvas.height() - (self.vertical_padding() * canvas.height() * 0.5),
+             self.x_label(),
+             name="x_label"
+            )
+        y_label_x = self.horizontal_padding() * canvas.width() * 0.5
+        if self.y_label():
+            canvas.add_text(
+             y_label_x,
+             canvas.height() * 0.5,
+             self.y_label(),
+             rotation=(y_label_x, canvas.height() * 0.5, 270),
+             name="y_label"
+            )
         return canvas

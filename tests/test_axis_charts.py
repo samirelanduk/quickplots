@@ -153,3 +153,48 @@ class AxisChartCanvasTests(TestCase):
         self.assertIsInstance(y_label, Text)
         self.assertEqual(x_label.text(), "Input")
         self.assertEqual(y_label.text(), "Output")
+
+
+    def test_axis_labels_are_positioned_correctly(self):
+        self.chart.x_label("Input")
+        self.chart.y_label("Output")
+        canvas = self.chart.create()
+        x_label = canvas.get_graphic_by_name("x_label")
+        y_label = canvas.get_graphic_by_name("y_label")
+        self.assertEqual(x_label.x(), 350)
+        self.assertEqual(x_label.y(), 475)
+        self.assertEqual(y_label.x(), 35)
+        self.assertEqual(y_label.y(), 250)
+        self.chart.horizontal_padding(0.2)
+        self.chart.vertical_padding(0.3)
+        canvas.save("temp.svg")
+        canvas = self.chart.create()
+        x_label = canvas.get_graphic_by_name("x_label")
+        y_label = canvas.get_graphic_by_name("y_label")
+        self.assertEqual(x_label.x(), 350)
+        self.assertEqual(x_label.y(), 425)
+        self.assertEqual(y_label.x(), 70)
+        self.assertEqual(y_label.y(), 250)
+
+
+    def test_axis_labels_are_centered(self):
+        self.chart.x_label("Input")
+        self.chart.y_label("Output")
+        canvas = self.chart.create()
+        x_label = canvas.get_graphic_by_name("x_label")
+        y_label = canvas.get_graphic_by_name("y_label")
+        self.assertEqual(x_label.horizontal_align(), "center")
+        self.assertEqual(x_label.vertical_align(), "center")
+        self.assertEqual(y_label.horizontal_align(), "center")
+        self.assertEqual(y_label.vertical_align(), "center")
+
+
+    def test_y_axis_label_is_rotated(self):
+        self.chart.y_label("Output")
+        canvas = self.chart.create()
+        y_label = canvas.get_graphic_by_name("y_label")
+        self.assertEqual(y_label.rotation(), (35, 250, 270))
+        self.chart.horizontal_padding(0.2)
+        canvas = self.chart.create()
+        y_label = canvas.get_graphic_by_name("y_label")
+        self.assertEqual(y_label.rotation(), (70, 250, 270))
