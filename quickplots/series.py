@@ -1,6 +1,6 @@
 class Series:
 
-    def __init__(self, *data):
+    def __init__(self, *data, name=None):
         self._data = []
         if len(data) == 0:
             raise ValueError("Cannot create Series with no data")
@@ -36,6 +36,10 @@ class Series:
                 )
             self._data.append(tuple(point))
         self._data = sorted(self._data, key=lambda k: k[0])
+
+        if not isinstance(name, str) and name is not None:
+            raise TypeError("name must be str, not '%s'" % str(name))
+        self._name = name
 
 
     def __repr__(self):

@@ -8,6 +8,7 @@ class SeriesCreationTests(TestCase):
     def test_can_create_series(self):
         series = Series((1, 1), (2, 4), (3, 9))
         self.assertEqual(series._data, [(1, 1), (2, 4), (3, 9)])
+        self.assertEqual(series._name, None)
 
 
     def test_can_create_series_with_list_points(self):
@@ -79,6 +80,16 @@ class SeriesCreationTests(TestCase):
         self.assertEqual(series._data, [(2, 4), (3, 9), (4, 16), (5, 25)])
         series = Series((2, 3, 4, 5), (4, 9, 16, 25))
         self.assertEqual(series._data, [(2, 4), (3, 9), (4, 16), (5, 25)])
+
+
+    def test_can_create_series_with_name(self):
+        series = Series((1, 1), (2, 4), (3, 9), name="Squares")
+        self.assertEqual(series._name, "Squares")
+
+
+    def test_name_must_be_str(self):
+        with self.assertRaises(TypeError):
+            Series((1, 1), (2, 4), (3, 9), name=100)
 
 
 
