@@ -94,6 +94,12 @@ class AxisChart(Chart):
         self._all_series.append(series)
 
 
+    def remove_series(self, series):
+        if len(self.all_series()) == 1:
+            raise ValueError("Cannot remove last series from %s" % str(self))
+        self._all_series.remove(series)
+
+
     def x_label(self, x_label=None):
         if x_label is None:
             return self._x_label

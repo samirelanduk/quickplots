@@ -130,7 +130,7 @@ class AxisChartPropertyTests(AxisChartTest):
 
 
 
-class AxisChartSeriesManipulationTests(AxisChartTest):
+class AxisChartSeriesTests(AxisChartTest):
 
     def test_can_add_series(self):
         chart = AxisChart(self.series1)
@@ -147,6 +147,18 @@ class AxisChartSeriesManipulationTests(AxisChartTest):
         chart = AxisChart(self.series1)
         with self.assertRaises(TypeError):
             chart.add_series("Series")
+
+
+    def test_can_remove_series(self):
+        chart = AxisChart(self.series1, self.series2)
+        chart.remove_series(self.series1)
+        self.assertEqual(chart.all_series(), [self.series2])
+
+
+    def test_cannot_remove_last_series(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(ValueError):
+            chart.remove_series(self.series1)
 
 
 
