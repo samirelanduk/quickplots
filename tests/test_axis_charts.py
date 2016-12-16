@@ -1,53 +1,81 @@
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from quickplots.charts import AxisChart, Chart
+from quickplots.series import Series
 from omnicanvas import Canvas
 from omnicanvas.graphics import Text, Rectangle
 
-class AxisChartCreationTests(TestCase):
+class AxisChartTest(TestCase):
+
+    def setUp(self):
+        self.series1 = Mock(Series)
+        self.series2 = Mock(Series)
+        self.series3 = Mock(Series)
+
+
+
+class AxisChartCreationTests(AxisChartTest):
 
     def test_can_create_axis_chart(self):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         self.assertIsInstance(chart, Chart)
+        self.assertEqual(chart._all_series, [self.series1])
         self.assertEqual(chart._x_label, "")
         self.assertEqual(chart._y_label, "")
-        self.assertEqual(chart._all_series, [])
         self.assertEqual(chart._horizontal_padding, 0.1)
         self.assertEqual(chart._vertical_padding, 0.1)
 
 
     @patch("quickplots.charts.Chart.__init__")
     def test_axis_chart_uses_chart_initialisation(self, mock):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         self.assertTrue(mock.called)
 
 
+    def test_can_create_axis_chart_with_multiple_series(self):
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        self.assertEqual(
+         chart._all_series,
+         [self.series1, self.series2, self.series3]
+        )
+
+
+    def test_axis_chart_series_must_be_of_type_series(self):
+        with self.assertRaises(TypeError):
+            AxisChart(self.series1, [1, 2, 3])
+
+
+    def test_axis_chart_requires_at_least_one_series(self):
+        with self.assertRaises(ValueError):
+            AxisChart()
+
+
     def test_can_create_axis_chart_with_axis_labels(self):
-        chart = AxisChart(x_label="Input")
+        chart = AxisChart(self.series1, x_label="Input")
         self.assertEqual(chart._x_label, "Input")
-        chart = AxisChart(y_label="Output")
+        chart = AxisChart(self.series1, y_label="Output")
         self.assertEqual(chart._y_label, "Output")
 
 
     def test_axis_labels_must_be_string(self):
         with self.assertRaises(TypeError):
-            AxisChart(x_label=1)
+            AxisChart(self.series1, x_label=1)
         with self.assertRaises(TypeError):
-            AxisChart(y_label=1)
+            AxisChart(self.series1, y_label=1)
 
 
     def test_repr(self):
-        chart = AxisChart()
-        self.assertEqual(str(chart), "<AxisChart (0 series)>")
-        chart._all_series.append("dummy series")
+        chart = AxisChart(self.series1)
         self.assertEqual(str(chart), "<AxisChart (1 series)>")
+        chart._all_series.append(self.series2)
+        self.assertEqual(str(chart), "<AxisChart (2 series)>")
 
 
 
-class AxisChartPropertyTests(TestCase):
+class AxisChartPropertyTests(AxisChartTest):
 
     def test_basic_properties(self):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         self.assertEqual(chart.horizontal_padding(), chart._horizontal_padding)
         self.assertEqual(chart.vertical_padding(), chart._vertical_padding)
         self.assertIs(chart.x_label(), chart._x_label)
@@ -55,7 +83,7 @@ class AxisChartPropertyTests(TestCase):
 
 
     def test_can_update_axis_labels(self):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         chart.x_label("Input")
         self.assertEqual(chart.x_label(), "Input")
         chart.y_label("Output")
@@ -63,7 +91,7 @@ class AxisChartPropertyTests(TestCase):
 
 
     def test_set_axis_labels_must_be_str(self):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         with self.assertRaises(TypeError):
             chart.x_label(1)
         with self.assertRaises(TypeError):
@@ -71,7 +99,7 @@ class AxisChartPropertyTests(TestCase):
 
 
     def test_can_update_padding(self):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         chart.horizontal_padding(0.4)
         self.assertEqual(chart.horizontal_padding(), 0.4)
         chart.vertical_padding(0.3)
@@ -79,7 +107,7 @@ class AxisChartPropertyTests(TestCase):
 
 
     def test_padding_must_be_float(self):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         with self.assertRaises(TypeError):
             chart.horizontal_padding(10)
         with self.assertRaises(TypeError):
@@ -87,7 +115,7 @@ class AxisChartPropertyTests(TestCase):
 
 
     def test_padding_must_be_between_0_and_half(self):
-        chart = AxisChart()
+        chart = AxisChart(self.series1)
         with self.assertRaises(ValueError):
             chart.horizontal_padding(0.0)
         with self.assertRaises(ValueError):
@@ -95,10 +123,11 @@ class AxisChartPropertyTests(TestCase):
 
 
 
-class AxisChartCanvasTests(TestCase):
+class AxisChartCanvasTests(AxisChartTest):
 
     def setUp(self):
-        self.chart = AxisChart(title="Test AxisChart")
+        AxisChartTest.setUp(self)
+        self.chart = AxisChart(self.series1, title="Test AxisChart")
 
 
     def test_can_create_basic_canvas(self):

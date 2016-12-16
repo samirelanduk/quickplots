@@ -1,4 +1,5 @@
 from omnicanvas import Canvas
+from .series import Series
 
 class Chart:
 
@@ -58,8 +59,15 @@ class Chart:
 
 class AxisChart(Chart):
 
-    def __init__(self, *args, x_label="", y_label="", **kwargs):
-        Chart.__init__(self, *args, **kwargs)
+    def __init__(self, *series, x_label="", y_label="", **kwargs):
+        Chart.__init__(self, **kwargs)
+
+        for s in series:
+            if not isinstance(s, Series):
+                raise TypeError("'%s' is not a Series" % str(s))
+        if len(series) == 0:
+            raise ValueError("AxisChart needs at least one series")
+        self._all_series = list(series)
 
         if not isinstance(x_label, str):
             raise TypeError("x_label must be str, not '%s'" % str(x_label))
@@ -68,7 +76,6 @@ class AxisChart(Chart):
             raise TypeError("y_label must be str, not '%s'" % str(y_label))
         self._y_label = y_label
 
-        self._all_series = []
         self._horizontal_padding = 0.1
         self._vertical_padding = 0.1
 
