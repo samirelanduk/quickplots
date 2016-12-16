@@ -100,6 +100,16 @@ class AxisChart(Chart):
         self._all_series.remove(series)
 
 
+    def get_series_by_name(self, name):
+        if not isinstance(name, str):
+            raise TypeError(
+             "Can only search series by str name, not '%s'" % str(name)
+            )
+        for series in self.all_series():
+            if series.name() == name:
+                return series
+
+
     def x_label(self, x_label=None):
         if x_label is None:
             return self._x_label

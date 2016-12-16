@@ -9,9 +9,11 @@ class AxisChartTest(TestCase):
 
     def setUp(self):
         self.series1 = Mock(Series)
+        self.series1.name.return_value = "series1"
         self.series2 = Mock(Series)
+        self.series2.name.return_value = "series2"
         self.series3 = Mock(Series)
-
+        self.series3.name.return_value = "series3"
 
 
 class AxisChartCreationTests(AxisChartTest):
@@ -159,6 +161,20 @@ class AxisChartSeriesTests(AxisChartTest):
         chart = AxisChart(self.series1)
         with self.assertRaises(ValueError):
             chart.remove_series(self.series1)
+
+
+    def test_can_get_series_by_name(self):
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        self.assertIs(chart.get_series_by_name("series1"), self.series1)
+        self.assertIs(chart.get_series_by_name("series2"), self.series2)
+        self.assertIs(chart.get_series_by_name("series3"), self.series3)
+        self.assertIs(chart.get_series_by_name("series4"), None)
+
+
+    def test_can_only_search_series_name_by_str(self):
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        with self.assertRaises(TypeError):
+            chart.get_series_by_name(self.series1)
 
 
 
