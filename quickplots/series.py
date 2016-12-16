@@ -50,6 +50,15 @@ class Series:
         return list(self._data)
 
 
+    def name(self, name=None):
+        if name is None:
+            return self._name
+        else:
+            if not isinstance(name, str) and name is not None:
+                raise TypeError("name must be str, not '%s'" % str(name))
+            self._name = name
+
+
     def add_data_point(self, x, y):
         if not isinstance(x, float) and not isinstance(x, int):
             raise TypeError("x value must be numeric, not '%s'" % str(x))

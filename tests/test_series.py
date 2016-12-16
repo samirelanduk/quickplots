@@ -96,14 +96,27 @@ class SeriesCreationTests(TestCase):
 class SeriesPropertyTests(TestCase):
 
     def test_basic_properties(self):
-        series = Series((1, 1), (2, 4), (3, 9))
+        series = Series((1, 1), (2, 4), (3, 9), name="Squares")
         self.assertEqual(series.data(), series._data)
+        self.assertIs(series.name(), series._name)
 
 
     def test_series_data_is_read_only(self):
         series = Series((1, 1), (2, 4), (3, 9))
         series.data().append("bad")
         self.assertEqual(series.data(), [(1, 1), (2, 4), (3, 9)])
+
+
+    def test_can_update_name(self):
+        series = Series((1, 1), (2, 4), (3, 9), name="Squares")
+        series.name("Sexy squares")
+        self.assertEqual(series.name(), "Sexy squares")
+
+
+    def test_set_name_must_be_str(self):
+        series = Series((1, 1), (2, 4), (3, 9), name="Squares")
+        with self.assertRaises(TypeError):
+            series.name(100)
 
 
 
