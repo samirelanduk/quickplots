@@ -84,6 +84,10 @@ class AxisChart(Chart):
         return "<AxisChart (%i series)>" % len(self._all_series)
 
 
+    def all_series(self):
+        return list(self._all_series)
+
+
     def x_label(self, x_label=None):
         if x_label is None:
             return self._x_label

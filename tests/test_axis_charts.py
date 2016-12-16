@@ -76,10 +76,17 @@ class AxisChartPropertyTests(AxisChartTest):
 
     def test_basic_properties(self):
         chart = AxisChart(self.series1)
+        self.assertEqual(chart.all_series(), chart._all_series)
         self.assertEqual(chart.horizontal_padding(), chart._horizontal_padding)
         self.assertEqual(chart.vertical_padding(), chart._vertical_padding)
         self.assertIs(chart.x_label(), chart._x_label)
         self.assertIs(chart.y_label(), chart._y_label)
+
+
+    def test_all_series_is_not_directly_modifable(self):
+        chart = AxisChart(self.series1)
+        chart.all_series().append("Bad series")
+        self.assertEqual(chart.all_series(), [self.series1])
 
 
     def test_can_update_axis_labels(self):
