@@ -91,6 +91,13 @@ class AxisChartPropertyTests(AxisChartTest):
         self.assertEqual(chart.all_series(), [self.series1])
 
 
+    def test_series_refers_to_first_series(self):
+        chart = AxisChart(self.series1)
+        self.assertIs(chart.series(), self.series1)
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        self.assertIs(chart.series(), self.series1)
+
+
     def test_can_update_axis_labels(self):
         chart = AxisChart(self.series1)
         chart.x_label("Input")

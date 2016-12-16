@@ -88,6 +88,10 @@ class AxisChart(Chart):
         return list(self._all_series)
 
 
+    def series(self):
+        return self._all_series[0]
+
+
     def add_series(self, series):
         if not isinstance(series, Series):
             raise TypeError("'%s' is not a Series" % str(series))
