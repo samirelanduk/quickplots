@@ -130,6 +130,26 @@ class AxisChartPropertyTests(AxisChartTest):
 
 
 
+class AxisChartSeriesManipulationTests(AxisChartTest):
+
+    def test_can_add_series(self):
+        chart = AxisChart(self.series1)
+        chart.add_series(self.series2)
+        self.assertEqual(chart.all_series(), [self.series1, self.series2])
+        chart.add_series(self.series3)
+        self.assertEqual(
+         chart.all_series(),
+         [self.series1, self.series2, self.series3]
+        )
+
+
+    def test_can_only_add_series(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.add_series("Series")
+
+
+
 class AxisChartCanvasTests(AxisChartTest):
 
     def setUp(self):
