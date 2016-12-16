@@ -43,7 +43,9 @@ class Series:
 
 
     def __repr__(self):
-        return "<Series (%i data points)>" % len(self._data)
+        return "<Series %s(%i data points)>" % (
+         "'%s' " % self._name if self._name is not None else "", len(self._data)
+        )
 
 
     def data(self):

@@ -70,11 +70,6 @@ class SeriesCreationTests(TestCase):
         Series((1, 2, 3), (1, 4, 9.5))
 
 
-    def test_series_repr(self):
-        series = Series((1, 1), (2, 4), (3, 9))
-        self.assertEqual(str(series), "<Series (3 data points)>")
-
-
     def test_data_will_be_sorted_by_x_value(self):
         series = Series((3, 9), (2, 4), (5, 25), (4, 16))
         self.assertEqual(series._data, [(2, 4), (3, 9), (4, 16), (5, 25)])
@@ -90,6 +85,16 @@ class SeriesCreationTests(TestCase):
     def test_name_must_be_str(self):
         with self.assertRaises(TypeError):
             Series((1, 1), (2, 4), (3, 9), name=100)
+
+
+    def test_series_repr(self):
+        series = Series((1, 1), (2, 4), (3, 9))
+        self.assertEqual(str(series), "<Series (3 data points)>")
+
+
+    def test_name_in_repr_if_not_none(self):
+        series = Series((1, 1), (2, 4), (3, 9), name="Squares")
+        self.assertEqual(str(series), "<Series 'Squares' (3 data points)>")
 
 
 
