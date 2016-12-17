@@ -159,11 +159,13 @@ class AxisChart(Chart):
 
 
     def x_limit(self):
-        return (0, 0)
+        largest_x = max([series.data()[-1][0] for series in self.all_series()])
+        return (0, largest_x)
 
 
     def y_limit(self):
-        return (0, 1)
+        largest_y = max([series.data()[-1][1] for series in self.all_series()])
+        return (0, largest_y)
 
 
     def create(self):

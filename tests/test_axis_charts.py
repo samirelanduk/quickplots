@@ -156,6 +156,21 @@ class AxisChartPropertyTests(AxisChartTest):
         self.assertEqual(chart.y_limit()[0], 0)
 
 
+    def test_x_and_y_upper_limits_default_to_highest_values_in_series(self):
+        chart = AxisChart(self.series1)
+        self.assertEqual(chart.x_limit()[1], 3)
+        self.assertEqual(chart.y_limit()[1], 9)
+        chart = AxisChart(self.series2)
+        self.assertEqual(chart.x_limit()[1], 3)
+        self.assertEqual(chart.y_limit()[1], 27)
+        chart = AxisChart(self.series3)
+        self.assertEqual(chart.x_limit()[1], 30)
+        self.assertEqual(chart.y_limit()[1], 300)
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        self.assertEqual(chart.x_limit()[1], 30)
+        self.assertEqual(chart.y_limit()[1], 300)
+
+
 
 class AxisChartSeriesTests(AxisChartTest):
 
