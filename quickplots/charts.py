@@ -162,6 +162,31 @@ class AxisChart(Chart):
             self._vertical_padding = padding
 
 
+    def x_lower_limit(self, lower=None):
+        if lower is None:
+            return 0 if self._x_lower_limit is None else self._x_lower_limit
+        else:
+            if not isinstance(lower, int) and not isinstance(lower, float):
+                raise TypeError(
+                 "lower x limit must be numeric, not '%s'" % str(lower)
+                )
+            self._x_lower_limit = lower
+
+
+    def x_upper_limit(self, upper=None):
+        if upper is None:
+            largest_x = max(
+             [series.data()[-1][0] for series in self.all_series()]
+            ) if self._x_upper_limit is None else self._x_upper_limit
+            return largest_x
+        else:
+            if not isinstance(upper, int) and not isinstance(upper, float):
+                raise TypeError(
+                 "upper x limit must be numeric, not '%s'" % str(upper)
+                )
+            self._x_upper_limit = upper
+
+
     def x_limit(self, lower=None, upper=None):
         if lower is None and upper is None:
             largest_x = max(
@@ -184,6 +209,31 @@ class AxisChart(Chart):
             self._x_upper_limit = upper
         else:
             raise TypeError("Need both a lower and upper x_limit")
+
+
+    def y_lower_limit(self, lower=None):
+        if lower is None:
+            return 0 if self._y_lower_limit is None else self._y_lower_limit
+        else:
+            if not isinstance(lower, int) and not isinstance(lower, float):
+                raise TypeError(
+                 "lower y limit must be numeric, not '%s'" % str(lower)
+                )
+            self._y_lower_limit = lower
+
+
+    def y_upper_limit(self, upper=None):
+        if upper is None:
+            largest_y = max(
+             [series.data()[-1][1] for series in self.all_series()]
+            ) if self._y_upper_limit is None else self._y_upper_limit
+            return largest_y
+        else:
+            if not isinstance(upper, int) and not isinstance(upper, float):
+                raise TypeError(
+                 "upper y limit must be numeric, not '%s'" % str(upper)
+                )
+            self._y_upper_limit = upper
 
 
     def y_limit(self, lower=None, upper=None):

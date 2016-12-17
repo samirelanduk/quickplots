@@ -203,7 +203,41 @@ class AxisChartPropertyTests(AxisChartTest):
             chart.y_limit("1", 1)
         chart.x_limit(100.5, 100.5)
         chart.y_limit(100.5, 100.5)
-        
+
+
+    def test_can_get_axis_limits_individually(self):
+        chart = AxisChart(self.series1)
+        self.assertEqual(chart.x_lower_limit(), 0)
+        self.assertEqual(chart.x_upper_limit(), 3)
+        self.assertEqual(chart.y_lower_limit(), 0)
+        self.assertEqual(chart.y_upper_limit(), 9)
+
+
+    def test_can_update_axis_limits_individually(self):
+        chart = AxisChart(self.series1)
+        chart.x_lower_limit(1000)
+        chart.x_upper_limit(1005)
+        chart.y_lower_limit(-10)
+        chart.y_upper_limit(-1)
+        self.assertEqual(chart.x_limit(), (1000, 1005))
+        self.assertEqual(chart.y_limit(), (-10, -1))
+
+
+    def test_individually_updated_axis_limits_must_be_numeric(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.x_lower_limit("1000")
+        with self.assertRaises(TypeError):
+            chart.x_upper_limit("1005")
+        with self.assertRaises(TypeError):
+            chart.y_lower_limit("-10")
+        with self.assertRaises(TypeError):
+            chart.y_upper_limit("-1")
+        chart.x_lower_limit(1000.5)
+        chart.x_upper_limit(1005.5)
+        chart.y_lower_limit(-10.5)
+        chart.y_upper_limit(-1.5)
+
 
 
 class AxisChartSeriesTests(AxisChartTest):
