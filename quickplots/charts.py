@@ -158,6 +158,14 @@ class AxisChart(Chart):
             self._vertical_padding = padding
 
 
+    def x_limit(self):
+        return (0, 0)
+
+
+    def y_limit(self):
+        return (0, 1)
+
+
     def create(self):
         canvas = Chart.create(self)
 

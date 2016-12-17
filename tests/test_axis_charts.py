@@ -10,10 +10,13 @@ class AxisChartTest(TestCase):
     def setUp(self):
         self.series1 = Mock(Series)
         self.series1.name.return_value = "series1"
+        self.series1.data.return_value = [(1, 1), (2, 4), (3, 9)]
         self.series2 = Mock(Series)
         self.series2.name.return_value = "series2"
+        self.series2.data.return_value = [(1, 1), (2, 8), (3, 27)]
         self.series3 = Mock(Series)
         self.series3.name.return_value = "series3"
+        self.series3.data.return_value = [(10, 100), (20, 200), (30, 300)]
 
 
 class AxisChartCreationTests(AxisChartTest):
@@ -136,6 +139,21 @@ class AxisChartPropertyTests(AxisChartTest):
             chart.horizontal_padding(0.0)
         with self.assertRaises(ValueError):
             chart.vertical_padding(0.5)
+
+
+    def test_x_and_y_lower_limits_default_to_zero(self):
+        chart = AxisChart(self.series1)
+        self.assertEqual(chart.x_limit()[0], 0)
+        self.assertEqual(chart.y_limit()[0], 0)
+        chart = AxisChart(self.series2)
+        self.assertEqual(chart.x_limit()[0], 0)
+        self.assertEqual(chart.y_limit()[0], 0)
+        chart = AxisChart(self.series3)
+        self.assertEqual(chart.x_limit()[0], 0)
+        self.assertEqual(chart.y_limit()[0], 0)
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        self.assertEqual(chart.x_limit()[0], 0)
+        self.assertEqual(chart.y_limit()[0], 0)
 
 
 
