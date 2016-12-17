@@ -29,6 +29,10 @@ class AxisChartCreationTests(AxisChartTest):
         self.assertEqual(chart._y_label, "")
         self.assertEqual(chart._horizontal_padding, 0.1)
         self.assertEqual(chart._vertical_padding, 0.1)
+        self.assertEqual(chart._x_lower_limit, None)
+        self.assertEqual(chart._x_upper_limit, None)
+        self.assertEqual(chart._y_lower_limit, None)
+        self.assertEqual(chart._y_upper_limit, None)
 
 
     @patch("quickplots.charts.Chart.__init__")
@@ -170,6 +174,36 @@ class AxisChartPropertyTests(AxisChartTest):
         self.assertEqual(chart.x_limit()[1], 30)
         self.assertEqual(chart.y_limit()[1], 300)
 
+
+    def test_can_override_default_axis_limits(self):
+        chart = AxisChart(self.series1)
+        chart.x_limit(1, 5)
+        self.assertEqual(chart.x_limit(), (1, 5))
+        chart.y_limit(-10, 100)
+        self.assertEqual(chart.y_limit(), (-10, 100))
+
+
+    def test_need_to_provide_both_values_when_overriding_axis_limits(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.x_limit(1)
+        with self.assertRaises(TypeError):
+            chart.y_limit(1)
+
+
+    def test_updated_axis_limits_must_be_numeric(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.x_limit(1, "1")
+        with self.assertRaises(TypeError):
+            chart.x_limit("1", 1)
+        with self.assertRaises(TypeError):
+            chart.y_limit(1, "1")
+        with self.assertRaises(TypeError):
+            chart.y_limit("1", 1)
+        chart.x_limit(100.5, 100.5)
+        chart.y_limit(100.5, 100.5)
+        
 
 
 class AxisChartSeriesTests(AxisChartTest):

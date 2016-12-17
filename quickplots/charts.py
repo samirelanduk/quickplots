@@ -78,6 +78,10 @@ class AxisChart(Chart):
 
         self._horizontal_padding = 0.1
         self._vertical_padding = 0.1
+        self._x_lower_limit = None
+        self._x_upper_limit = None
+        self._y_lower_limit = None
+        self._y_upper_limit = None
 
 
     def __repr__(self):
@@ -158,14 +162,52 @@ class AxisChart(Chart):
             self._vertical_padding = padding
 
 
-    def x_limit(self):
-        largest_x = max([series.data()[-1][0] for series in self.all_series()])
-        return (0, largest_x)
+    def x_limit(self, lower=None, upper=None):
+        if lower is None and upper is None:
+            largest_x = max(
+             [series.data()[-1][0] for series in self.all_series()]
+            ) if self._x_upper_limit is None else self._x_upper_limit
+            return (
+             0 if self._x_lower_limit is None else self._x_lower_limit,
+             largest_x
+            )
+        elif lower is not None and upper is not None:
+            if not isinstance(lower, int) and not isinstance(lower, float):
+                raise TypeError(
+                 "lower x limit must be numeric, not '%s'" % str(lower)
+                )
+            self._x_lower_limit = lower
+            if not isinstance(upper, int) and not isinstance(upper, float):
+                raise TypeError(
+                 "upper x limit must be numeric, not '%s'" % str(upper)
+                )
+            self._x_upper_limit = upper
+        else:
+            raise TypeError("Need both a lower and upper x_limit")
 
 
-    def y_limit(self):
-        largest_y = max([series.data()[-1][1] for series in self.all_series()])
-        return (0, largest_y)
+    def y_limit(self, lower=None, upper=None):
+        if lower is None and upper is None:
+            largest_y = max(
+             [series.data()[-1][1] for series in self.all_series()]
+            ) if self._y_upper_limit is None else self._y_upper_limit
+            return (
+             0 if self._y_lower_limit is None else self._y_lower_limit,
+             largest_y
+            )
+        elif lower is not None and upper is not None:
+            if not isinstance(lower, int) and not isinstance(lower, float):
+                raise TypeError(
+                 "lower y limit must be numeric, not '%s'" % str(lower)
+                )
+            self._y_lower_limit = lower
+            if not isinstance(upper, int) and not isinstance(upper, float):
+                raise TypeError(
+                 "upper y limit must be numeric, not '%s'" % str(upper)
+                )
+            self._y_upper_limit = upper
+        else:
+            raise TypeError("Need both a lower and upper y_limit")
 
 
     def create(self):
