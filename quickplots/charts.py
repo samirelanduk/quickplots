@@ -1,3 +1,4 @@
+import math
 from omnicanvas import Canvas
 from .series import Series
 
@@ -162,86 +163,132 @@ class AxisChart(Chart):
             self._vertical_padding = padding
 
 
-    def x_lower_limit(self, lower=None):
-        if lower is None:
+    def smallest_x(self):
+        return min(
+         [series.data()[0][0] for series in self.all_series()]
+        )
+
+
+    def largest_x(self):
+        return max(
+         [series.data()[-1][0] for series in self.all_series()]
+        )
+
+
+    def smallest_y(self):
+        return min(
+         [series.smallest_y() for series in self.all_series()]
+        )
+
+
+    def largest_y(self):
+        return max(
+         [series.largest_y() for series in self.all_series()]
+        )
+
+
+    def x_lower_limit(self, limit=None):
+        if limit is None:
             if self._x_lower_limit is None:
-                smallest_x = min(
-                 [series.data()[0][0] for series in self.all_series()]
-                )
-                return smallest_x if smallest_x < 0 else 0
+                if self.smallest_x() < 0:
+                    if self.smallest_x() == self.largest_x():
+                        return int(self.smallest_x() - 1)
+                    else:
+                        return self.smallest_x()
+                else:
+                    return 0
             else:
                 return self._x_lower_limit
         else:
-            if not isinstance(lower, int) and not isinstance(lower, float):
+            if not isinstance(limit, int) and not isinstance(limit, float):
                 raise TypeError(
-                 "lower x limit must be numeric, not '%s'" % str(lower)
+                 "lower x limit must be numeric, not '%s'" % str(limit)
                 )
-            self._x_lower_limit = lower
-
-
-    def x_upper_limit(self, upper=None):
-        if upper is None:
-            largest_x = max(
-             [series.data()[-1][0] for series in self.all_series()]
-            ) if self._x_upper_limit is None else self._x_upper_limit
-            return largest_x
-        else:
-            if not isinstance(upper, int) and not isinstance(upper, float):
-                raise TypeError(
-                 "upper x limit must be numeric, not '%s'" % str(upper)
+            if limit >= self.largest_x():
+                raise ValueError(
+                 "lower x limit must be less than upper limit (%s), not %s" % (
+                  str(self.largest_x()), str(limit)
+                 )
                 )
-            self._x_upper_limit = upper
+            self._x_lower_limit = limit
 
 
-    def x_limit(self, lower=None, upper=None):
-        if lower is None and upper is None:
-            return (self.x_lower_limit(), self.x_upper_limit())
-        elif lower is not None and upper is not None:
-            self.x_lower_limit(lower)
-            self.x_upper_limit(upper)
-        else:
-            raise TypeError("Need both a lower and upper x_limit")
-
-
-    def y_lower_limit(self, lower=None):
-        if lower is None:
+    def y_lower_limit(self, limit=None):
+        if limit is None:
             if self._y_lower_limit is None:
-                smallest_y = min(
-                 [series.smallest_y() for series in self.all_series()]
-                )
-                return smallest_y if smallest_y < 0 else 0
+                if self.smallest_y() < 0:
+                    if self.smallest_y() == self.largest_y():
+                        return int(self.smallest_y() - 1)
+                    else:
+                        return self.smallest_y()
+                else:
+                    return 0
             else:
                 return self._y_lower_limit
         else:
-            if not isinstance(lower, int) and not isinstance(lower, float):
+            if not isinstance(limit, int) and not isinstance(limit, float):
                 raise TypeError(
-                 "lower y limit must be numeric, not '%s'" % str(lower)
+                 "lower y limit must be numeric, not '%s'" % str(limit)
                 )
-            self._y_lower_limit = lower
+            if limit >= self.largest_y():
+                raise ValueError(
+                 "lower y limit must be less than upper limit (%s), not %s" % (
+                  str(self.largest_y()), str(limit)
+                 )
+                )
+            self._y_lower_limit = limit
 
 
-    def y_upper_limit(self, upper=None):
-        if upper is None:
-            largest_y = max(
-             [series.largest_y() for series in self.all_series()]
-            ) if self._y_upper_limit is None else self._y_upper_limit
-            return largest_y
+    def x_upper_limit(self, limit=None):
+        if limit is None:
+            if self._x_upper_limit is None:
+                if self.smallest_x() == self.largest_x():
+                    if int(self.largest_x()) == float(self.largest_x()):
+                        return self.largest_x() + 1
+                    else:
+                        return math.ceil(self.largest_x())
+                else:
+                    return self.largest_x()
+            else:
+                return self._x_upper_limit
         else:
-            if not isinstance(upper, int) and not isinstance(upper, float):
+            if not isinstance(limit, int) and not isinstance(limit, float):
                 raise TypeError(
-                 "upper y limit must be numeric, not '%s'" % str(upper)
+                 "upper x limit must be numeric, not '%s'" % str(limit)
                 )
-            self._y_upper_limit = upper
+            if limit <= self.smallest_x():
+                raise ValueError(
+                 "upper x limit must be greater than lower limit (%s), not %s" % (
+                  str(self.smallest_x()), str(limit)
+                 )
+                )
+            self._x_upper_limit = limit
 
 
-    def y_limit(self, lower=None, upper=None):
-        if lower is None and upper is None:
-            return (self.y_lower_limit(), self.y_upper_limit())
-        elif lower is not None and upper is not None:
-            self.y_lower_limit(lower)
-            self.y_upper_limit(upper)
+    def y_upper_limit(self, limit=None):
+        if limit is None:
+            if self._y_upper_limit is None:
+                if self.smallest_y() == self.largest_y():
+                    if int(self.largest_y()) == float(self.largest_y()):
+                        return self.largest_y() + 1
+                    else:
+                        return math.ceil(self.largest_y())
+                else:
+                    return self.largest_y()
+            else:
+                return self._y_upper_limit
         else:
-            raise TypeError("Need both a lower and upper y_limit")
+            if not isinstance(limit, int) and not isinstance(limit, float):
+                raise TypeError(
+                 "upper y limit must be numeric, not '%s'" % str(limit)
+                )
+            if limit <= self.smallest_y():
+                raise ValueError(
+                 "upper y limit must be greater than lower limit (%s), not %s" % (
+                  str(self.smallest_y()), str(limit)
+                 )
+                )
+            self._y_upper_limit = limit
 
 
     def create(self):

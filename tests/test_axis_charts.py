@@ -8,21 +8,9 @@ from omnicanvas.graphics import Text, Rectangle
 class AxisChartTest(TestCase):
 
     def setUp(self):
-        self.series1 = Mock(Series)
-        self.series1.name.return_value = "series1"
-        self.series1.data.return_value = [(1, 1), (2, 4), (3, 9)]
-        self.series1.smallest_y.return_value = 1
-        self.series1.largest_y.return_value = 9
-        self.series2 = Mock(Series)
-        self.series2.name.return_value = "series2"
-        self.series2.data.return_value = [(1, 1), (2, 8), (3, 27)]
-        self.series2.smallest_y.return_value = 1
-        self.series2.largest_y.return_value = 27
-        self.series3 = Mock(Series)
-        self.series3.name.return_value = "series3"
-        self.series3.data.return_value = [(10, 100), (20, 300), (30, 200)]
-        self.series3.smallest_y.return_value = 100
-        self.series3.largest_y.return_value = 300
+        self.series1 = Series((1, 1), (2, 4), (3, 9), name="series1")
+        self.series2 = Series((10, 20), (100, 200), (1000, 2000), name="series2")
+        self.series3 = Series((-10, -5), (23, 45), (-1, 2), name="series3")
 
 
 class AxisChartCreationTests(AxisChartTest):
@@ -87,7 +75,7 @@ class AxisChartCreationTests(AxisChartTest):
 
 
 
-class AxisChartPropertyTests(AxisChartTest):
+class AxisChartBasicPropertyTests(AxisChartTest):
 
     def test_basic_properties(self):
         chart = AxisChart(self.series1)
@@ -111,6 +99,9 @@ class AxisChartPropertyTests(AxisChartTest):
         self.assertIs(chart.series(), self.series1)
 
 
+
+class AxisChartAxisLabelTests(AxisChartTest):
+
     def test_can_update_axis_labels(self):
         chart = AxisChart(self.series1)
         chart.x_label("Input")
@@ -126,6 +117,9 @@ class AxisChartPropertyTests(AxisChartTest):
         with self.assertRaises(TypeError):
             chart.y_label(1)
 
+
+
+class AxisChartPaddingTests(AxisChartTest):
 
     def test_can_update_padding(self):
         chart = AxisChart(self.series1)
@@ -151,110 +145,238 @@ class AxisChartPropertyTests(AxisChartTest):
             chart.vertical_padding(0.5)
 
 
-    def test_x_and_y_lower_limits_default_to_zero(self):
+
+class AxisChartValueExtremesTests(AxisChartTest):
+
+    def test_chart_knows_its_smallest_values(self):
         chart = AxisChart(self.series1)
-        self.assertEqual(chart.x_limit()[0], 0)
-        self.assertEqual(chart.y_limit()[0], 0)
+        self.assertEqual(chart.smallest_x(), 1)
+        self.assertEqual(chart.smallest_y(), 1)
         chart = AxisChart(self.series2)
-        self.assertEqual(chart.x_limit()[0], 0)
-        self.assertEqual(chart.y_limit()[0], 0)
+        self.assertEqual(chart.smallest_x(), 10)
+        self.assertEqual(chart.smallest_y(), 20)
         chart = AxisChart(self.series3)
-        self.assertEqual(chart.x_limit()[0], 0)
-        self.assertEqual(chart.y_limit()[0], 0)
+        self.assertEqual(chart.smallest_x(), -10)
+        self.assertEqual(chart.smallest_y(), -5)
         chart = AxisChart(self.series1, self.series2, self.series3)
-        self.assertEqual(chart.x_limit()[0], 0)
-        self.assertEqual(chart.y_limit()[0], 0)
+        self.assertEqual(chart.smallest_x(), -10)
+        self.assertEqual(chart.smallest_y(), -5)
 
 
-    def test_axis_lower_limits_match_lowest_value_when_negative(self):
-        self.series2.data.return_value = [(-5, 1), (2, -8), (3, 27)]
-        self.series2.smallest_y.return_value = -8
-        self.series2.largest_y.return_value = 27
-        chart = AxisChart(self.series2)
-        self.assertEqual(chart.x_limit()[0], -5)
-        self.assertEqual(chart.y_limit()[0], -8)
-        chart = AxisChart(self.series1, self.series2, self.series3)
-        self.assertEqual(chart.x_limit()[0], -5)
-        self.assertEqual(chart.y_limit()[0], -8)
-
-
-    def test_x_and_y_upper_limits_default_to_highest_values_in_series(self):
+    def test_chart_knows_its_largest_values(self):
         chart = AxisChart(self.series1)
-        self.assertEqual(chart.x_limit()[1], 3)
-        self.assertEqual(chart.y_limit()[1], 9)
+        self.assertEqual(chart.largest_x(), 3)
+        self.assertEqual(chart.largest_y(), 9)
         chart = AxisChart(self.series2)
-        self.assertEqual(chart.x_limit()[1], 3)
-        self.assertEqual(chart.y_limit()[1], 27)
+        self.assertEqual(chart.largest_x(), 1000)
+        self.assertEqual(chart.largest_y(), 2000)
         chart = AxisChart(self.series3)
-        self.assertEqual(chart.x_limit()[1], 30)
-        self.assertEqual(chart.y_limit()[1], 300)
+        self.assertEqual(chart.largest_x(), 23)
+        self.assertEqual(chart.largest_y(), 45)
         chart = AxisChart(self.series1, self.series2, self.series3)
-        self.assertEqual(chart.x_limit()[1], 30)
-        self.assertEqual(chart.y_limit()[1], 300)
+        self.assertEqual(chart.largest_x(), 1000)
+        self.assertEqual(chart.largest_y(), 2000)
 
 
-    def test_can_override_default_axis_limits(self):
-        chart = AxisChart(self.series1)
-        chart.x_limit(1, 5)
-        self.assertEqual(chart.x_limit(), (1, 5))
-        chart.y_limit(-10, 100)
-        self.assertEqual(chart.y_limit(), (-10, 100))
 
+class AxisChartAxisLimitTests(AxisChartTest):
 
-    def test_need_to_provide_both_values_when_overriding_axis_limits(self):
-        chart = AxisChart(self.series1)
-        with self.assertRaises(TypeError):
-            chart.x_limit(1)
-        with self.assertRaises(TypeError):
-            chart.y_limit(1)
-
-
-    def test_updated_axis_limits_must_be_numeric(self):
-        chart = AxisChart(self.series1)
-        with self.assertRaises(TypeError):
-            chart.x_limit(1, "1")
-        with self.assertRaises(TypeError):
-            chart.x_limit("1", 1)
-        with self.assertRaises(TypeError):
-            chart.y_limit(1, "1")
-        with self.assertRaises(TypeError):
-            chart.y_limit("1", 1)
-        chart.x_limit(100.5, 100.5)
-        chart.y_limit(100.5, 100.5)
-
-
-    def test_can_get_axis_limits_individually(self):
+    def test_lower_x_limit_defaults_to_zero(self):
         chart = AxisChart(self.series1)
         self.assertEqual(chart.x_lower_limit(), 0)
-        self.assertEqual(chart.x_upper_limit(), 3)
+
+
+    def test_lower_x_limit_does_not_default_to_zero_when_negative(self):
+        chart = AxisChart(self.series3)
+        self.assertEqual(chart.x_lower_limit(), -10)
+
+
+    def test_lower_x_limit_is_zero_when_only_one_x_value(self):
+        series = Series((1, 2), (1, 3), (1, 4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.x_lower_limit(), 0)
+
+
+    def test_lower_x_limit_adjusts_when_only_one_negative_x_value(self):
+        series = Series((-1, 2), (-1, 3), (-1, 4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.x_lower_limit(), -2)
+        series = Series((-1.5, 2), (-1.5, 3), (-1.5, 4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.x_lower_limit(), -2)
+
+
+    def test_can_manually_set_lower_x_limit(self):
+        chart = AxisChart(self.series1)
+        chart.x_lower_limit(2)
+        self.assertEqual(chart.x_lower_limit(), 2)
+        chart.x_lower_limit(-200)
+        self.assertEqual(chart.x_lower_limit(), -200)
+
+
+    def test_manually_set_lower_x_limit_must_be_numeric(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.x_lower_limit("2")
+        chart.x_lower_limit(2.5)
+
+
+    def test_manually_set_lower_x_limit_cannot_be_greater_than_upper_limit(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(ValueError):
+            chart.x_lower_limit(3)
+        with self.assertRaises(ValueError):
+            chart.x_lower_limit(3.5)
+        with self.assertRaises(ValueError):
+            chart.x_lower_limit(4)
+
+
+    def test_lower_y_limit_defaults_to_zero(self):
+        chart = AxisChart(self.series1)
         self.assertEqual(chart.y_lower_limit(), 0)
+
+
+    def test_lower_y_limit_does_not_default_to_zero_when_negative(self):
+        chart = AxisChart(self.series3)
+        self.assertEqual(chart.y_lower_limit(), -5)
+
+
+    def test_lower_y_limit_is_zero_when_only_one_y_value(self):
+        series = Series((1, 1), (2, 1), (3, 1))
+        chart = AxisChart(series)
+        self.assertEqual(chart.y_lower_limit(), 0)
+
+
+    def test_lower_y_limit_adjusts_when_only_one_negative_y_value(self):
+        series = Series((1, -4), (2, -4), (3, -4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.y_lower_limit(), -5)
+        series = Series((1, -4.5), (2, -4.5), (3, -4.5))
+        chart = AxisChart(series)
+        self.assertEqual(chart.y_lower_limit(), -5)
+
+
+    def test_can_manually_set_lower_y_limit(self):
+        chart = AxisChart(self.series1)
+        chart.y_lower_limit(2)
+        self.assertEqual(chart.y_lower_limit(), 2)
+        chart.y_lower_limit(-200)
+        self.assertEqual(chart.y_lower_limit(), -200)
+
+
+    def test_manually_set_lower_y_limit_must_be_numeric(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.y_lower_limit("2")
+        chart.y_lower_limit(2.5)
+
+
+    def test_manually_set_lower_y_limit_cannot_be_greater_than_upper_limit(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(ValueError):
+            chart.y_lower_limit(9)
+        with self.assertRaises(ValueError):
+            chart.y_lower_limit(9.5)
+        with self.assertRaises(ValueError):
+            chart.y_lower_limit(10)
+
+
+    def test_upper_x_limit_defaults_to_largest_x(self):
+        chart = AxisChart(self.series1)
+        self.assertEqual(chart.x_upper_limit(), 3)
+        chart = AxisChart(self.series2)
+        self.assertEqual(chart.x_upper_limit(), 1000)
+        chart = AxisChart(self.series3)
+        self.assertEqual(chart.x_upper_limit(), 23)
+
+
+    def test_upper_x_limit_adjusts_when_only_one_x_value(self):
+        series = Series((1, 2), (1, 3), (1, 4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.x_upper_limit(), 2)
+        series = Series((1.5, 2), (1.5, 3), (1.5, 4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.x_upper_limit(), 2)
+        series = Series((-1, 2), (-1, 3), (-1, 4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.x_upper_limit(), 0)
+        series = Series((-1.5, 2), (-1.5, 3), (-1.5, 4))
+        chart = AxisChart(series)
+        self.assertEqual(chart.x_upper_limit(), -1)
+
+
+    def test_can_manually_set_upper_x_limit(self):
+        chart = AxisChart(self.series1)
+        chart.x_upper_limit(2)
+        self.assertEqual(chart.x_upper_limit(), 2)
+        chart.x_upper_limit(200)
+        self.assertEqual(chart.x_upper_limit(), 200)
+
+
+    def test_manually_set_upper_x_limit_must_be_numeric(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.x_upper_limit("2")
+        chart.x_upper_limit(2.5)
+
+
+    def test_manually_set_lower_x_limit_cannot_be_less_than_lower_limit(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(ValueError):
+            chart.x_upper_limit(1)
+        with self.assertRaises(ValueError):
+            chart.x_upper_limit(0.5)
+        with self.assertRaises(ValueError):
+            chart.x_upper_limit(0)
+
+
+    def test_upper_y_limit_defaults_to_largest_y(self):
+        chart = AxisChart(self.series1)
         self.assertEqual(chart.y_upper_limit(), 9)
+        chart = AxisChart(self.series2)
+        self.assertEqual(chart.y_upper_limit(), 2000)
+        chart = AxisChart(self.series3)
+        self.assertEqual(chart.y_upper_limit(), 45)
 
 
-    def test_can_update_axis_limits_individually(self):
+    def test_upper_y_limit_adjusts_when_only_one_y_value(self):
+        series = Series((1, 2), (2, 2), (3, 2))
+        chart = AxisChart(series)
+        self.assertEqual(chart.y_upper_limit(), 3)
+        series = Series((1, 2.5), (2, 2.5), (3, 2.5))
+        chart = AxisChart(series)
+        self.assertEqual(chart.y_upper_limit(), 3)
+        series = Series((1, -2), (2, -2), (3, -2))
+        chart = AxisChart(series)
+        self.assertEqual(chart.y_upper_limit(), -1)
+        series = Series((1, -2.5), (2, -2.5), (3, -2.5))
+        chart = AxisChart(series)
+        self.assertEqual(chart.y_upper_limit(), -2)
+
+
+    def test_can_manually_set_upper_y_limit(self):
         chart = AxisChart(self.series1)
-        chart.x_lower_limit(1000)
-        chart.x_upper_limit(1005)
-        chart.y_lower_limit(-10)
-        chart.y_upper_limit(-1)
-        self.assertEqual(chart.x_limit(), (1000, 1005))
-        self.assertEqual(chart.y_limit(), (-10, -1))
+        chart.y_upper_limit(2)
+        self.assertEqual(chart.y_upper_limit(), 2)
+        chart.y_upper_limit(200)
+        self.assertEqual(chart.y_upper_limit(), 200)
 
 
-    def test_individually_updated_axis_limits_must_be_numeric(self):
+    def test_manually_set_upper_y_limit_must_be_numeric(self):
         chart = AxisChart(self.series1)
         with self.assertRaises(TypeError):
-            chart.x_lower_limit("1000")
-        with self.assertRaises(TypeError):
-            chart.x_upper_limit("1005")
-        with self.assertRaises(TypeError):
-            chart.y_lower_limit("-10")
-        with self.assertRaises(TypeError):
-            chart.y_upper_limit("-1")
-        chart.x_lower_limit(1000.5)
-        chart.x_upper_limit(1005.5)
-        chart.y_lower_limit(-10.5)
-        chart.y_upper_limit(-1.5)
+            chart.y_upper_limit("2")
+        chart.y_upper_limit(2.5)
+
+
+    def test_manually_set_lower_y_limit_cannot_be_less_than_lower_limit(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(ValueError):
+            chart.y_upper_limit(1)
+        with self.assertRaises(ValueError):
+            chart.y_upper_limit(0.5)
+        with self.assertRaises(ValueError):
+            chart.y_upper_limit(0)
 
 
 
