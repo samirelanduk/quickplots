@@ -164,7 +164,13 @@ class AxisChart(Chart):
 
     def x_lower_limit(self, lower=None):
         if lower is None:
-            return 0 if self._x_lower_limit is None else self._x_lower_limit
+            if self._x_lower_limit is None:
+                smallest_x = min(
+                 [series.data()[0][0] for series in self.all_series()]
+                )
+                return smallest_x if smallest_x < 0 else 0
+            else:
+                return self._x_lower_limit
         else:
             if not isinstance(lower, int) and not isinstance(lower, float):
                 raise TypeError(
@@ -199,7 +205,13 @@ class AxisChart(Chart):
 
     def y_lower_limit(self, lower=None):
         if lower is None:
-            return 0 if self._y_lower_limit is None else self._y_lower_limit
+            if self._y_lower_limit is None:
+                smallest_y = min(
+                 [series.smallest_y() for series in self.all_series()]
+                )
+                return smallest_y if smallest_y < 0 else 0
+            else:
+                return self._y_lower_limit
         else:
             if not isinstance(lower, int) and not isinstance(lower, float):
                 raise TypeError(
@@ -211,7 +223,7 @@ class AxisChart(Chart):
     def y_upper_limit(self, upper=None):
         if upper is None:
             largest_y = max(
-             [series.data()[-1][1] for series in self.all_series()]
+             [series.largest_y() for series in self.all_series()]
             ) if self._y_upper_limit is None else self._y_upper_limit
             return largest_y
         else:

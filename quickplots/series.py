@@ -61,6 +61,22 @@ class Series:
             self._name = name
 
 
+    def smallest_x(self):
+        return self.data()[0][0]
+
+
+    def largest_x(self):
+        return self.data()[-1][0]
+
+
+    def smallest_y(self):
+        return min([datum[-1] for datum in self.data()])
+
+
+    def largest_y(self):
+        return max([datum[-1] for datum in self.data()])
+
+
     def add_data_point(self, x, y):
         if not isinstance(x, float) and not isinstance(x, int):
             raise TypeError("x value must be numeric, not '%s'" % str(x))

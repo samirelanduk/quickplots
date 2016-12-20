@@ -11,12 +11,18 @@ class AxisChartTest(TestCase):
         self.series1 = Mock(Series)
         self.series1.name.return_value = "series1"
         self.series1.data.return_value = [(1, 1), (2, 4), (3, 9)]
+        self.series1.smallest_y.return_value = 1
+        self.series1.largest_y.return_value = 9
         self.series2 = Mock(Series)
         self.series2.name.return_value = "series2"
         self.series2.data.return_value = [(1, 1), (2, 8), (3, 27)]
+        self.series2.smallest_y.return_value = 1
+        self.series2.largest_y.return_value = 27
         self.series3 = Mock(Series)
         self.series3.name.return_value = "series3"
-        self.series3.data.return_value = [(10, 100), (20, 200), (30, 300)]
+        self.series3.data.return_value = [(10, 100), (20, 300), (30, 200)]
+        self.series3.smallest_y.return_value = 100
+        self.series3.largest_y.return_value = 300
 
 
 class AxisChartCreationTests(AxisChartTest):
@@ -158,6 +164,18 @@ class AxisChartPropertyTests(AxisChartTest):
         chart = AxisChart(self.series1, self.series2, self.series3)
         self.assertEqual(chart.x_limit()[0], 0)
         self.assertEqual(chart.y_limit()[0], 0)
+
+
+    def test_axis_lower_limits_match_lowest_value_when_negative(self):
+        self.series2.data.return_value = [(-5, 1), (2, -8), (3, 27)]
+        self.series2.smallest_y.return_value = -8
+        self.series2.largest_y.return_value = 27
+        chart = AxisChart(self.series2)
+        self.assertEqual(chart.x_limit()[0], -5)
+        self.assertEqual(chart.y_limit()[0], -8)
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        self.assertEqual(chart.x_limit()[0], -5)
+        self.assertEqual(chart.y_limit()[0], -8)
 
 
     def test_x_and_y_upper_limits_default_to_highest_values_in_series(self):

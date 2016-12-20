@@ -124,6 +124,14 @@ class SeriesPropertyTests(TestCase):
             series.name(100)
 
 
+    def test_can_get_smallest_amd_largest_values(self):
+        series = Series((1, -1), (2, 9), (3, 4))
+        self.assertEqual(series.smallest_x(), 1)
+        self.assertEqual(series.largest_x(), 3)
+        self.assertEqual(series.smallest_y(), -1)
+        self.assertEqual(series.largest_y(), 9)
+
+
 
 class SeriesDataManipulationTests(TestCase):
 
