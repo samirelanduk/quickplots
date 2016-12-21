@@ -1,6 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch
 from quickplots.series import Series
+from quickplots.charts import AxisChart
 import builtins
 
 class SeriesCreationTests(TestCase):
@@ -175,3 +176,18 @@ class SeriesDataManipulationTests(TestCase):
         self.series.remove_data_point(2, 4)
         with self.assertRaises(ValueError):
             self.series.remove_data_point(3, 9)
+
+
+
+class SeriesPaintingTests(TestCase):
+
+    def setUp(self):
+        self.series = Series((1, 1), (2, 4), (3, 9), (4, 16), (5, 25))
+        self.chart = AxisChart(self.series, width=1000, height=750)
+
+
+    def test_series_can_get_canvas_points(self):
+        self.assertEqual(
+         self.series.canvas_points(),
+         ((260, 651), (420, 579), (580, 459), (740, 291), (900, 75))
+        )
