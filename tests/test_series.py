@@ -186,6 +186,11 @@ class SeriesPaintingTests(TestCase):
         self.chart = AxisChart(self.series, width=1000, height=750)
 
 
+    def test_series_with_no_chart_returns_none_for_canvas_points(self):
+        series = Series((1, 1), (2, 4), (3, 9), (4, 16), (5, 25))
+        self.assertEqual(series.canvas_points(), None)
+
+
     def test_series_can_get_canvas_points(self):
         self.assertEqual(
          self.series.canvas_points(),

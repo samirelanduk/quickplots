@@ -100,20 +100,21 @@ class Series:
 
 
     def canvas_points(self):
-        points = []
-        width = self.chart().width()
-        height = self.chart().height()
-        x_padding = self.chart().horizontal_padding() * width
-        y_padding = self.chart().vertical_padding() * height
-        width -= (2 * x_padding)
-        height -= (2 * y_padding)
-        x_range = self.chart().x_upper_limit() - self.chart().x_lower_limit()
-        y_range = self.chart().y_upper_limit() - self.chart().y_lower_limit()
-        x_division = width / x_range
-        y_division = height / y_range
-        for datum in self.data():
-            points.append((
-             (datum[0] * x_division) + x_padding,
-             self.chart().height() - ((datum[1] * y_division) + y_padding),
-            ))
-        return tuple(points)
+        if self.chart():
+            points = []
+            width = self.chart().width()
+            height = self.chart().height()
+            x_padding = self.chart().horizontal_padding() * width
+            y_padding = self.chart().vertical_padding() * height
+            width -= (2 * x_padding)
+            height -= (2 * y_padding)
+            x_range = self.chart().x_upper_limit() - self.chart().x_lower_limit()
+            y_range = self.chart().y_upper_limit() - self.chart().y_lower_limit()
+            x_division = width / x_range
+            y_division = height / y_range
+            for datum in self.data():
+                points.append((
+                 (datum[0] * x_division) + x_padding,
+                 self.chart().height() - ((datum[1] * y_division) + y_padding),
+                ))
+            return tuple(points)
