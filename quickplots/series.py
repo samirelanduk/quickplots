@@ -40,6 +40,7 @@ class Series:
         if not isinstance(name, str) and name is not None:
             raise TypeError("name must be str, not '%s'" % str(name))
         self._name = name
+        self._chart = None
 
 
     def __repr__(self):
@@ -59,6 +60,10 @@ class Series:
             if not isinstance(name, str) and name is not None:
                 raise TypeError("name must be str, not '%s'" % str(name))
             self._name = name
+
+
+    def chart(self):
+        return self._chart
 
 
     def smallest_x(self):

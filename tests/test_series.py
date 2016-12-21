@@ -9,6 +9,7 @@ class SeriesCreationTests(TestCase):
         series = Series((1, 1), (2, 4), (3, 9))
         self.assertEqual(series._data, [(1, 1), (2, 4), (3, 9)])
         self.assertEqual(series._name, None)
+        self.assertEqual(series._chart, None)
 
 
     def test_can_create_series_with_list_points(self):
@@ -104,6 +105,7 @@ class SeriesPropertyTests(TestCase):
         series = Series((1, 1), (2, 4), (3, 9), name="Squares")
         self.assertEqual(series.data(), series._data)
         self.assertIs(series.name(), series._name)
+        self.assertIs(series.chart(), series._chart)
 
 
     def test_series_data_is_read_only(self):

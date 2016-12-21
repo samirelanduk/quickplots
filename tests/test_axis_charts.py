@@ -43,6 +43,13 @@ class AxisChartCreationTests(AxisChartTest):
         )
 
 
+    def test_series_know_about_chart(self):
+        chart = AxisChart(self.series1, self.series2, self.series3)
+        self.assertIs(self.series1.chart(), chart)
+        self.assertIs(self.series2.chart(), chart)
+        self.assertIs(self.series3.chart(), chart)
+
+
     def test_axis_chart_series_must_be_of_type_series(self):
         with self.assertRaises(TypeError):
             AxisChart(self.series1, [1, 2, 3])
@@ -399,6 +406,12 @@ class AxisChartSeriesTests(AxisChartTest):
             chart.add_series("Series")
 
 
+    def test_adding_series_updates_its_chart(self):
+        chart = AxisChart(self.series1)
+        chart.add_series(self.series2)
+        self.assertIs(self.series2.chart(), chart)
+
+
     def test_can_remove_series(self):
         chart = AxisChart(self.series1, self.series2)
         chart.remove_series(self.series1)
@@ -409,6 +422,13 @@ class AxisChartSeriesTests(AxisChartTest):
         chart = AxisChart(self.series1)
         with self.assertRaises(ValueError):
             chart.remove_series(self.series1)
+
+
+    def test_removing_series_breaks_its_connection(self):
+        chart = AxisChart(self.series1, self.series2)
+        chart.remove_series(self.series1)
+        self.assertIs(self.series2.chart(), chart)
+        self.assertIs(self.series1.chart(), None)
 
 
     def test_can_get_series_by_name(self):

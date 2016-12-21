@@ -69,6 +69,8 @@ class AxisChart(Chart):
         if len(series) == 0:
             raise ValueError("AxisChart needs at least one series")
         self._all_series = list(series)
+        for s in series:
+            s._chart = self
 
         if not isinstance(x_label, str):
             raise TypeError("x_label must be str, not '%s'" % str(x_label))
@@ -101,12 +103,14 @@ class AxisChart(Chart):
         if not isinstance(series, Series):
             raise TypeError("'%s' is not a Series" % str(series))
         self._all_series.append(series)
+        series._chart = self
 
 
     def remove_series(self, series):
         if len(self.all_series()) == 1:
             raise ValueError("Cannot remove last series from %s" % str(self))
         self._all_series.remove(series)
+        series._chart = None
 
 
     def get_series_by_name(self, name):
