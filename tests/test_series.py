@@ -182,8 +182,11 @@ class SeriesDataManipulationTests(TestCase):
 class SeriesPaintingTests(TestCase):
 
     def setUp(self):
-        self.series = Series((1, 1), (2, 4), (3, 9), (4, 16), (5, 25))
-        self.chart = AxisChart(self.series, width=1000, height=750)
+        x = list(range(1, 11))
+        y = [n ** 2 for n in x]
+        data = list(zip(x, y))
+        self.series = Series(*data)
+        self.chart = AxisChart(self.series, width=1000, height=500)
 
 
     def test_series_with_no_chart_returns_none_for_canvas_points(self):
@@ -191,8 +194,11 @@ class SeriesPaintingTests(TestCase):
         self.assertEqual(series.canvas_points(), None)
 
 
-    def test_series_can_get_canvas_points(self):
+    def test_series_can_get_canvas_points_with_zero_base(self):
         self.assertEqual(
          self.series.canvas_points(),
-         ((260, 651), (420, 579), (580, 459), (740, 291), (900, 75))
+         (
+          (180, 446), (260, 434), (340, 414), (420, 386), (500, 350),
+          (580, 306), (660, 254), (740, 194), (820, 126), (900, 50)
+         )
         )
