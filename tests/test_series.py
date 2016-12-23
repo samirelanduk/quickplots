@@ -202,3 +202,15 @@ class SeriesPaintingTests(TestCase):
           (580, 306), (660, 254), (740, 194), (820, 126), (900, 50)
          )
         )
+
+
+    def test_series_canvas_points_with_zero_base_with_unusual_margin(self):
+        self.chart.horizontal_padding(0.45)
+        self.chart.vertical_padding(0.25)
+        self.assertEqual(
+         self.series.canvas_points(),
+         (
+          (460, 372.5), (470, 365), (480, 352.5), (490, 335), (500, 312.5),
+          (510, 285), (520, 252.5), (530, 215), (540, 172.5), (550, 125)
+         )
+        )
