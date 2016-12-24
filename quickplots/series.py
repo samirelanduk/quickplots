@@ -101,20 +101,27 @@ class Series:
 
     def canvas_points(self):
         if self.chart():
-            points = []
-            width = self.chart().width()
-            height = self.chart().height()
-            x_padding = self.chart().horizontal_padding() * width
-            y_padding = self.chart().vertical_padding() * height
-            width -= (2 * x_padding)
-            height -= (2 * y_padding)
-            x_range = self.chart().x_upper_limit() - self.chart().x_lower_limit()
-            y_range = self.chart().y_upper_limit() - self.chart().y_lower_limit()
-            x_division = width / x_range
-            y_division = height / y_range
-            for datum in self.data():
-                points.append((
-                 (datum[0] * x_division) + x_padding,
-                 self.chart().height() - ((datum[1] * y_division) + y_padding),
+            x_axis_min = self.chart().x_lower_limit()
+            y_axis_min = self.chart().y_lower_limit()
+            x_axis_max = self.chart().x_upper_limit()
+            y_axis_max = self.chart().y_upper_limit()
+            chart_width = self.chart().width()
+            chart_height = self.chart().height()
+            horizontal_padding = self.chart().horizontal_padding()
+            vertical_padding = self.chart().vertical_padding()
+            horizontal_margin_pixels = horizontal_padding * chart_width
+            vertical_margin_pixels = vertical_padding * chart_height
+            x_axis_pixels = chart_width - (2 * horizontal_margin_pixels)
+            y_axis_pixels = chart_height - (2 * vertical_margin_pixels)
+            x_axis_span = x_axis_max - x_axis_min
+            y_axis_span = y_axis_max - y_axis_min
+            x_pixels_per_point = x_axis_pixels / x_axis_span
+            y_pixels_per_point = y_axis_pixels / y_axis_span
+            data = []
+            for x, y in self.data():
+                relative_x, relative_y = x - x_axis_min, y - y_axis_min
+                data.append((
+                 (relative_x * x_pixels_per_point) + horizontal_margin_pixels,
+                 chart_height - ((relative_y * y_pixels_per_point) + vertical_margin_pixels)
                 ))
-            return tuple(points)
+            return tuple(data)

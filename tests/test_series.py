@@ -214,3 +214,17 @@ class SeriesPaintingTests(TestCase):
           (510, 285), (520, 252.5), (530, 215), (540, 172.5), (550, 125)
          )
         )
+
+
+    def test_non_zero_based_series_points(self):
+        self.chart.x_lower_limit(5)
+        self.chart.x_upper_limit(15)
+        self.chart.y_lower_limit(50)
+        self.chart.y_upper_limit(300)
+        self.assertEqual(
+         self.series.canvas_points(),
+         (
+          (-220, 528.4), (-140, 523.6), (-60, 515.6), (20, 504.4), (100, 490),
+          (180, 472.4), (260, 451.6), (340, 427.6), (420, 400.4), (500, 370)
+         )
+        )
