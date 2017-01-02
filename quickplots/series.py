@@ -125,3 +125,8 @@ class Series:
                  chart_height - ((relative_y * y_pixels_per_point) + vertical_margin_pixels)
                 ))
             return tuple(data)
+
+
+
+class LineSeries(Series):
+    pass
