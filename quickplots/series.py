@@ -129,4 +129,6 @@ class Series:
 
 
 class LineSeries(Series):
-    pass
+
+    def __init__(self, *args, **kwargs):
+        Series.__init__(self, *args, **kwargs)
