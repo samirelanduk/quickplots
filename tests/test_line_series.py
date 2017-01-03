@@ -43,6 +43,7 @@ class LineSeriesPropertyTests(TestCase):
     def test_basic_line_series_properties(self):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         self.assertIs(series._color, series.color())
+        self.assertIs(series._linestyle, series.linestyle())
 
 
     def test_can_modify_color(self):
@@ -55,3 +56,15 @@ class LineSeriesPropertyTests(TestCase):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         with self.assertRaises(TypeError):
             series.color(100)
+
+
+    def test_can_modify_linestyle(self):
+        series = LineSeries((1, 1), (2, 4), (3, 9))
+        series.linestyle("--")
+        self.assertEqual(series.linestyle(), "--")
+
+
+    def test_set_linestyle_must_be_str(self):
+        series = LineSeries((1, 1), (2, 4), (3, 9))
+        with self.assertRaises(TypeError):
+            series.linestyle(100)

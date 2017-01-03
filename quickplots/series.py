@@ -148,3 +148,14 @@ class LineSeries(Series):
             if not isinstance(color, str):
                 raise TypeError("color must be str, not '%s'" % str(color))
             self._color = color
+
+
+    def linestyle(self, linestyle=None):
+        if linestyle is None:
+            return self._linestyle
+        else:
+            if not isinstance(linestyle, str):
+                raise TypeError(
+                 "linestyle must be str, not '%s'" % str(linestyle)
+                )
+            self._linestyle = linestyle
