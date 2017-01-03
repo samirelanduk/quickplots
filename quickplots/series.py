@@ -138,5 +138,10 @@ class LineSeries(Series):
         self._color = color
 
 
-    def color(self):
-        return self._color
+    def color(self, color=None):
+        if color is None:
+            return self._color
+        else:
+            if not isinstance(color, str):
+                raise TypeError("color must be str, not '%s'" % str(color))
+            self._color = color
