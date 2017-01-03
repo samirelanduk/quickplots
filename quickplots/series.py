@@ -164,4 +164,8 @@ class LineSeries(Series):
 
 
     def write_to_canvas(self, canvas):
-        canvas.add_polyline(0, 0, 1, 1)
+        points = self.canvas_points()
+        args = []
+        for point in points:
+            args += list(point)
+        canvas.add_polyline(*args)

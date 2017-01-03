@@ -85,7 +85,7 @@ class LineSeriesPropertyTests(TestCase):
 class LineSeriesPaintingTests(TestCase):
 
     def setUp(self):
-        x = list(range(1, 5))
+        x = list(range(1, 6))
         y = [n ** 2 for n in x]
         data = list(zip(x, y))
         self.series = LineSeries(*data)
@@ -97,3 +97,12 @@ class LineSeriesPaintingTests(TestCase):
         self.series.write_to_canvas(self.canvas)
         self.assertEqual(len(self.canvas.graphics()), 1)
         self.assertIsInstance(self.canvas.graphics()[0], Polyline)
+
+
+    def test_line_series_puts_points_in_correct_place(self):
+        self.series.write_to_canvas(self.canvas)
+        line = self.canvas.graphics()[0]
+        points = self.series.canvas_points()
+        self.assertEqual(len(points), len(line.coordinates(xy_pairs=True)))
+        for index, point in enumerate(points):
+            self.assertEqual(point, line.coordinates(xy_pairs=True)[index])
