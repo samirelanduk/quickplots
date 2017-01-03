@@ -133,4 +133,6 @@ class LineSeries(Series):
     def __init__(self, *args, color="#000000", **kwargs):
         Series.__init__(self, *args, **kwargs)
 
+        if not isinstance(color, str):
+            raise TypeError("color must be str, not '%s'" % str(color))
         self._color = color
