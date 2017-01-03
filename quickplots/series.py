@@ -161,3 +161,7 @@ class LineSeries(Series):
                  "linestyle must be str, not '%s'" % str(linestyle)
                 )
             self._linestyle = linestyle
+
+
+    def write_to_canvas(self, canvas):
+        canvas.add_polyline(0, 0, 1, 1)

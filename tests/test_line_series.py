@@ -1,6 +1,9 @@
 from unittest import TestCase
 from unittest.mock import patch
 from quickplots.series import LineSeries, Series
+from quickplots.charts import AxisChart
+from omnicanvas import Canvas
+from omnicanvas.graphics import Polyline
 
 class LineSeriesCreationTests(TestCase):
 
@@ -76,3 +79,21 @@ class LineSeriesPropertyTests(TestCase):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         with self.assertRaises(TypeError):
             series.linestyle(100)
+
+
+
+class LineSeriesPaintingTests(TestCase):
+
+    def setUp(self):
+        x = list(range(1, 5))
+        y = [n ** 2 for n in x]
+        data = list(zip(x, y))
+        self.series = LineSeries(*data)
+        self.chart = AxisChart(self.series)
+        self.canvas = Canvas(self.chart.width(), self.chart.height())
+
+
+    def test_can_write_object_to_canvas(self):
+        self.series.write_to_canvas(self.canvas)
+        self.assertEqual(len(self.canvas.graphics()), 1)
+        self.assertIsInstance(self.canvas.graphics()[0], Polyline)
