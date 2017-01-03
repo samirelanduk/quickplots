@@ -106,3 +106,10 @@ class LineSeriesPaintingTests(TestCase):
         self.assertEqual(len(points), len(line.coordinates(xy_pairs=True)))
         for index, point in enumerate(points):
             self.assertEqual(point, line.coordinates(xy_pairs=True)[index])
+
+
+    def test_line_series_can_transfer_color(self):
+        self.series.color("#DDDDDD")
+        self.series.write_to_canvas(self.canvas)
+        line = self.canvas.graphics()[0]
+        self.assertEqual(line.line_color(), "#DDDDDD")
