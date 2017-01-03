@@ -37,6 +37,14 @@ class LineSeriesCreationTests(TestCase):
             LineSeries((1, 1), (2, 4), (3, 9), linestyle=100)
 
 
+    def test_line_series_repr(self):
+        series = LineSeries((1, 1), (2, 4), (3, 9))
+        self.assertEqual(str(series), "<LineSeries (3 data points)>")
+        series = LineSeries((1, 1), (2, 4), (3, 9), name="line")
+        self.assertEqual(str(series), "<LineSeries 'line' (3 data points)>")
+
+
+
 
 class LineSeriesPropertyTests(TestCase):
 
