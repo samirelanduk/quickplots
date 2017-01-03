@@ -136,3 +136,7 @@ class LineSeries(Series):
         if not isinstance(color, str):
             raise TypeError("color must be str, not '%s'" % str(color))
         self._color = color
+
+
+    def color(self):
+        return self._color

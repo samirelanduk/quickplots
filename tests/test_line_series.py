@@ -24,3 +24,11 @@ class LineSeriesCreationTests(TestCase):
     def test_color_must_be_str(self):
         with self.assertRaises(TypeError):
             LineSeries((1, 1), (2, 4), (3, 9), color=100)
+
+
+
+class LineSeriesPropertyTests(TestCase):
+
+    def test_basic_line_series_properties(self):
+        series = LineSeries((1, 1), (2, 4), (3, 9))
+        self.assertIs(series._color, series.color())
