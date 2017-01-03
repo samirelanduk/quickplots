@@ -130,5 +130,7 @@ class Series:
 
 class LineSeries(Series):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, color="#000000", **kwargs):
         Series.__init__(self, *args, **kwargs)
+
+        self._color = color
