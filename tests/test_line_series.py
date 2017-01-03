@@ -113,3 +113,10 @@ class LineSeriesPaintingTests(TestCase):
         self.series.write_to_canvas(self.canvas)
         line = self.canvas.graphics()[0]
         self.assertEqual(line.line_color(), "#DDDDDD")
+
+
+    def test_line_series_can_transfer_line_style(self):
+        self.series.linestyle("--")
+        self.series.write_to_canvas(self.canvas)
+        line = self.canvas.graphics()[0]
+        self.assertEqual(line.line_style(), "--")
