@@ -94,14 +94,17 @@ class LineSeriesPaintingTests(TestCase):
 
 
     def test_can_write_object_to_canvas(self):
-        self.series.write_to_canvas(self.canvas)
+        self.series.write_to_canvas(self.canvas, "series1")
         self.assertEqual(len(self.canvas.graphics()), 1)
-        self.assertIsInstance(self.canvas.graphics()[0], Polyline)
+        self.assertIsInstance(
+         self.canvas.get_graphic_by_name("series1"),
+         Polyline
+        )
 
 
     def test_line_series_puts_points_in_correct_place(self):
-        self.series.write_to_canvas(self.canvas)
-        line = self.canvas.graphics()[0]
+        self.series.write_to_canvas(self.canvas, "series1")
+        line = self.canvas.get_graphic_by_name("series1")
         points = self.series.canvas_points()
         self.assertEqual(len(points), len(line.coordinates(xy_pairs=True)))
         for index, point in enumerate(points):
@@ -110,13 +113,13 @@ class LineSeriesPaintingTests(TestCase):
 
     def test_line_series_can_transfer_color(self):
         self.series.color("#DDDDDD")
-        self.series.write_to_canvas(self.canvas)
-        line = self.canvas.graphics()[0]
+        self.series.write_to_canvas(self.canvas, "series1")
+        line = self.canvas.get_graphic_by_name("series1")
         self.assertEqual(line.line_color(), "#DDDDDD")
 
 
     def test_line_series_can_transfer_line_style(self):
         self.series.linestyle("--")
-        self.series.write_to_canvas(self.canvas)
-        line = self.canvas.graphics()[0]
+        self.series.write_to_canvas(self.canvas, "series1")
+        line = self.canvas.get_graphic_by_name("series1")
         self.assertEqual(line.line_style(), "--")

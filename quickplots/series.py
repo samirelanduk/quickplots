@@ -163,11 +163,11 @@ class LineSeries(Series):
             self._linestyle = linestyle
 
 
-    def write_to_canvas(self, canvas):
+    def write_to_canvas(self, canvas, name):
         points = self.canvas_points()
         args = []
         for point in points:
             args += list(point)
         canvas.add_polyline(
-         *args, line_color=self.color(), line_style=self.linestyle()
+         *args, line_color=self.color(), line_style=self.linestyle(), name=name
         )

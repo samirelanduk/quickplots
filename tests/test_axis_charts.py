@@ -1,16 +1,16 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
 from quickplots.charts import AxisChart, Chart
-from quickplots.series import Series
+from quickplots.series import Series, LineSeries
 from omnicanvas import Canvas
-from omnicanvas.graphics import Text, Rectangle
+from omnicanvas.graphics import Text, Rectangle, Polyline
 
 class AxisChartTest(TestCase):
 
     def setUp(self):
-        self.series1 = Series((1, 1), (2, 4), (3, 9), name="series1")
-        self.series2 = Series((10, 20), (100, 200), (1000, 2000), name="series2")
-        self.series3 = Series((-10, -5), (23, 45), (-1, 2), name="series3")
+        self.series1 = LineSeries((1, 1), (2, 4), (3, 9), name="series1")
+        self.series2 = LineSeries((10, 20), (100, 200), (1000, 2000), name="series2")
+        self.series3 = LineSeries((-10, -5), (23, 45), (-1, 2), name="series3")
 
 
 class AxisChartCreationTests(AxisChartTest):
@@ -550,3 +550,15 @@ class AxisChartCanvasTests(AxisChartTest):
         canvas = self.chart.create()
         y_label = canvas.get_graphic_by_name("y_label")
         self.assertEqual(y_label.rotation(), (70, 250, 270))
+
+
+    @patch("quickplots.series.LineSeries.write_to_canvas")
+    def test_series_canvas_writer_is_called(self, mock):
+        canvas = self.chart.create()
+        self.assertTrue(mock.called)
+
+
+    def test_series_paint_themselves_to_canvas(self):
+        canvas = self.chart.create()
+        line = canvas.get_graphic_by_name("series1")
+        self.assertIsInstance(line, Polyline)
