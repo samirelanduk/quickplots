@@ -562,3 +562,16 @@ class AxisChartCanvasTests(AxisChartTest):
         canvas = self.chart.create()
         line = canvas.get_graphic_by_name("series1")
         self.assertIsInstance(line, Polyline)
+
+
+    def test_multiple_series_can_be_written_to_canvas(self):
+        self.chart = AxisChart(
+         self.series1, self.series2, self.series3, title="Test AxisChart"
+        )
+        canvas = self.chart.create()
+        line1 = canvas.get_graphic_by_name("series1")
+        line2 = canvas.get_graphic_by_name("series2")
+        line3 = canvas.get_graphic_by_name("series3")
+        self.assertIsInstance(line1, Polyline)
+        self.assertIsInstance(line2, Polyline)
+        self.assertIsInstance(line3, Polyline)

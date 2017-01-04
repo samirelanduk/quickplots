@@ -323,5 +323,6 @@ class AxisChart(Chart):
              rotation=(y_label_x, canvas.height() * 0.5, 270),
              name="y_label"
             )
-        self.series().write_to_canvas(canvas, "series1")
+        for index, series in enumerate(self.all_series(), start=1):
+            series.write_to_canvas(canvas, "series%i" % index)
         return canvas
