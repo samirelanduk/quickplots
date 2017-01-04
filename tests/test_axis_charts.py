@@ -575,3 +575,9 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertIsInstance(line1, Polyline)
         self.assertIsInstance(line2, Polyline)
         self.assertIsInstance(line3, Polyline)
+
+
+    def test_series_are_before_everything_else_except_title(self):
+        canvas = self.chart.create()
+        line = canvas.get_graphic_by_name("series1")
+        self.assertIs(line, canvas.graphics()[1])
