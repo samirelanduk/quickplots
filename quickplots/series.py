@@ -169,5 +169,6 @@ class LineSeries(Series):
         for point in points:
             args += list(point)
         canvas.add_polyline(
-         *args, line_color=self.color(), line_style=self.linestyle(), name=name
+         *args, line_color=self.color(), line_style=self.linestyle(),
+         line_width=2, name=name
         )
