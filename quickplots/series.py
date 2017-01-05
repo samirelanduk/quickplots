@@ -132,7 +132,7 @@ class Series:
 
 class LineSeries(Series):
 
-    def __init__(self, *args, color="#000000", linestyle="-", **kwargs):
+    def __init__(self, *args, color="#FF0000", linestyle="-", **kwargs):
         Series.__init__(self, *args, **kwargs)
 
         if not isinstance(color, str):
