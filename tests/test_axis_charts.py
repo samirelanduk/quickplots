@@ -577,10 +577,10 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertIsInstance(line3, Polyline)
 
 
-    def test_series_are_before_everything_else_except_title(self):
+    def test_series_are_before_everything_else(self):
         canvas = self.chart.create()
         line = canvas.get_graphic_by_name("series1")
-        self.assertIs(line, canvas.graphics()[1])
+        self.assertIs(line, canvas.graphics()[0])
 
 
     def test_white_rectangles_block_out_area_beyond_axes(self):

@@ -326,6 +326,7 @@ class AxisChart(Chart):
          line_width=0,
          name="block-s"
         )
+        canvas._graphics.append(canvas._graphics.pop(0)) # Dirty hack
 
         axes = canvas.add_rectangle(
          self.horizontal_padding() * canvas.width(),
