@@ -611,3 +611,17 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertEqual(block4.y(), 0)
         self.assertEqual(block4.width(), canvas.width() - (axes.x() + axes.width()))
         self.assertEqual(block4.height(), canvas.height())
+
+
+    def test_white_blockers_are_immediately_after_series(self):
+        canvas = self.chart.create()
+        line = canvas.get_graphic_by_name("series1")
+        block1 = canvas.get_graphic_by_name("block-w")
+        block2 = canvas.get_graphic_by_name("block-n")
+        block3 = canvas.get_graphic_by_name("block-e")
+        block4 = canvas.get_graphic_by_name("block-s")
+        start_index = canvas.graphics().index(line)
+        self.assertEqual(canvas.graphics().index(block1), start_index + 1)
+        self.assertEqual(canvas.graphics().index(block2), start_index + 2)
+        self.assertEqual(canvas.graphics().index(block3), start_index + 3)
+        self.assertEqual(canvas.graphics().index(block4), start_index + 4)

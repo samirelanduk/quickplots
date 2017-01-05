@@ -300,6 +300,32 @@ class AxisChart(Chart):
 
         for index, series in enumerate(self.all_series(), start=1):
             series.write_to_canvas(canvas, "series%i" % index)
+        canvas.add_rectangle(
+         0, 0, self.horizontal_padding() * canvas.width(), canvas.height(),
+         opacity=1,
+         line_width=0,
+         name="block-w"
+        )
+        canvas.add_rectangle(
+         0, 0, canvas.width(), self.vertical_padding() * canvas.height(),
+         opacity=1,
+         line_width=0,
+         name="block-n"
+        )
+        canvas.add_rectangle(
+         canvas.width() - (self.horizontal_padding() * canvas.width()), 0,
+         self.horizontal_padding() * canvas.width(), canvas.height(),
+         opacity=1,
+         line_width=0,
+         name="block-e"
+        )
+        canvas.add_rectangle(
+         0, canvas.height() - (self.vertical_padding() * canvas.height()),
+         canvas.width(), self.vertical_padding() * canvas.height(),
+         opacity=1,
+         line_width=0,
+         name="block-s"
+        )
 
         axes = canvas.add_rectangle(
          self.horizontal_padding() * canvas.width(),
@@ -326,31 +352,4 @@ class AxisChart(Chart):
              rotation=(y_label_x, canvas.height() * 0.5, 270),
              name="y_label"
             )
-
-        canvas.add_rectangle(
-         0, 0, axes.x(), canvas.height(),
-         opacity=1,
-         line_width=0,
-         name="block-w"
-        )
-        canvas.add_rectangle(
-         0, 0, canvas.width(), axes.y(),
-         opacity=1,
-         line_width=0,
-         name="block-n"
-        )
-        canvas.add_rectangle(
-         axes.x() + axes.width(), 0,
-         canvas.width() - (axes.x() + axes.width()), canvas.height(),
-         opacity=1,
-         line_width=0,
-         name="block-e"
-        )
-        canvas.add_rectangle(
-         0, axes.y() + axes.height(),
-         canvas.width(), canvas.height() - (axes.y() + axes.height()),
-         opacity=1,
-         line_width=0,
-         name="block-s"
-        )
         return canvas
