@@ -327,6 +327,8 @@ class AxisChart(Chart):
          name="block-s"
         )
         canvas._graphics.append(canvas._graphics.pop(0)) # Dirty hack
+        canvas.graphics()[-1].y(self.vertical_padding() * canvas.height() * 0.5)
+        canvas.graphics()[-1].vertical_align("center")
 
         axes = canvas.add_rectangle(
          self.horizontal_padding() * canvas.width(),

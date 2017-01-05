@@ -459,6 +459,13 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertEqual(title.text(), "Test AxisChart")
 
 
+    def test_title_centered_in_space_between_axis_top_and_canvas_top(self):
+        canvas = self.chart.create()
+        title = canvas.get_graphic_by_name("title")
+        self.assertEqual(title.y(), 25)
+        self.assertEqual(title.vertical_align(), "center")
+
+
     def test_chart_has_axes(self):
         canvas = self.chart.create()
         axes = canvas.get_graphic_by_name("axes")
