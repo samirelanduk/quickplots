@@ -446,6 +446,19 @@ class AxisChartSeriesTests(AxisChartTest):
 
 
 
+class AxisChartQuickAddTests(AxisChartTest):
+
+    def test_can_quick_add_line_series(self):
+        chart = AxisChart(self.series1)
+        chart.line((1, 1), (2, 8), (3, 27))
+        self.assertEqual(len(chart.all_series()), 2)
+        self.assertIsInstance(chart.all_series()[-1], LineSeries)
+        self.assertEqual(
+         chart.all_series()[-1].data(),
+         [(1, 1), (2, 8), (3, 27)]
+        )
+
+
 class AxisChartCanvasTests(AxisChartTest):
 
     def setUp(self):

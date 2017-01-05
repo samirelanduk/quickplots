@@ -1,6 +1,6 @@
 import math
 from omnicanvas import Canvas
-from .series import Series
+from .series import Series, LineSeries
 
 class Chart:
 
@@ -111,6 +111,11 @@ class AxisChart(Chart):
             raise ValueError("Cannot remove last series from %s" % str(self))
         self._all_series.remove(series)
         series._chart = None
+
+
+    def line(self, *args):
+        series = LineSeries(*args)
+        self.add_series(series)
 
 
     def get_series_by_name(self, name):
