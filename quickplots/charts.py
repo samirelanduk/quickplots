@@ -113,8 +113,8 @@ class AxisChart(Chart):
         series._chart = None
 
 
-    def line(self, *args):
-        series = LineSeries(*args)
+    def line(self, *args, **kwargs):
+        series = LineSeries(*args, **kwargs)
         self.add_series(series)
 
 
