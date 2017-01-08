@@ -70,6 +70,13 @@ class Chart:
 
 
     def create(self):
+        """Renders the chart to an OmniCanvas `canvas <https://omnicanvas.readt\
+        hedocs.io/en/latest/api/canvas.html#omnicanvas.canvas.Canvas>`_. This
+        object can then be `saved <https://omnicanvas.readthedocs.io/en/latest/\
+        api/canvas.html#omnicanvas.canvas.Canvas.save>`_ or `rendered <https://\
+        omnicanvas.readthedocs.io/en/latest/api/canvas.html#omnicanvas.canvas.C\
+        anvas.render>`_ as SVG."""
+
         canvas = Canvas(self.width(), self.height())
         canvas.add_text(
          self.width() / 2, 0, self.title(),
@@ -79,6 +86,24 @@ class Chart:
 
 
 class AxisChart(Chart):
+    """Base class: :py:class:`Chart`
+
+    A chart with axes, onto which series can be shown. Line charts, scatter
+    charts, bar charts etc. are all AxisCharts with the relevant series. An
+    AxisChart can have multiple series associated with it, and they will all be
+    drawn onto the chart.
+
+    AxisCharts have the usual properties relating to axes, such as axes labels.
+
+    :param Series \*series: One or more :py:class:`.Series` objects to be\
+    associated with the chart.
+    :param str title: The chart's title. This will be displayed at the top of\
+    the chart.
+    :param width: The width in pixels of the chart.
+    :param height: The height in pixels of the chart.
+    :param str x_label: The label for the x-axis.
+    :param str y_label: The label for the y-axis.
+    :raises ValueError: If no series are given."""
 
     def __init__(self, *series, x_label="", y_label="", **kwargs):
         Chart.__init__(self, **kwargs)
@@ -112,14 +137,28 @@ class AxisChart(Chart):
 
 
     def all_series(self):
+        """Returns a ``list`` of all the :py:class:`.Series` objects associated
+        with the chart.
+
+        :rtype: ``list``"""
+
         return list(self._all_series)
 
 
     def series(self):
+        """Returns the first :py:class:`.Series` objects associated with the
+        chart.
+
+        :rtype: :py:class:`.Series`"""
+
         return self._all_series[0]
 
 
     def add_series(self, series):
+        """Adds a :py:class:`.Series` to the chart.
+
+        :param Series series: The :py:class:`.Series` to add."""
+
         if not isinstance(series, Series):
             raise TypeError("'%s' is not a Series" % str(series))
         self._all_series.append(series)
@@ -127,6 +166,11 @@ class AxisChart(Chart):
 
 
     def remove_series(self, series):
+        """Removes a :py:class:`.Series` from the chart.
+
+        :param Series series: The :py:class:`.Series` to remove.
+        :raises ValueError: if you try to remove the last :py:class:`.Series`."""
+
         if len(self.all_series()) == 1:
             raise ValueError("Cannot remove last series from %s" % str(self))
         self._all_series.remove(series)
@@ -134,11 +178,27 @@ class AxisChart(Chart):
 
 
     def line(self, *args, **kwargs):
+        """Adds a :py:class:`.LineSeries` to the chart.
+
+        :param \*data: The data for the series as either (x,y) values or two big \
+        tuples/lists of x and y values respectively.
+        :param str name: The name to be associated with the series.
+        :param str color: The hex colour of the line.
+        :param str linestyle: The line pattern. See\
+        `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.h\
+        tml#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
+        :raises ValueError: if the size and length of the data doesn't match either\
+        format."""
+
         series = LineSeries(*args, **kwargs)
         self.add_series(series)
 
 
     def get_series_by_name(self, name):
+        """Returns the first :py:class:`.Series` of a given name, or ``None``.
+
+        :param str name: The name to search by."""
+
         if not isinstance(name, str):
             raise TypeError(
              "Can only search series by str name, not '%s'" % str(name)
@@ -149,6 +209,11 @@ class AxisChart(Chart):
 
 
     def x_label(self, x_label=None):
+        """Returns or sets (if a value is provided) the chart's x-axis label.
+
+        :param str x_label: If given, the chart's x_label will be set to this.
+        :rtype: str"""
+
         if x_label is None:
             return self._x_label
         else:
@@ -158,6 +223,11 @@ class AxisChart(Chart):
 
 
     def y_label(self, y_label=None):
+        """Returns or sets (if a value is provided) the chart's y-axis label.
+
+        :param str y_label: If given, the chart's y_label will be set to this.
+        :rtype: str"""
+
         if y_label is None:
             return self._y_label
         else:
@@ -167,6 +237,16 @@ class AxisChart(Chart):
 
 
     def horizontal_padding(self, padding=None):
+        """Returns or sets (if a value is provided) the chart's horizontal
+        padding. This determines how much space will be on either side of the
+        display area, as a proportion of overall width, and should be a value
+        between 0 and 0.5
+
+        :param float padding: If given, the chart's horizontal_padding\
+        will be set to this.
+        :raises ValueError: if a value outside of 0 < n < 0.5 is given.
+        :rtype: float"""
+
         if padding is None:
             return self._horizontal_padding
         else:
@@ -180,6 +260,16 @@ class AxisChart(Chart):
 
 
     def vertical_padding(self, padding=None):
+        """Returns or sets (if a value is provided) the chart's vertical
+        padding. This determines how much space will be above and below the
+        display area, as a proportion of overall height, and should be a value
+        between 0 and 0.5
+
+        :param float padding: If given, the chart's vertical_padding\
+        will be set to this.
+        :raises ValueError: if a value outside of 0 < n < 0.5 is given.
+        :rtype: float"""
+
         if padding is None:
             return self._vertical_padding
         else:
@@ -193,30 +283,50 @@ class AxisChart(Chart):
 
 
     def smallest_x(self):
+        """Returns the smallest x-value in all the :py:class:`.Series`
+        associated with the chart."""
+
         return min(
          [series.data()[0][0] for series in self.all_series()]
         )
 
 
     def largest_x(self):
+        """Returns the largest x-value in all the :py:class:`.Series`
+        associated with the chart."""
+
         return max(
          [series.data()[-1][0] for series in self.all_series()]
         )
 
 
     def smallest_y(self):
+        """Returns the smallest y-value in all the :py:class:`.Series`
+        associated with the chart."""
+
         return min(
          [series.smallest_y() for series in self.all_series()]
         )
 
 
     def largest_y(self):
+        """Returns the largest y-value in all the :py:class:`.Series`
+        associated with the chart."""
+
         return max(
          [series.largest_y() for series in self.all_series()]
         )
 
 
     def x_lower_limit(self, limit=None):
+        """Returns or sets (if a value is provided) the value at which the
+        x-axis should start. By default this is zero (unless there are negative
+        values).
+
+        :param limit: If given, the chart's x_lower_limit will be set to this.
+        :raises ValueError: if you try to make the lower limit larger than the\
+        upper limit."""
+
         if limit is None:
             if self._x_lower_limit is None:
                 if self.smallest_x() < 0:
@@ -243,6 +353,14 @@ class AxisChart(Chart):
 
 
     def y_lower_limit(self, limit=None):
+        """Returns or sets (if a value is provided) the value at which the
+        y-axis should start. By default this is zero (unless there are negative
+        values).
+
+        :param limit: If given, the chart's y_lower_limit will be set to this.
+        :raises ValueError: if you try to make the lower limit larger than the\
+        upper limit."""
+
         if limit is None:
             if self._y_lower_limit is None:
                 if self.smallest_y() < 0:
@@ -269,6 +387,14 @@ class AxisChart(Chart):
 
 
     def x_upper_limit(self, limit=None):
+        """Returns or sets (if a value is provided) the value at which the
+        x-axis should end. By default this is the highest x value in the
+        associated series.
+
+        :param limit: If given, the chart's x_upper_limit will be set to this.
+        :raises ValueError: if you try to make the upper limit smaller than the\
+        lower limit."""
+
         if limit is None:
             if self._x_upper_limit is None:
                 if self.smallest_x() == self.largest_x():
@@ -295,6 +421,14 @@ class AxisChart(Chart):
 
 
     def y_upper_limit(self, limit=None):
+        """Returns or sets (if a value is provided) the value at which the
+        y-axis should end. By default this is the highest y value in the
+        associated series.
+
+        :param limit: If given, the chart's y_upper_limit will be set to this.
+        :raises ValueError: if you try to make the upper limit smaller than the\
+        lower limit."""
+
         if limit is None:
             if self._y_upper_limit is None:
                 if self.smallest_y() == self.largest_y():
@@ -321,6 +455,13 @@ class AxisChart(Chart):
 
 
     def create(self):
+        """Renders the chart to an OmniCanvas `canvas <https://omnicanvas.readt\
+        hedocs.io/en/latest/api/canvas.html#omnicanvas.canvas.Canvas>`_. This
+        object can then be `saved <https://omnicanvas.readthedocs.io/en/latest/\
+        api/canvas.html#omnicanvas.canvas.Canvas.save>`_ or `rendered <https://\
+        omnicanvas.readthedocs.io/en/latest/api/canvas.html#omnicanvas.canvas.C\
+        anvas.render>`_ as SVG."""
+        
         canvas = Chart.create(self)
 
         for index, series in enumerate(self.all_series(), start=1):
