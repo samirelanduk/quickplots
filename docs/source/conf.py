@@ -19,7 +19,9 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('.'))
+current_dir = "/".join(os.path.realpath(__file__).split("/")[:-1])
+sys.path.insert(0, current_dir + "/../..")
+import quickplots
 
 
 # -- General configuration ------------------------------------------------

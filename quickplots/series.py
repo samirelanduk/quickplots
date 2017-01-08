@@ -1,4 +1,25 @@
 class Series:
+    """A data series. Series objects represent the data to be plotted onto a
+    chart, and are essentially a sequence of x,y numerical values.
+
+    The charts themselves will have subclasses of this class, with specific
+    painting methods, but this class defines all the core properties of series.
+
+    They are instantiated by passing in positional arguments for the data. You
+    should provide one or more (x,y) data points as either two-tuples or
+    two-lists. Alternatively, you can provide a list/tuple of all the x values
+    and a seperate list/tuple of all the y-values - the class will know what you
+    mean by the size and number of positional arguments it recieves.
+
+    The data given will automatically be ordered by x-value.
+
+    You can also pass the series a name as a keyword argument.
+
+    :param \*data: The data for the series as either (x,y) values or two big \
+    tuples/lists of x and y values respectively.
+    :param str name: The name to be associated with the series.
+    :raises ValueError: if the size and length of the data doesn't match either\
+    format."""
 
     def __init__(self, *data, name=None):
         self._data = []
@@ -52,10 +73,19 @@ class Series:
 
 
     def data(self):
+        """Returns the series' data as a list of (x,y) values.
+
+        :rtype: ``list``"""
+
         return list(self._data)
 
 
     def name(self, name=None):
+        """Returns or sets (if a value is provided) the series' name.
+
+        :param str name: If given, the series' name will be set to this.
+        :rtype: str"""
+
         if name is None:
             return self._name
         else:
@@ -65,26 +95,42 @@ class Series:
 
 
     def chart(self):
+        """If this series is associated with a :py:class:`Chart`, this method
+        will return it. Otherwise it will return ``None``."""
+
         return self._chart
 
 
     def smallest_x(self):
+        """Returns the smallest x-value in the series."""
+
         return self.data()[0][0]
 
 
     def largest_x(self):
+        """Returns the largest x-value in the series."""
+
         return self.data()[-1][0]
 
 
     def smallest_y(self):
+        """Returns the smallest y-value in the series."""
+
         return min([datum[-1] for datum in self.data()])
 
 
     def largest_y(self):
+        """Returns the largest y-value in the series."""
+
         return max([datum[-1] for datum in self.data()])
 
 
     def add_data_point(self, x, y):
+        """Adds a data point to the series.
+
+        :param x: The numerical x value to be added.
+        :param y: The numerical y value to be added."""
+
         if not isinstance(x, float) and not isinstance(x, int):
             raise TypeError("x value must be numeric, not '%s'" % str(x))
         if not isinstance(y, float) and not isinstance(y, int):
@@ -96,12 +142,25 @@ class Series:
 
 
     def remove_data_point(self, x, y):
+        """Removes the given data point from the series.
+
+        :param x: The numerical x value of the data point to be removed.
+        :param y: The numerical y value of the data point to be removed.
+        :raises ValueError: if you try to remove the last data point from\
+        a series."""
+
         if len(self._data) == 1:
             raise ValueError("You cannot remove a Series' last data point")
         self._data.remove((x, y))
 
 
     def canvas_points(self):
+        """Calculates the coordinates that the data should use to paint itself
+        to its associated :py:class:`AxisChart`. This is used internally to
+        create the chart.
+        
+        :rtype: ``tuple``"""
+
         if self.chart():
             x_axis_min = self.chart().x_lower_limit()
             y_axis_min = self.chart().y_lower_limit()
