@@ -95,7 +95,7 @@ class Series:
 
 
     def chart(self):
-        """If this series is associated with a :py:class:`Chart`, this method
+        """If this series is associated with a :py:class:`.Chart`, this method
         will return it. Otherwise it will return ``None``."""
 
         return self._chart
@@ -190,7 +190,9 @@ class Series:
 
 
 class LineSeries(Series):
-    """A :py:class:`Series` which can paint itself in a line-chart style.
+    """Base class: :py:class:`Series`
+
+    A :py:class:`Series` which can paint itself in a line-chart style.
 
     :param \*data: The data for the series as either (x,y) values or two big \
     tuples/lists of x and y values respectively.

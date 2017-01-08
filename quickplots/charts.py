@@ -3,6 +3,13 @@ from omnicanvas import Canvas
 from .series import Series, LineSeries
 
 class Chart:
+    """The base class for all charts. It controls the attributes common to all
+    charts - namely dimensions and title.
+
+    :param str title: The chart's title. This will be displayed at the top of\
+    the chart.
+    :param width: The width in pixels of the chart.
+    :param height: The height in pixels of the chart."""
 
     def __init__(self, title="", width=700, height=500):
         if not isinstance(title, str):
@@ -23,6 +30,11 @@ class Chart:
 
 
     def title(self, title=None):
+        """Returns or sets (if a value is provided) the chart's title.
+
+        :param str title: If given, the chart's title will be set to this.
+        :rtype: str"""
+
         if title is None:
             return self._title
         else:
@@ -32,6 +44,10 @@ class Chart:
 
 
     def width(self, width=None):
+        """Returns or sets (if a value is provided) the chart's width.
+
+        :param width: If given, the chart's width will be set to this."""
+
         if width is None:
             return self._width
         else:
@@ -41,6 +57,10 @@ class Chart:
 
 
     def height(self, height=None):
+        """Returns or sets (if a value is provided) the chart's height.
+
+        :param height: If given, the chart's height will be set to this."""
+
         if height is None:
             return self._height
         else:
