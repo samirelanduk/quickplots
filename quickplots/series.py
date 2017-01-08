@@ -158,7 +158,7 @@ class Series:
         """Calculates the coordinates that the data should use to paint itself
         to its associated :py:class:`AxisChart`. This is used internally to
         create the chart.
-        
+
         :rtype: ``tuple``"""
 
         if self.chart():
@@ -190,6 +190,17 @@ class Series:
 
 
 class LineSeries(Series):
+    """A :py:class:`Series` which can paint itself in a line-chart style.
+
+    :param \*data: The data for the series as either (x,y) values or two big \
+    tuples/lists of x and y values respectively.
+    :param str name: The name to be associated with the series.
+    :param str color: The hex colour of the line.
+    :param str linestyle: The line pattern. See\
+    `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.h\
+    tml#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
+    :raises ValueError: if the size and length of the data doesn't match either\
+    format."""
 
     def __init__(self, *args, color="#FF0000", linestyle="-", **kwargs):
         Series.__init__(self, *args, **kwargs)
@@ -203,6 +214,11 @@ class LineSeries(Series):
 
 
     def color(self, color=None):
+        """Returns or sets (if a value is provided) the series' colour.
+
+        :param str color: If given, the series' colour will be set to this.
+        :rtype: str"""
+
         if color is None:
             return self._color
         else:
@@ -212,6 +228,14 @@ class LineSeries(Series):
 
 
     def linestyle(self, linestyle=None):
+        """Returns or sets (if a value is provided) the series' linestyle. See\
+        `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graph\
+        ics.html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable
+        values.
+
+        :param str linestyle: If given, the series' linestyle will be set to this.
+        :rtype: str"""
+
         if linestyle is None:
             return self._linestyle
         else:
@@ -223,6 +247,11 @@ class LineSeries(Series):
 
 
     def write_to_canvas(self, canvas, name):
+        """Writes the series to an OmniCanvas canvas.
+
+        :param Canvas canvas: The canvas to write to.
+        :param str name: The name to give the line graphic on the canvas."""
+
         points = self.canvas_points()
         args = []
         for point in points:

@@ -3,3 +3,4 @@
 
 .. automodule:: quickplots.series
     :members:
+    :inherited-members:
