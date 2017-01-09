@@ -156,7 +156,7 @@ class Series:
 
     def canvas_points(self):
         """Calculates the coordinates that the data should use to paint itself
-        to its associated :py:class:`AxisChart`. This is used internally to
+        to its associated :py:class:`.AxisChart`. This is used internally to
         create the chart.
 
         :rtype: ``tuple``"""
@@ -219,7 +219,7 @@ class LineSeries(Series):
         """Returns or sets (if a value is provided) the series' colour.
 
         :param str color: If given, the series' colour will be set to this.
-        :rtype: str"""
+        :rtype: ``str``"""
 
         if color is None:
             return self._color
@@ -236,7 +236,7 @@ class LineSeries(Series):
         values.
 
         :param str linestyle: If given, the series' linestyle will be set to this.
-        :rtype: str"""
+        :rtype: ``str``"""
 
         if linestyle is None:
             return self._linestyle

@@ -33,7 +33,7 @@ class Chart:
         """Returns or sets (if a value is provided) the chart's title.
 
         :param str title: If given, the chart's title will be set to this.
-        :rtype: str"""
+        :rtype: ``str``"""
 
         if title is None:
             return self._title
@@ -461,7 +461,7 @@ class AxisChart(Chart):
         api/canvas.html#omnicanvas.canvas.Canvas.save>`_ or `rendered <https://\
         omnicanvas.readthedocs.io/en/latest/api/canvas.html#omnicanvas.canvas.C\
         anvas.render>`_ as SVG."""
-        
+
         canvas = Chart.create(self)
 
         for index, series in enumerate(self.all_series(), start=1):
