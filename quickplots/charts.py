@@ -169,7 +169,8 @@ class AxisChart(Chart):
         """Removes a :py:class:`.Series` from the chart.
 
         :param Series series: The :py:class:`.Series` to remove.
-        :raises ValueError: if you try to remove the last :py:class:`.Series`."""
+        :raises ValueError: if you try to remove the last\
+        :py:class:`.Series`."""
 
         if len(self.all_series()) == 1:
             raise ValueError("Cannot remove last series from %s" % str(self))
@@ -180,15 +181,16 @@ class AxisChart(Chart):
     def line(self, *args, **kwargs):
         """Adds a :py:class:`.LineSeries` to the chart.
 
-        :param \*data: The data for the series as either (x,y) values or two big \
+        :param \*data: The data for the series as either (x,y) values or two big\
         tuples/lists of x and y values respectively.
         :param str name: The name to be associated with the series.
         :param str color: The hex colour of the line.
         :param str linestyle: The line pattern. See\
-        `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.h\
-        tml#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
-        :raises ValueError: if the size and length of the data doesn't match either\
-        format."""
+        `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graph\
+        ics.html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable \
+        values.
+        :raises ValueError: if the size and length of the data doesn't match\
+        either format."""
 
         series = LineSeries(*args, **kwargs)
         self.add_series(series)
@@ -212,7 +214,7 @@ class AxisChart(Chart):
         """Returns or sets (if a value is provided) the chart's x-axis label.
 
         :param str x_label: If given, the chart's x_label will be set to this.
-        :rtype: str"""
+        :rtype: ``str``"""
 
         if x_label is None:
             return self._x_label
@@ -226,7 +228,7 @@ class AxisChart(Chart):
         """Returns or sets (if a value is provided) the chart's y-axis label.
 
         :param str y_label: If given, the chart's y_label will be set to this.
-        :rtype: str"""
+        :rtype: ``str``"""
 
         if y_label is None:
             return self._y_label

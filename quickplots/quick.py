@@ -10,8 +10,8 @@ def line(*args, **kwargs):
     :param str name: The name to be associated with the series.
     :param str color: The hex colour of the line.
     :param str linestyle: The line pattern. See\
-    `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.h\
-    tml#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
+    `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.\
+    html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
     :raises ValueError: if the size and length of the data doesn't match either\
     format.
     :param str title: The chart's title. This will be displayed at the top of\

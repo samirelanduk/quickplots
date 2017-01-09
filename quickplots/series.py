@@ -199,8 +199,8 @@ class LineSeries(Series):
     :param str name: The name to be associated with the series.
     :param str color: The hex colour of the line.
     :param str linestyle: The line pattern. See\
-    `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.h\
-    tml#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
+    `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.\
+    html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
     :raises ValueError: if the size and length of the data doesn't match either\
     format."""
 
@@ -235,7 +235,8 @@ class LineSeries(Series):
         ics.html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable
         values.
 
-        :param str linestyle: If given, the series' linestyle will be set to this.
+        :param str linestyle: If given, the series' linestyle will be set to\
+        this.
         :rtype: ``str``"""
 
         if linestyle is None:
