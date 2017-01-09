@@ -9,7 +9,7 @@ Example
 
   >>> import quickplots
   >>> chart = quickplots.line((0, 0), (1, 1), (2, 4), (3, 9), name="squares")
-  >>> chart.series().color("#FF0000")
+  >>> chart.get_series_by_name("squares").color("#FF0000")
   >>> chart.create().save("chart.svg")
 
 Installing
@@ -25,7 +25,7 @@ quickplots can be installed using pip:
 quickplots is written for Python 3. If the above installation fails, it may be
 that your system uses ``pip`` for the Python 2 version - if so, try:
 
-``$ pip3 install molecupy``
+``$ pip3 install quickplots``
 
 Requirements
 ~~~~~~~~~~~~
@@ -41,8 +41,8 @@ Overview
 
 Creating Charts
 ~~~~~~~~~~~~~~~
-The easiest way to create a chart is with the quick single-series functions.
-For example, the following code would create a line chart of the sine function:
+The easiest way to create a chart is with the quick-add functions. For example,
+the following code would create a line chart of the sine function:
 
   >>> import quickplots
   >>> from math import sin, radians
@@ -64,11 +64,11 @@ values and one of all the y values:
 Line charts
 ###########
 
-Use the ``line`` function as above to create line charts. You can pass in hex
-colors to the ``color`` function and line styles (see the full documentation
-for a full list of styles) to the ``linestyle`` argument.
+Use the ``line`` function as above to create line charts. You can pass
+in hex colors to the ``color`` function and line styles (see the full
+documentation for a full list of styles) to the ``linestyle`` argument.
 
-Charts themselves also have a ``line`` method for adding new line series. To
+Charts themselves also have a ``charts.AxisChart.line`` method for adding new line series. To
 add the cosine function to the above chart, you would do the following:
 
   >>> cosine_data = [(x, cos(radians(x))) for x in range(360)]
@@ -88,15 +88,20 @@ like so:
   >>> chart.x_label("A new x-axis label")
   >>> chart.y_label("A new y-axis label")
 
-Charts can have one or more Series objects. The ``series`` property will return
-the first series, and the ``all_series()`` will return all the series on the
-chart.
+Charts can have one or more ``Series` objects. The ``series``` property
+will return the first series, and the ``all_series`` will return all the
+series on the chart.
+
+See the documentation for ``AxisChart`` for
+more information.
 
 Outputting Charts
 ~~~~~~~~~~~~~~~~~
 
-All charts have a ``create`` method which will create an OmniCanvas canvas with
-the chart painted to it. These can be saved or rendered as SVG text.
+All charts have a ``create`` method which will create an
+OmniCanvas `canvas <https://omnicanvas.readthedocs.io/en/latest/api/canvas.htm\
+l#omnicanvas.canvas.Canvas>`_ with the chart painted to it. These can be saved
+or rendered as SVG text.
 
   >>> chart.create()
   <Canvas 700×500 (7 Graphics)>
