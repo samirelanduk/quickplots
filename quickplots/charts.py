@@ -494,7 +494,9 @@ class AxisChart(Chart):
          line_width=0,
          name="block-s"
         )
-        canvas._graphics.append(canvas._graphics.pop(0)) # Dirty hack
+        title = canvas.graphics()[0]
+        while canvas.graphics().index(title) != len(canvas.graphics()) - 1:
+            canvas.move_graphic_forward(title)
         canvas.graphics()[-1].y(self.vertical_padding() * canvas.height() * 0.5)
         canvas.graphics()[-1].vertical_align("center")
 
