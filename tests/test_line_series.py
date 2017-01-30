@@ -12,6 +12,7 @@ class LineSeriesCreationTests(TestCase):
         self.assertIsInstance(series, Series)
         self.assertEqual(series._color, "#FF0000")
         self.assertEqual(series._linestyle, "-")
+        self.assertEqual(series._linewidth, 2)
 
 
     @patch("quickplots.series.Series.__init__")
@@ -40,12 +41,21 @@ class LineSeriesCreationTests(TestCase):
             LineSeries((1, 1), (2, 4), (3, 9), linestyle=100)
 
 
+    def test_can_create_line_series_with_linewidth(self):
+        series = LineSeries((1, 1), (2, 4), (3, 9), linewidth=4)
+        self.assertEqual(series._linewidth, 4)
+
+
+    def test_linewidth_must_be_number(self):
+        with self.assertRaises(TypeError):
+            LineSeries((1, 1), (2, 4), (3, 9), linewidth="100")
+
+
     def test_line_series_repr(self):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         self.assertEqual(str(series), "<LineSeries (3 data points)>")
         series = LineSeries((1, 1), (2, 4), (3, 9), name="line")
         self.assertEqual(str(series), "<LineSeries 'line' (3 data points)>")
-
 
 
 
@@ -55,6 +65,7 @@ class LineSeriesPropertyTests(TestCase):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         self.assertIs(series._color, series.color())
         self.assertIs(series._linestyle, series.linestyle())
+        self.assertIs(series._linewidth, series.linewidth())
 
 
     def test_can_modify_color(self):
@@ -79,6 +90,18 @@ class LineSeriesPropertyTests(TestCase):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         with self.assertRaises(TypeError):
             series.linestyle(100)
+
+
+    def test_can_modify_linewidth(self):
+        series = LineSeries((1, 1), (2, 4), (3, 9))
+        series.linewidth(4)
+        self.assertEqual(series.linewidth(), 4)
+
+
+    def test_set_linewidth_must_be_str(self):
+        series = LineSeries((1, 1), (2, 4), (3, 9))
+        with self.assertRaises(TypeError):
+            series.linewidth("100")
 
 
 

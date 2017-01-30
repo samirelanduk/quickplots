@@ -1,3 +1,5 @@
+from numbers import Number
+
 class Series:
     """A data series. Series objects represent the data to be plotted onto a
     chart, and are essentially a sequence of x,y numerical values.
@@ -204,7 +206,7 @@ class LineSeries(Series):
     :raises ValueError: if the size and length of the data doesn't match either\
     format."""
 
-    def __init__(self, *args, color="#FF0000", linestyle="-", **kwargs):
+    def __init__(self, *args, color="#FF0000", linestyle="-", linewidth=2, **kwargs):
         Series.__init__(self, *args, **kwargs)
 
         if not isinstance(color, str):
@@ -213,6 +215,9 @@ class LineSeries(Series):
         if not isinstance(linestyle, str):
             raise TypeError("linestyle must be str, not '%s'" % str(linestyle))
         self._linestyle = linestyle
+        if not isinstance(linewidth, Number):
+            raise TypeError("linewidth must be number, not '%s'" % str(linewidth))
+        self._linewidth = linewidth
 
 
     def color(self, color=None):
@@ -247,6 +252,17 @@ class LineSeries(Series):
                  "linestyle must be str, not '%s'" % str(linestyle)
                 )
             self._linestyle = linestyle
+
+
+    def linewidth(self, linewidth=None):
+        if linewidth is None:
+            return self._linewidth
+        else:
+            if not isinstance(linewidth, Number):
+                raise TypeError(
+                 "linewidth must be number, not '%s'" % str(linewidth)
+                )
+            self._linewidth = linewidth
 
 
     def write_to_canvas(self, canvas, name):
