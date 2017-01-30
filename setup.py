@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
  name="quickplots",
- version="2.0.0",
+ version="2.1.0",
  description="A simple plotting library",
  long_description="A Python plotting library with simplicty and intuition as its primary goals",
  url="https://quickplots.readthedocs.io",
