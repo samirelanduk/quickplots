@@ -29,7 +29,7 @@ class Series:
         if len(data) == 2:
             if len(data[0]) != len(data[1]):
                 raise ValueError(
-                 "x and y data sequences are of unequal lenth (%i and %i)" % (
+                 "x and y data sequences are of unequal length (%i and %i)" % (
                   len(data[0]), len(data[1])
                  )
                 )
