@@ -146,3 +146,10 @@ class LineSeriesPaintingTests(TestCase):
         self.series.write_to_canvas(self.canvas, "series1")
         line = self.canvas.get_graphic_by_name("series1")
         self.assertEqual(line.line_style(), "--")
+
+
+    def test_line_series_can_transfer_line_width(self):
+        self.series.linewidth(5)
+        self.series.write_to_canvas(self.canvas, "series1")
+        line = self.canvas.get_graphic_by_name("series1")
+        self.assertEqual(line.line_width(), 5)

@@ -277,5 +277,5 @@ class LineSeries(Series):
             args += list(point)
         canvas.add_polyline(
          *args, line_color=self.color(), line_style=self.linestyle(),
-         line_width=2, name=name
+         line_width=self.linewidth(), name=name
         )
