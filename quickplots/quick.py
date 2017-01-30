@@ -23,7 +23,7 @@ def line(*args, **kwargs):
     :rtype: :py:class:`.AxisChart`"""
 
     line_series_kwargs = {}
-    for kwarg in ("name", "color", "linestyle"):
+    for kwarg in ("name", "color", "linestyle", "linewidth"):
         if kwarg in kwargs:
             line_series_kwargs[kwarg] = kwargs[kwarg]
             del kwargs[kwarg]
