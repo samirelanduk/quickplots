@@ -4,7 +4,7 @@ setup(
  name="quickplots",
  version="2.1.0",
  description="A simple plotting library",
- long_description="A Python plotting library with simplicty and intuition as its primary goals",
+ long_description="An object-oriented plotting library for Python, with simplicity as its principal aim.",
  url="https://quickplots.readthedocs.io",
  author="Sam Ireland",
  author_email="mail@samireland.com",
