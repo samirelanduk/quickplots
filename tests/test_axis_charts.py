@@ -462,7 +462,8 @@ class AxisChartQuickAddTests(AxisChartTest):
     def test_can_quick_add_line_series_with_series_keyword_arguments(self):
         chart = AxisChart(self.series1)
         chart.line(
-         (1, 1), (2, 8), (3, 27), name="cubes", color="#ADADAD", linestyle=".."
+         (1, 1), (2, 8), (3, 27),
+         name="cubes", color="#ADADAD", linestyle="..", linewidth=10
         )
         self.assertEqual(
          chart.all_series()[-1].name(),
@@ -475,6 +476,10 @@ class AxisChartQuickAddTests(AxisChartTest):
         self.assertEqual(
          chart.all_series()[-1].linestyle(),
          ".."
+        )
+        self.assertEqual(
+         chart.all_series()[-1].linewidth(),
+         10
         )
 
 
