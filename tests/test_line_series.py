@@ -16,7 +16,7 @@ class LineSeriesCreationTests(TestCase):
 
 
     @patch("quickplots.series.Series.__init__")
-    def test_axis_chart_uses_chart_initialisation(self, mock):
+    def test_line_series_uses_series_initialisation(self, mock):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         self.assertTrue(mock.called)
 

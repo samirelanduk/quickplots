@@ -279,3 +279,10 @@ class LineSeries(Series):
          *args, line_color=self.color(), line_style=self.linestyle(),
          line_width=self.linewidth(), name=name
         )
+
+
+
+class ScatterSeries(Series):
+
+    def __init__(self, *args, **kwargs):
+        Series.__init__(self, *args, **kwargs)
