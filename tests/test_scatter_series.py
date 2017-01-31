@@ -2,11 +2,13 @@ from unittest import TestCase
 from unittest.mock import patch
 from quickplots.series import ScatterSeries, Series
 
-class LineSeriesCreationTests(TestCase):
+class ScatterSeriesCreationTests(TestCase):
 
-    def test_can_create_line_series(self):
+    def test_can_create_scatter_series(self):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         self.assertIsInstance(series, Series)
+        self.assertEqual(series._color, "#FF0000")
+        self.assertEqual(series._size, 5)
 
 
     @patch("quickplots.series.Series.__init__")
@@ -25,6 +27,16 @@ class LineSeriesCreationTests(TestCase):
             ScatterSeries((1, 1), (2, 4), (3, 9), color=100)
 
 
+    def test_can_create_scatter_series_with_size(self):
+        series = ScatterSeries((1, 1), (2, 4), (3, 9), size=4)
+        self.assertEqual(series._size, 4)
+
+
+    def test_size_must_be_number(self):
+        with self.assertRaises(TypeError):
+            ScatterSeries((1, 1), (2, 4), (3, 9), size="100")
+
+
     def test_scatter_series_repr(self):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         self.assertEqual(str(series), "<ScatterSeries (3 data points)>")
@@ -38,6 +50,7 @@ class ScatterSeriesPropertyTests(TestCase):
     def test_scatter_line_series_properties(self):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         self.assertIs(series._color, series.color())
+        self.assertIs(series._size, series.size())
 
 
     def test_can_modify_color(self):
@@ -50,3 +63,15 @@ class ScatterSeriesPropertyTests(TestCase):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         with self.assertRaises(TypeError):
             series.color(100)
+
+
+    def test_can_modify_size(self):
+        series = ScatterSeries((1, 1), (2, 4), (3, 9))
+        series.size(4)
+        self.assertEqual(series.size(), 4)
+
+
+    def test_set_size_must_be_str(self):
+        series = ScatterSeries((1, 1), (2, 4), (3, 9))
+        with self.assertRaises(TypeError):
+            series.size("100")
