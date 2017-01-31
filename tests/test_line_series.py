@@ -98,7 +98,7 @@ class LineSeriesPropertyTests(TestCase):
         self.assertEqual(series.linewidth(), 4)
 
 
-    def test_set_linewidth_must_be_str(self):
+    def test_set_linewidth_must_be_number(self):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         with self.assertRaises(TypeError):
             series.linewidth("100")

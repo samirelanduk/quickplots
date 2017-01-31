@@ -284,7 +284,7 @@ class LineSeries(Series):
 
 class ScatterSeries(Series):
 
-    def __init__(self, *args, color="#FF0000", size=5, **kwargs):
+    def __init__(self, *args, color="#FF0000", size=5, linewidth=1, **kwargs):
         Series.__init__(self, *args, **kwargs)
 
         if not isinstance(color, str):
@@ -293,6 +293,9 @@ class ScatterSeries(Series):
         if not isinstance(size, Number):
             raise TypeError("size must be number, not '%s'" % str(size))
         self._size = size
+        if not isinstance(linewidth, Number):
+            raise TypeError("linewidth must be number, not '%s'" % str(linewidth))
+        self._linewidth = linewidth
 
 
     def color(self, color=None):
@@ -318,3 +321,14 @@ class ScatterSeries(Series):
                  "size must be number, not '%s'" % str(size)
                 )
             self._size = size
+
+
+    def linewidth(self, linewidth=None):
+        if linewidth is None:
+            return self._linewidth
+        else:
+            if not isinstance(linewidth, Number):
+                raise TypeError(
+                 "linewidth must be number, not '%s'" % str(linewidth)
+                )
+            self._linewidth = linewidth
