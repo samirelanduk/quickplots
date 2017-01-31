@@ -1,1 +1,1 @@
-omnicanvas
+omnicanvas>=0.3
