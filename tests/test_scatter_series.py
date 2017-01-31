@@ -13,3 +13,10 @@ class LineSeriesCreationTests(TestCase):
     def test_scatter_chart_uses_chart_initialisation(self, mock):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         self.assertTrue(mock.called)
+
+
+    def test_scatter_series_repr(self):
+        series = ScatterSeries((1, 1), (2, 4), (3, 9))
+        self.assertEqual(str(series), "<ScatterSeries (3 data points)>")
+        series = ScatterSeries((1, 1), (2, 4), (3, 9), name="line")
+        self.assertEqual(str(series), "<ScatterSeries 'line' (3 data points)>")
