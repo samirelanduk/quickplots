@@ -284,5 +284,23 @@ class LineSeries(Series):
 
 class ScatterSeries(Series):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, color="#FF0000", **kwargs):
         Series.__init__(self, *args, **kwargs)
+
+        if not isinstance(color, str):
+            raise TypeError("color must be str, not '%s'" % str(color))
+        self._color = color
+
+
+    def color(self, color=None):
+        """Returns or sets (if a value is provided) the series' colour.
+
+        :param str color: If given, the series' colour will be set to this.
+        :rtype: ``str``"""
+
+        if color is None:
+            return self._color
+        else:
+            if not isinstance(color, str):
+                raise TypeError("color must be str, not '%s'" % str(color))
+            self._color = color
