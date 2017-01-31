@@ -1,4 +1,5 @@
 import math
+from numerus import is_numeric
 from omnicanvas import Canvas
 from .series import Series, LineSeries
 
@@ -16,11 +17,11 @@ class Chart:
             raise TypeError("title must be str, not '%s'" % str(title))
         self._title = title
 
-        if not isinstance(width, int) and not isinstance(width, float):
+        if not is_numeric(width):
             raise TypeError("width must be numeric, not '%s'" % str(width))
         self._width = width
 
-        if not isinstance(height, int) and not isinstance(height, float):
+        if not is_numeric(height):
             raise TypeError("height must be numeric, not '%s'" % str(height))
         self._height = height
 
@@ -51,7 +52,7 @@ class Chart:
         if width is None:
             return self._width
         else:
-            if not isinstance(width, int) and not isinstance(width, float):
+            if not is_numeric(width):
                 raise TypeError("width must be numeric, not '%s'" % str(width))
             self._width = width
 
@@ -64,7 +65,7 @@ class Chart:
         if height is None:
             return self._height
         else:
-            if not isinstance(height, int) and not isinstance(height, float):
+            if not is_numeric(height):
                 raise TypeError("height must be numeric, not '%s'" % str(height))
             self._height = height
 
@@ -341,7 +342,7 @@ class AxisChart(Chart):
             else:
                 return self._x_lower_limit
         else:
-            if not isinstance(limit, int) and not isinstance(limit, float):
+            if not is_numeric(limit):
                 raise TypeError(
                  "lower x limit must be numeric, not '%s'" % str(limit)
                 )
@@ -375,7 +376,7 @@ class AxisChart(Chart):
             else:
                 return self._y_lower_limit
         else:
-            if not isinstance(limit, int) and not isinstance(limit, float):
+            if not is_numeric(limit):
                 raise TypeError(
                  "lower y limit must be numeric, not '%s'" % str(limit)
                 )
@@ -409,7 +410,7 @@ class AxisChart(Chart):
             else:
                 return self._x_upper_limit
         else:
-            if not isinstance(limit, int) and not isinstance(limit, float):
+            if not is_numeric(limit):
                 raise TypeError(
                  "upper x limit must be numeric, not '%s'" % str(limit)
                 )
@@ -443,7 +444,7 @@ class AxisChart(Chart):
             else:
                 return self._y_upper_limit
         else:
-            if not isinstance(limit, int) and not isinstance(limit, float):
+            if not is_numeric(limit):
                 raise TypeError(
                  "upper y limit must be numeric, not '%s'" % str(limit)
                 )

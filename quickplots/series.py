@@ -1,4 +1,4 @@
-from numbers import Number
+from numerus import is_numeric
 
 class Series:
     """A data series. Series objects represent the data to be plotted onto a
@@ -133,9 +133,9 @@ class Series:
         :param x: The numerical x value to be added.
         :param y: The numerical y value to be added."""
 
-        if not isinstance(x, float) and not isinstance(x, int):
+        if not is_numeric(x):
             raise TypeError("x value must be numeric, not '%s'" % str(x))
-        if not isinstance(y, float) and not isinstance(y, int):
+        if not is_numeric(y):
             raise TypeError("y value must be numeric, not '%s'" % str(y))
         current_last_x = self._data[-1][0]
         self._data.append((x, y))
@@ -215,7 +215,7 @@ class LineSeries(Series):
         if not isinstance(linestyle, str):
             raise TypeError("linestyle must be str, not '%s'" % str(linestyle))
         self._linestyle = linestyle
-        if not isinstance(linewidth, Number):
+        if not is_numeric(linewidth):
             raise TypeError("linewidth must be number, not '%s'" % str(linewidth))
         self._linewidth = linewidth
 
@@ -258,7 +258,7 @@ class LineSeries(Series):
         if linewidth is None:
             return self._linewidth
         else:
-            if not isinstance(linewidth, Number):
+            if not is_numeric(linewidth):
                 raise TypeError(
                  "linewidth must be number, not '%s'" % str(linewidth)
                 )
@@ -290,10 +290,10 @@ class ScatterSeries(Series):
         if not isinstance(color, str):
             raise TypeError("color must be str, not '%s'" % str(color))
         self._color = color
-        if not isinstance(size, Number):
+        if not is_numeric(size):
             raise TypeError("size must be number, not '%s'" % str(size))
         self._size = size
-        if not isinstance(linewidth, Number):
+        if not is_numeric(linewidth):
             raise TypeError("linewidth must be number, not '%s'" % str(linewidth))
         self._linewidth = linewidth
 
@@ -316,7 +316,7 @@ class ScatterSeries(Series):
         if size is None:
             return self._size
         else:
-            if not isinstance(size, Number):
+            if not is_numeric(size):
                 raise TypeError(
                  "size must be number, not '%s'" % str(size)
                 )
@@ -327,7 +327,7 @@ class ScatterSeries(Series):
         if linewidth is None:
             return self._linewidth
         else:
-            if not isinstance(linewidth, Number):
+            if not is_numeric(linewidth):
                 raise TypeError(
                  "linewidth must be number, not '%s'" % str(linewidth)
                 )

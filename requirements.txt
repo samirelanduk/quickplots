@@ -1,1 +1,2 @@
 omnicanvas>=0.3
+numerus
