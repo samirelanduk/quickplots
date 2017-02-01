@@ -1,6 +1,9 @@
 from unittest import TestCase
 from unittest.mock import patch
+from quickplots.charts import AxisChart
 from quickplots.series import ScatterSeries, Series
+from omnicanvas import Canvas
+from omnicanvas.graphics import Oval
 
 class ScatterSeriesCreationTests(TestCase):
 
@@ -99,3 +102,22 @@ class ScatterSeriesPropertyTests(TestCase):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         with self.assertRaises(TypeError):
             series.linewidth("100")
+
+
+
+class ScatterSeriesPaintingTests(TestCase):
+
+    def setUp(self):
+        x = list(range(1, 6))
+        y = [n ** 2 for n in x]
+        data = list(zip(x, y))
+        self.series = ScatterSeries(*data)
+        self.chart = AxisChart(self.series)
+        self.canvas = Canvas(self.chart.width(), self.chart.height())
+
+
+    def test_can_write_object_to_canvas(self):
+        self.series.write_to_canvas(self.canvas, "series1")
+        self.assertEqual(len(self.canvas.graphics()), 5)
+        for graphic in self.canvas.graphics():
+            self.assertIsInstance(graphic, Oval)

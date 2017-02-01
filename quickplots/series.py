@@ -332,3 +332,9 @@ class ScatterSeries(Series):
                  "linewidth must be number, not '%s'" % str(linewidth)
                 )
             self._linewidth = linewidth
+
+
+    def write_to_canvas(self, canvas, name):
+        points = self.canvas_points()
+        for point in points:
+            canvas.add_oval(0, 0, 10, 10)
