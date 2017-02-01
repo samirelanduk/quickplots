@@ -340,5 +340,5 @@ class ScatterSeries(Series):
             canvas.add_oval(
              point[0] - (self.size() / 2), point[1] - (self.size() / 2),
              self.size(), self.size(),
-             fill_color=self.color(), name=name
+             fill_color=self.color(), line_width=self.linewidth(), name=name
             )

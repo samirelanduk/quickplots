@@ -146,3 +146,11 @@ class ScatterSeriesPaintingTests(TestCase):
         markers = [g for g in self.canvas.graphics() if g.name() == "series1"]
         for marker in markers:
             self.assertEqual(marker.width(), 20)
+
+
+    def test_scatter_series_can_transfer_linewidth(self):
+        self.series.linewidth(4)
+        self.series.write_to_canvas(self.canvas, "series1")
+        markers = [g for g in self.canvas.graphics() if g.name() == "series1"]
+        for marker in markers:
+            self.assertEqual(marker.line_width(), 4)
