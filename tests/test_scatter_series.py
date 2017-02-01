@@ -121,3 +121,12 @@ class ScatterSeriesPaintingTests(TestCase):
         self.assertEqual(len(self.canvas.graphics()), 5)
         for graphic in self.canvas.graphics():
             self.assertIsInstance(graphic, Oval)
+
+
+    def test_line_series_puts_points_in_correct_place(self):
+        self.series.write_to_canvas(self.canvas, "series1")
+        markers = [g for g in self.canvas.graphics() if g.name() == "series1"]
+        points = self.series.canvas_points()
+        self.assertEqual(len(points), len(points))
+        for index, point in enumerate(points):
+            self.assertEqual(point, (markers[index].x(), markers[index].y()))

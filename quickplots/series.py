@@ -337,4 +337,4 @@ class ScatterSeries(Series):
     def write_to_canvas(self, canvas, name):
         points = self.canvas_points()
         for point in points:
-            canvas.add_oval(0, 0, 10, 10)
+            canvas.add_oval(point[0], point[1], 10, 10, name=name)
