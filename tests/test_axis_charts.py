@@ -1,9 +1,9 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
+from omnicanvas import Canvas, colors
+from omnicanvas.graphics import Text, Rectangle, Polyline
 from quickplots.charts import AxisChart, Chart
 from quickplots.series import Series, LineSeries, ScatterSeries
-from omnicanvas import Canvas
-from omnicanvas.graphics import Text, Rectangle, Polyline
 
 class AxisChartTest(TestCase):
 
@@ -443,6 +443,14 @@ class AxisChartSeriesTests(AxisChartTest):
         chart = AxisChart(self.series1, self.series2, self.series3)
         with self.assertRaises(TypeError):
             chart.get_series_by_name(self.series1)
+
+
+
+class AxisChartColorSelectionTests(AxisChartTest):
+
+    def test_chart_picks_first_omnicanvas_color_if_no_omnicanvas_colors(self):
+        chart = AxisChart(self.series1)
+        self.assertEqual(chart.next_color(), colors[0])
 
 
 

@@ -1,6 +1,6 @@
 import math
 from numerus import is_numeric
-from omnicanvas import Canvas
+from omnicanvas import Canvas, colors
 from .series import Series, LineSeries, ScatterSeries
 
 class Chart:
@@ -177,6 +177,10 @@ class AxisChart(Chart):
             raise ValueError("Cannot remove last series from %s" % str(self))
         self._all_series.remove(series)
         series._chart = None
+
+
+    def next_color(self):
+        return colors[0]
 
 
     def line(self, *args, **kwargs):
