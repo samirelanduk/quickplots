@@ -10,7 +10,6 @@ class LineSeriesCreationTests(TestCase):
     def test_can_create_line_series(self):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         self.assertIsInstance(series, Series)
-        self.assertEqual(series._color, "#FF0000")
         self.assertEqual(series._linestyle, "-")
         self.assertEqual(series._linewidth, 2)
 
@@ -19,16 +18,6 @@ class LineSeriesCreationTests(TestCase):
     def test_line_series_uses_series_initialisation(self, mock):
         series = LineSeries((1, 1), (2, 4), (3, 9))
         self.assertTrue(mock.called)
-
-
-    def test_can_create_line_series_with_color(self):
-        series = LineSeries((1, 1), (2, 4), (3, 9), color="#FF0000")
-        self.assertEqual(series._color, "#FF0000")
-
-
-    def test_color_must_be_str(self):
-        with self.assertRaises(TypeError):
-            LineSeries((1, 1), (2, 4), (3, 9), color=100)
 
 
     def test_can_create_line_series_with_linestyle(self):
@@ -66,18 +55,6 @@ class LineSeriesPropertyTests(TestCase):
         self.assertIs(series._color, series.color())
         self.assertIs(series._linestyle, series.linestyle())
         self.assertIs(series._linewidth, series.linewidth())
-
-
-    def test_can_modify_color(self):
-        series = LineSeries((1, 1), (2, 4), (3, 9))
-        series.color("#00FF00")
-        self.assertEqual(series.color(), "#00FF00")
-
-
-    def test_set_color_must_be_str(self):
-        series = LineSeries((1, 1), (2, 4), (3, 9))
-        with self.assertRaises(TypeError):
-            series.color(100)
 
 
     def test_can_modify_linestyle(self):

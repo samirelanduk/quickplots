@@ -9,6 +9,7 @@ class SeriesCreationTests(TestCase):
     def test_can_create_series(self):
         series = Series((1, 1), (2, 4), (3, 9))
         self.assertEqual(series._data, [(1, 1), (2, 4), (3, 9)])
+        self.assertEqual(series._color, "#000000")
         self.assertEqual(series._name, None)
         self.assertEqual(series._chart, None)
 
@@ -79,6 +80,16 @@ class SeriesCreationTests(TestCase):
         self.assertEqual(series._data, [(2, 4), (3, 9), (4, 16), (5, 25)])
 
 
+    def test_can_create_line_series_with_color(self):
+        series = Series((1, 1), (2, 4), (3, 9), color="#FF0000")
+        self.assertEqual(series._color, "#FF0000")
+
+
+    def test_color_must_be_str(self):
+        with self.assertRaises(TypeError):
+            Series((1, 1), (2, 4), (3, 9), color=100)
+
+
     def test_can_create_series_with_name(self):
         series = Series((1, 1), (2, 4), (3, 9), name="Squares")
         self.assertEqual(series._name, "Squares")
@@ -105,6 +116,7 @@ class SeriesPropertyTests(TestCase):
     def test_basic_properties(self):
         series = Series((1, 1), (2, 4), (3, 9), name="Squares")
         self.assertEqual(series.data(), series._data)
+        self.assertIs(series.color(), series._color)
         self.assertIs(series.name(), series._name)
         self.assertIs(series.chart(), series._chart)
 
@@ -113,6 +125,18 @@ class SeriesPropertyTests(TestCase):
         series = Series((1, 1), (2, 4), (3, 9))
         series.data().append("bad")
         self.assertEqual(series.data(), [(1, 1), (2, 4), (3, 9)])
+
+
+    def test_can_modify_color(self):
+        series = Series((1, 1), (2, 4), (3, 9))
+        series.color("#00FF00")
+        self.assertEqual(series.color(), "#00FF00")
+
+
+    def test_set_color_must_be_str(self):
+        series = Series((1, 1), (2, 4), (3, 9))
+        with self.assertRaises(TypeError):
+            series.color(100)
 
 
     def test_can_update_name(self):

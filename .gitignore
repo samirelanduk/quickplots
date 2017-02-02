@@ -7,3 +7,4 @@ _static
 _templates
 dist
 *.egg-info
+test.py

@@ -10,7 +10,6 @@ class ScatterSeriesCreationTests(TestCase):
     def test_can_create_scatter_series(self):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         self.assertIsInstance(series, Series)
-        self.assertEqual(series._color, "#FF0000")
         self.assertEqual(series._size, 5)
         self.assertEqual(series._linewidth, 1)
 
@@ -19,16 +18,6 @@ class ScatterSeriesCreationTests(TestCase):
     def test_scatter_chart_uses_chart_initialisation(self, mock):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
         self.assertTrue(mock.called)
-
-
-    def test_can_create_scatter_series_with_color(self):
-        series = ScatterSeries((1, 1), (2, 4), (3, 9), color="#FF0000")
-        self.assertEqual(series._color, "#FF0000")
-
-
-    def test_color_must_be_str(self):
-        with self.assertRaises(TypeError):
-            ScatterSeries((1, 1), (2, 4), (3, 9), color=100)
 
 
     def test_can_create_scatter_series_with_size(self):
@@ -63,21 +52,8 @@ class ScatterSeriesPropertyTests(TestCase):
 
     def test_scatter_line_series_properties(self):
         series = ScatterSeries((1, 1), (2, 4), (3, 9))
-        self.assertIs(series._color, series.color())
         self.assertIs(series._size, series.size())
         self.assertIs(series._linewidth, series.linewidth())
-
-
-    def test_can_modify_color(self):
-        series = ScatterSeries((1, 1), (2, 4), (3, 9))
-        series.color("#00FF00")
-        self.assertEqual(series.color(), "#00FF00")
-
-
-    def test_set_color_must_be_str(self):
-        series = ScatterSeries((1, 1), (2, 4), (3, 9))
-        with self.assertRaises(TypeError):
-            series.color(100)
 
 
     def test_can_modify_size(self):

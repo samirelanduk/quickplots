@@ -23,7 +23,7 @@ class Series:
     :raises ValueError: if the size and length of the data doesn't match either\
     format."""
 
-    def __init__(self, *data, name=None):
+    def __init__(self, *data, color="#000000", name=None):
         self._data = []
         if len(data) == 0:
             raise ValueError("Cannot create Series with no data")
@@ -60,6 +60,9 @@ class Series:
             self._data.append(tuple(point))
         self._data = sorted(self._data, key=lambda k: k[0])
 
+        if not isinstance(color, str):
+            raise TypeError("color must be str, not '%s'" % str(color))
+        self._color = color
         if not isinstance(name, str) and name is not None:
             raise TypeError("name must be str, not '%s'" % str(name))
         self._name = name
@@ -80,6 +83,20 @@ class Series:
         :rtype: ``list``"""
 
         return list(self._data)
+
+
+    def color(self, color=None):
+        """Returns or sets (if a value is provided) the series' colour.
+
+        :param str color: If given, the series' colour will be set to this.
+        :rtype: ``str``"""
+
+        if color is None:
+            return self._color
+        else:
+            if not isinstance(color, str):
+                raise TypeError("color must be str, not '%s'" % str(color))
+            self._color = color
 
 
     def name(self, name=None):
@@ -206,32 +223,15 @@ class LineSeries(Series):
     :raises ValueError: if the size and length of the data doesn't match either\
     format."""
 
-    def __init__(self, *args, color="#FF0000", linestyle="-", linewidth=2, **kwargs):
+    def __init__(self, *args, linestyle="-", linewidth=2, **kwargs):
         Series.__init__(self, *args, **kwargs)
 
-        if not isinstance(color, str):
-            raise TypeError("color must be str, not '%s'" % str(color))
-        self._color = color
         if not isinstance(linestyle, str):
             raise TypeError("linestyle must be str, not '%s'" % str(linestyle))
         self._linestyle = linestyle
         if not is_numeric(linewidth):
             raise TypeError("linewidth must be number, not '%s'" % str(linewidth))
         self._linewidth = linewidth
-
-
-    def color(self, color=None):
-        """Returns or sets (if a value is provided) the series' colour.
-
-        :param str color: If given, the series' colour will be set to this.
-        :rtype: ``str``"""
-
-        if color is None:
-            return self._color
-        else:
-            if not isinstance(color, str):
-                raise TypeError("color must be str, not '%s'" % str(color))
-            self._color = color
 
 
     def linestyle(self, linestyle=None):
@@ -284,32 +284,15 @@ class LineSeries(Series):
 
 class ScatterSeries(Series):
 
-    def __init__(self, *args, color="#FF0000", size=5, linewidth=1, **kwargs):
+    def __init__(self, *args, size=5, linewidth=1, **kwargs):
         Series.__init__(self, *args, **kwargs)
 
-        if not isinstance(color, str):
-            raise TypeError("color must be str, not '%s'" % str(color))
-        self._color = color
         if not is_numeric(size):
             raise TypeError("size must be number, not '%s'" % str(size))
         self._size = size
         if not is_numeric(linewidth):
             raise TypeError("linewidth must be number, not '%s'" % str(linewidth))
         self._linewidth = linewidth
-
-
-    def color(self, color=None):
-        """Returns or sets (if a value is provided) the series' colour.
-
-        :param str color: If given, the series' colour will be set to this.
-        :rtype: ``str``"""
-
-        if color is None:
-            return self._color
-        else:
-            if not isinstance(color, str):
-                raise TypeError("color must be str, not '%s'" % str(color))
-            self._color = color
 
 
     def size(self, size=None):
