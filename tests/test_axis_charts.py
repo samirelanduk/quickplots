@@ -453,6 +453,15 @@ class AxisChartColorSelectionTests(AxisChartTest):
         self.assertEqual(chart.next_color(), colors[0])
 
 
+    def test_chart_works_through_omnicanvas_colors(self):
+        chart = AxisChart(self.series1)
+        self.series1.color(colors[0])
+        self.assertEqual(chart.next_color(), colors[1])
+        chart = AxisChart(self.series1, self.series2)
+        self.series2.color(colors[1])
+        self.assertEqual(chart.next_color(), colors[2])
+
+
 
 class AxisChartQuickAddTests(AxisChartTest):
 

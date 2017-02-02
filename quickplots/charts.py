@@ -180,7 +180,10 @@ class AxisChart(Chart):
 
 
     def next_color(self):
-        return colors[0]
+        current_colors = [series.color() for series in self.all_series()]
+        for color in colors:
+            if color not in current_colors:
+                return color
 
 
     def line(self, *args, **kwargs):
