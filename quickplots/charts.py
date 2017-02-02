@@ -1,7 +1,7 @@
 import math
 from numerus import is_numeric
 from omnicanvas import Canvas
-from .series import Series, LineSeries
+from .series import Series, LineSeries, ScatterSeries
 
 class Chart:
     """The base class for all charts. It controls the attributes common to all
@@ -194,6 +194,11 @@ class AxisChart(Chart):
         either format."""
 
         series = LineSeries(*args, **kwargs)
+        self.add_series(series)
+
+
+    def scatter(self, *args, **kwargs):
+        series = ScatterSeries(*args, **kwargs)
         self.add_series(series)
 
 

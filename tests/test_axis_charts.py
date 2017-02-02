@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
 from quickplots.charts import AxisChart, Chart
-from quickplots.series import Series, LineSeries
+from quickplots.series import Series, LineSeries, ScatterSeries
 from omnicanvas import Canvas
 from omnicanvas.graphics import Text, Rectangle, Polyline
 
@@ -465,22 +465,34 @@ class AxisChartQuickAddTests(AxisChartTest):
          (1, 1), (2, 8), (3, 27),
          name="cubes", color="#ADADAD", linestyle="..", linewidth=10
         )
+        self.assertEqual(chart.all_series()[-1].name(), "cubes")
+        self.assertEqual(chart.all_series()[-1].color(), "#ADADAD")
+        self.assertEqual(chart.all_series()[-1].linestyle(), "..")
+        self.assertEqual(chart.all_series()[-1].linewidth(), 10)
+
+
+    def test_can_quick_add_scatter_series(self):
+        chart = AxisChart(self.series1)
+        chart.scatter((1, 1), (2, 8), (3, 27))
+        self.assertEqual(len(chart.all_series()), 2)
+        self.assertIsInstance(chart.all_series()[-1], ScatterSeries)
         self.assertEqual(
-         chart.all_series()[-1].name(),
-         "cubes"
+         chart.all_series()[-1].data(),
+         [(1, 1), (2, 8), (3, 27)]
         )
-        self.assertEqual(
-         chart.all_series()[-1].color(),
-         "#ADADAD"
+
+
+    def test_can_quick_add_scatter_series_with_series_keyword_arguments(self):
+        chart = AxisChart(self.series1)
+        chart.scatter(
+         (1, 1), (2, 8), (3, 27),
+         name="cubes", color="#ADADAD", size=0.5, linewidth=10
         )
-        self.assertEqual(
-         chart.all_series()[-1].linestyle(),
-         ".."
-        )
-        self.assertEqual(
-         chart.all_series()[-1].linewidth(),
-         10
-        )
+        self.assertEqual(chart.all_series()[-1].name(), "cubes")
+        self.assertEqual(chart.all_series()[-1].color(), "#ADADAD")
+        self.assertEqual(chart.all_series()[-1].size(), 0.5)
+        self.assertEqual(chart.all_series()[-1].linewidth(), 10)
+
 
 
 class AxisChartCanvasTests(AxisChartTest):
