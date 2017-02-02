@@ -1,3 +1,4 @@
+from omnicanvas import colors
 from .series import LineSeries, ScatterSeries
 from .charts import AxisChart
 
@@ -27,6 +28,8 @@ def line(*args, **kwargs):
         if kwarg in kwargs:
             line_series_kwargs[kwarg] = kwargs[kwarg]
             del kwargs[kwarg]
+    if "color" not in line_series_kwargs:
+        line_series_kwargs["color"] = colors[0]
     series = LineSeries(*args, **line_series_kwargs)
     chart = AxisChart(series, **kwargs)
     return chart
@@ -38,6 +41,8 @@ def scatter(*args, **kwargs):
         if kwarg in kwargs:
             scatter_series_kwargs[kwarg] = kwargs[kwarg]
             del kwargs[kwarg]
+    if "color" not in scatter_series_kwargs:
+        scatter_series_kwargs["color"] = colors[0]
     series = ScatterSeries(*args, **scatter_series_kwargs)
     chart = AxisChart(series, **kwargs)
     return chart
