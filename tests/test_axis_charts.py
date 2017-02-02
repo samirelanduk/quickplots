@@ -490,6 +490,16 @@ class AxisChartQuickAddTests(AxisChartTest):
         )
 
 
+    def test_added_line_uses_next_color(self):
+        chart = AxisChart(self.series1)
+        next_color = chart.next_color()
+        chart.line((1, 1), (2, 8), (3, 27))
+        self.assertEqual(chart.all_series()[-1].color(), next_color)
+        next_color = chart.next_color()
+        chart.line((1, 1), (2, 8), (3, 27))
+        self.assertEqual(chart.all_series()[-1].color(), next_color)
+
+
     def test_can_quick_add_line_series_with_series_keyword_arguments(self):
         chart = AxisChart(self.series1)
         chart.line(
@@ -511,6 +521,16 @@ class AxisChartQuickAddTests(AxisChartTest):
          chart.all_series()[-1].data(),
          [(1, 1), (2, 8), (3, 27)]
         )
+
+
+    def test_added_scatter_uses_next_color(self):
+        chart = AxisChart(self.series1)
+        next_color = chart.next_color()
+        chart.scatter((1, 1), (2, 8), (3, 27))
+        self.assertEqual(chart.all_series()[-1].color(), next_color)
+        next_color = chart.next_color()
+        chart.scatter((1, 1), (2, 8), (3, 27))
+        self.assertEqual(chart.all_series()[-1].color(), next_color)
 
 
     def test_can_quick_add_scatter_series_with_series_keyword_arguments(self):

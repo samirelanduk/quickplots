@@ -202,11 +202,15 @@ class AxisChart(Chart):
         :raises ValueError: if the size and length of the data doesn't match\
         either format."""
 
+        if "color" not in kwargs:
+            kwargs["color"] = self.next_color()
         series = LineSeries(*args, **kwargs)
         self.add_series(series)
 
 
     def scatter(self, *args, **kwargs):
+        if "color" not in kwargs:
+            kwargs["color"] = self.next_color()
         series = ScatterSeries(*args, **kwargs)
         self.add_series(series)
 
