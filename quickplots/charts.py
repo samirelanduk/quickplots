@@ -1,4 +1,5 @@
 import math
+from random import randint
 from numerus import is_numeric
 from omnicanvas import Canvas, colors
 from .series import Series, LineSeries, ScatterSeries
@@ -184,6 +185,7 @@ class AxisChart(Chart):
         for color in colors:
             if color not in current_colors:
                 return color
+        return "#%02x%02x%02x" % (randint(0,255), randint(0,255), randint(0,255))
 
 
     def line(self, *args, **kwargs):

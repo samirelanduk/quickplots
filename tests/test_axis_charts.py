@@ -462,6 +462,20 @@ class AxisChartColorSelectionTests(AxisChartTest):
         self.assertEqual(chart.next_color(), colors[2])
 
 
+    def test_chart_returns_random_colors_when_all_used(self):
+        from omnicanvas.color import is_valid_color
+        series = [Series((1, 1), (2, 2), color=color) for color in colors]
+        chart = AxisChart(*series)
+        self.assertTrue(is_valid_color(chart.next_color()))
+
+
+    def test_chart_can_identify_unused_colors_before_using_randoms(self):
+        series = [Series((1, 1), (2, 2), color=color) for color in colors]
+        series.pop(4)
+        chart = AxisChart(*series)
+        self.assertEqual(chart.next_color(), colors[4])
+
+
 
 class AxisChartQuickAddTests(AxisChartTest):
 
