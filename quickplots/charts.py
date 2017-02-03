@@ -553,3 +553,14 @@ class AxisChart(Chart):
              name="y_label"
             )
         return canvas
+
+
+
+def determine_ticks(low, high):
+    range_ = high - low
+    tick_difference = 10 ** math.floor(math.log10(range_ / 1.25))
+    low_tick = math.floor(low / tick_difference) * tick_difference
+    ticks = [low_tick + tick_difference] if low_tick < low else [low_tick]
+    while ticks[-1] + tick_difference <= high:
+        ticks.append(ticks[-1] + tick_difference)
+    return ticks
