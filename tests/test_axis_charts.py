@@ -387,6 +387,15 @@ class AxisChartAxisLimitTests(AxisChartTest):
 
 
 
+class AxisChartTickTests(AxisChartTest):
+
+    def test_ticks_are_tuple(self):
+        chart = AxisChart(self.series1)
+        self.assertIsInstance(chart.x_ticks(), tuple)
+        self.assertIsInstance(chart.y_ticks(), tuple)
+
+
+
 class AxisChartSeriesTests(AxisChartTest):
 
     def test_can_add_series(self):

@@ -475,6 +475,14 @@ class AxisChart(Chart):
             self._y_upper_limit = limit
 
 
+    def x_ticks(self):
+        return ()
+
+
+    def y_ticks(self):
+        return ()
+
+
     def create(self):
         """Renders the chart to an OmniCanvas `canvas <https://omnicanvas.readt\
         hedocs.io/en/latest/api/canvas.html#omnicanvas.canvas.Canvas>`_. This
