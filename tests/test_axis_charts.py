@@ -398,59 +398,68 @@ class AxisChartTickTests(AxisChartTest):
     def test_tick_determiner_produces_correct_values_when_zero_based(self):
         self.assertEqual(
          determine_ticks(0, 10),
-         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+         (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
         )
         self.assertEqual(
          determine_ticks(0, 12.4),
-         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+         (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
         )
         self.assertEqual(
          determine_ticks(0, 12.5),
-         [0, 10]
+         (0, 10)
         )
         self.assertEqual(
          determine_ticks(0, 75),
-         [0, 10, 20, 30, 40, 50, 60, 70]
+         (0, 10, 20, 30, 40, 50, 60, 70)
         )
         self.assertEqual(
          determine_ticks(0, 100),
-         [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+         (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
         )
         self.assertEqual(
          determine_ticks(0, 124),
-         [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]
+         (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120)
         )
         self.assertEqual(
          determine_ticks(0, 125),
-         [0, 100]
+         (0, 100)
         )
         self.assertEqual(
          determine_ticks(0, 54321),
-         [0, 10000, 20000, 30000, 40000, 50000]
+         (0, 10000, 20000, 30000, 40000, 50000)
         )
 
 
     def test_tick_determiner_produces_correct_values_when_not_zero_based(self):
         self.assertEqual(
          determine_ticks(7, 12),
-         [7, 8, 9, 10, 11, 12]
+         (7, 8, 9, 10, 11, 12)
         )
         self.assertEqual(
          determine_ticks(11, 1009),
-         [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+         (100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)
         )
         self.assertEqual(
          determine_ticks(-500, 500),
-         [-500, -400, -300, -200, -100, 0, 100, 200, 300, 400, 500]
+         (-500, -400, -300, -200, -100, 0, 100, 200, 300, 400, 500)
         )
         self.assertEqual(
          determine_ticks(-500, 749),
-         [-500, -400, -300, -200, -100, 0, 100, 200, 300, 400, 500, 600, 700]
+         (-500, -400, -300, -200, -100, 0, 100, 200, 300, 400, 500, 600, 700)
         )
         self.assertEqual(
          determine_ticks(-500, 750),
-         [0]
+         (0,)
         )
+
+
+    @patch("quickplots.charts.determine_ticks")
+    def test_default_ticks_use_tick_determiner(self, mock_determine_tick):
+        mock_determine_tick.return_value = "ticks"
+        chart = AxisChart(self.series1)
+        self.assertEqual(chart.x_ticks(), "ticks")
+        self.assertEqual(chart.y_ticks(), "ticks")
+
 
 
 class AxisChartSeriesTests(AxisChartTest):

@@ -476,11 +476,11 @@ class AxisChart(Chart):
 
 
     def x_ticks(self):
-        return ()
+        return determine_ticks(self.smallest_x(), self.largest_x())
 
 
     def y_ticks(self):
-        return ()
+        return determine_ticks(self.smallest_y(), self.largest_y())
 
 
     def create(self):
@@ -563,4 +563,4 @@ def determine_ticks(low, high):
     ticks = [low_tick + tick_difference] if low_tick < low else [low_tick]
     while ticks[-1] + tick_difference <= high:
         ticks.append(ticks[-1] + tick_difference)
-    return ticks
+    return tuple(ticks)
