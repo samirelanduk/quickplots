@@ -132,6 +132,8 @@ class AxisChart(Chart):
         self._x_upper_limit = None
         self._y_lower_limit = None
         self._y_upper_limit = None
+        self._x_ticks = None
+        self._y_ticks = None
 
 
     def __repr__(self):
@@ -475,12 +477,30 @@ class AxisChart(Chart):
             self._y_upper_limit = limit
 
 
-    def x_ticks(self):
-        return determine_ticks(self.smallest_x(), self.largest_x())
+    def x_ticks(self, *ticks):
+        if ticks:
+            for tick in ticks:
+                if not is_numeric(tick):
+                    raise TypeError("'%s' is not a numeric tick" % str(tick))
+            self._x_ticks = tuple(sorted(ticks))
+        else:
+            if self._x_ticks:
+                return self._x_ticks
+            else:
+                return determine_ticks(self.smallest_x(), self.largest_x())
 
 
-    def y_ticks(self):
-        return determine_ticks(self.smallest_y(), self.largest_y())
+    def y_ticks(self, *ticks):
+        if ticks:
+            for tick in ticks:
+                if not is_numeric(tick):
+                    raise TypeError("'%s' is not a numeric tick" % str(tick))
+            self._y_ticks = tuple(sorted(ticks))
+        else:
+            if self._y_ticks:
+                return self._y_ticks
+            else:
+                return determine_ticks(self.smallest_y(), self.largest_y())
 
 
     def create(self):

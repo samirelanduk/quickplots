@@ -27,6 +27,8 @@ class AxisChartCreationTests(AxisChartTest):
         self.assertEqual(chart._x_upper_limit, None)
         self.assertEqual(chart._y_lower_limit, None)
         self.assertEqual(chart._y_upper_limit, None)
+        self.assertEqual(chart._x_ticks, None)
+        self.assertEqual(chart._y_ticks, None)
 
 
     @patch("quickplots.charts.Chart.__init__")
@@ -389,12 +391,6 @@ class AxisChartAxisLimitTests(AxisChartTest):
 
 class AxisChartTickTests(AxisChartTest):
 
-    def test_ticks_are_tuple(self):
-        chart = AxisChart(self.series1)
-        self.assertIsInstance(chart.x_ticks(), tuple)
-        self.assertIsInstance(chart.y_ticks(), tuple)
-
-
     def test_tick_determiner_produces_correct_values_when_zero_based(self):
         self.assertEqual(
          determine_ticks(0, 10),
@@ -459,6 +455,30 @@ class AxisChartTickTests(AxisChartTest):
         chart = AxisChart(self.series1)
         self.assertEqual(chart.x_ticks(), "ticks")
         self.assertEqual(chart.y_ticks(), "ticks")
+
+
+    def test_can_override_default_ticks(self):
+        chart = AxisChart(self.series1)
+        chart.x_ticks(0, 5, 10000)
+        self.assertEqual(chart.x_ticks(), (0, 5, 10000))
+        chart.y_ticks(-100, 9, 17.7)
+        self.assertEqual(chart.y_ticks(), (-100, 9, 17.7))
+
+
+    def test_custom_ticks_will_be_ordered(self):
+        chart = AxisChart(self.series1)
+        chart.x_ticks(5, 0, 10000)
+        self.assertEqual(chart.x_ticks(), (0, 5, 10000))
+        chart.y_ticks(17.7, 9, -100)
+        self.assertEqual(chart.y_ticks(), (-100, 9, 17.7))
+
+
+    def test_provided_ticks_must_be_numeric(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.x_ticks(5, "0", 10000)
+        with self.assertRaises(TypeError):
+            chart.y_ticks(5, "0", 10000)
 
 
 
