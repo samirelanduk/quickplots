@@ -15,6 +15,7 @@ def line(*args, **kwargs):
     html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
     :raises ValueError: if the size and length of the data doesn't match either\
     format.
+    :param Number linewidth: The width in pixels of the data points' edge.
     :param str title: The chart's title. This will be displayed at the top of\
     the chart.
     :param width: The width in pixels of the chart.
@@ -36,6 +37,25 @@ def line(*args, **kwargs):
 
 
 def scatter(*args, **kwargs):
+    """This function creates a scatter chart. Specifcally it creates an
+    :py:class:`.AxisChart` and then adds a :py:class:`.ScatterSeries` to it.
+
+    :param \*data: The data for the scatter series as either (x,y) values or two\
+    big tuples/lists of x and y values respectively.
+    :param str name: The name to be associated with the series.
+    :param str color: The hex colour of the data points.
+    :param Number size: The size of each data point - generally the diameter.
+    :param Number linewidth: The width in pixels of the data points' edge.
+    :raises ValueError: if the size and length of the data doesn't match either\
+    format.
+    :param str title: The chart's title. This will be displayed at the top of\
+    the chart.
+    :param width: The width in pixels of the chart.
+    :param height: The height in pixels of the chart.
+    :param str x_label: The label for the x-axis.
+    :param str y_label: The label for the y-axis.
+    :rtype: :py:class:`.AxisChart`"""
+
     scatter_series_kwargs = {}
     for kwarg in ("name", "color", "size", "linewidth"):
         if kwarg in kwargs:

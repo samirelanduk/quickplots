@@ -20,6 +20,7 @@ class Series:
     :param \*data: The data for the series as either (x,y) values or two big \
     tuples/lists of x and y values respectively.
     :param str name: The name to be associated with the series.
+    :param str color: The hex colour of the line.
     :raises ValueError: if the size and length of the data doesn't match either\
     format."""
 
@@ -221,7 +222,8 @@ class LineSeries(Series):
     `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graphics.\
     html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable values.
     :raises ValueError: if the size and length of the data doesn't match either\
-    format."""
+    format.
+    :param Number linewidth: The width in pixels of the data points' edge."""
 
     def __init__(self, *args, linestyle="-", linewidth=2, **kwargs):
         Series.__init__(self, *args, **kwargs)
@@ -255,6 +257,13 @@ class LineSeries(Series):
 
 
     def linewidth(self, linewidth=None):
+        """Returns or sets (if a value is provided) the width of the series'
+        line.
+
+        :param Number linewidth: If given, the series' linewidth will be set to\
+        this.
+        :rtype: ``Number``"""
+
         if linewidth is None:
             return self._linewidth
         else:
@@ -283,6 +292,16 @@ class LineSeries(Series):
 
 
 class ScatterSeries(Series):
+    """Base class: :py:class:`Series`
+
+    A :py:class:`Series` which can paint itself in a scatter-chart style.
+
+    :param \*data: The data for the series as either (x,y) values or two big \
+    tuples/lists of x and y values respectively.
+    :param str name: The name to be associated with the series.
+    :param str color: The hex colour of the line.
+    :param Number size: The size of each data point - generally the diameter.
+    :param Number linewidth: The width in pixels of the data points' edge."""
 
     def __init__(self, *args, size=5, linewidth=1, **kwargs):
         Series.__init__(self, *args, **kwargs)
@@ -296,6 +315,13 @@ class ScatterSeries(Series):
 
 
     def size(self, size=None):
+        """Returns or sets (if a value is provided) the diameter of the series'
+        data points.
+
+        :param Number size: If given, the series' size will be set to\
+        this.
+        :rtype: ``Number``"""
+
         if size is None:
             return self._size
         else:
@@ -307,6 +333,13 @@ class ScatterSeries(Series):
 
 
     def linewidth(self, linewidth=None):
+        """Returns or sets (if a value is provided) the width of the series'
+        data points' edge.
+
+        :param Number linewidth: If given, the series' linewidth will be set to\
+        this.
+        :rtype: ``Number``"""
+
         if linewidth is None:
             return self._linewidth
         else:
@@ -318,6 +351,11 @@ class ScatterSeries(Series):
 
 
     def write_to_canvas(self, canvas, name):
+        """Writes the series to an OmniCanvas canvas.
+
+        :param Canvas canvas: The canvas to write to.
+        :param str name: The name to give the line graphic on the canvas."""
+
         points = self.canvas_points()
         for point in points:
             canvas.add_oval(
