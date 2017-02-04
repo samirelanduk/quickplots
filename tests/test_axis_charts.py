@@ -485,6 +485,41 @@ class AxisChartTickTests(AxisChartTest):
             chart.y_ticks(5, "0", 10000)
 
 
+    def test_can_set_grids(self):
+        chart = AxisChart(self.series1)
+        self.assertEqual(chart.x_grid(), True)
+        self.assertEqual(chart.y_grid(), True)
+        chart.x_grid(False)
+        self.assertEqual(chart.x_grid(), False)
+        chart.y_grid(False)
+        self.assertEqual(chart.y_grid(), False)
+
+
+    def test_can_turn_both_grids_on_and_off(self):
+        chart = AxisChart(self.series1)
+        chart.x_grid(False)
+        self.assertEqual(chart.x_grid(), False)
+        self.assertEqual(chart.y_grid(), True)
+        chart.grid(True)
+        self.assertEqual(chart.x_grid(), True)
+        self.assertEqual(chart.y_grid(), True)
+        chart.grid(False)
+        self.assertEqual(chart.x_grid(), False)
+        self.assertEqual(chart.y_grid(), False)
+
+
+    def test_grids_must_be_boolean(self):
+        chart = AxisChart(self.series1)
+        with self.assertRaises(TypeError):
+            chart.x_grid(2)
+        with self.assertRaises(TypeError):
+            chart.y_grid(2)
+        with self.assertRaises(TypeError):
+            chart.grid(2)
+
+
+
+
 
 class AxisChartSeriesTests(AxisChartTest):
 

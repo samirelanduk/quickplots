@@ -505,12 +505,28 @@ class AxisChart(Chart):
                 return determine_ticks(self.y_lower_limit(), self.y_upper_limit())
 
 
-    def x_grid(self):
-        return self._x_grid
+    def x_grid(self, grid=None):
+        if grid is None:
+            return self._x_grid
+        else:
+            if not isinstance(grid, bool):
+                raise TypeError("grid must be boolean, not '%s'" % grid)
+            self._x_grid = grid
 
 
-    def y_grid(self):
-        return self._y_grid
+    def y_grid(self, grid=None):
+        if grid is None:
+            return self._y_grid
+        else:
+            if not isinstance(grid, bool):
+                raise TypeError("grid must be boolean, not '%s'" % grid)
+            self._y_grid = grid
+
+
+    def grid(self, grid):
+        if not isinstance(grid, bool):
+            raise TypeError("grid must be boolean, not '%s'" % grid)
+        self._x_grid = self._y_grid = grid
 
 
     def create(self):
