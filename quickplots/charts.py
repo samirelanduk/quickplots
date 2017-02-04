@@ -559,11 +559,11 @@ class AxisChart(Chart):
         if self.x_label():
             canvas.add_text(
              canvas.width() / 2,
-             canvas.height() - (self.vertical_padding() * canvas.height() * 0.5),
+             canvas.height() - (self.vertical_padding() * canvas.height() * 0.25),
              self.x_label(),
              name="x_label"
             )
-        y_label_x = self.horizontal_padding() * canvas.width() * 0.5
+        y_label_x = self.horizontal_padding() * canvas.width() * 0.25
         if self.y_label():
             canvas.add_text(
              y_label_x,
@@ -572,18 +572,24 @@ class AxisChart(Chart):
              rotation=(y_label_x, canvas.height() * 0.5, 270),
              name="y_label"
             )
-        for tick in self.x_ticks():
+        x_tick_series = Series(*[(tick, 0) for tick in self.x_ticks()])
+        x_tick_series._chart = self
+        x_tick_points = x_tick_series.canvas_points()
+        for index, tick in enumerate(x_tick_series.data()):
             canvas.add_text(
-             0,
-             0,
-             str(tick),
+             x_tick_points[index][0],
+             canvas.height() - (self.vertical_padding() * canvas.height() * 0.75),
+             str(tick[0]),
              name="xtick"
             )
-        for tick in self.y_ticks():
+        y_tick_series = Series(*[(0, tick) for tick in self.y_ticks()])
+        y_tick_series._chart = self
+        y_tick_points = y_tick_series.canvas_points()
+        for index, tick in enumerate(y_tick_series.data()):
             canvas.add_text(
-             0,
-             0,
-             str(tick),
+             self.horizontal_padding() * canvas.width() * 0.75,
+             y_tick_points[index][1],
+             str(tick[1]),
              name="ytick"
             )
         return canvas

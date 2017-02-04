@@ -682,7 +682,6 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertEqual(axes.y(), 5)
         self.assertEqual(axes.width(), 140)
         self.assertEqual(axes.height(), 490)
-        canvas.save("temp.svg")
 
 
     def test_axes_have_transparent_interior(self):
@@ -716,18 +715,17 @@ class AxisChartCanvasTests(AxisChartTest):
         x_label = canvas.get_graphic_by_name("x_label")
         y_label = canvas.get_graphic_by_name("y_label")
         self.assertEqual(x_label.x(), 350)
-        self.assertEqual(x_label.y(), 475)
-        self.assertEqual(y_label.x(), 35)
+        self.assertEqual(x_label.y(), 487.5)
+        self.assertEqual(y_label.x(), 17.5)
         self.assertEqual(y_label.y(), 250)
         self.chart.horizontal_padding(0.2)
         self.chart.vertical_padding(0.3)
-        canvas.save("temp.svg")
         canvas = self.chart.create()
         x_label = canvas.get_graphic_by_name("x_label")
         y_label = canvas.get_graphic_by_name("y_label")
         self.assertEqual(x_label.x(), 350)
-        self.assertEqual(x_label.y(), 425)
-        self.assertEqual(y_label.x(), 70)
+        self.assertEqual(x_label.y(), 462.5)
+        self.assertEqual(y_label.x(), 35)
         self.assertEqual(y_label.y(), 250)
 
 
@@ -747,11 +745,11 @@ class AxisChartCanvasTests(AxisChartTest):
         self.chart.y_label("Output")
         canvas = self.chart.create()
         y_label = canvas.get_graphic_by_name("y_label")
-        self.assertEqual(y_label.rotation(), (35, 250, 270))
+        self.assertEqual(y_label.rotation(), (17.5, 250, 270))
         self.chart.horizontal_padding(0.2)
         canvas = self.chart.create()
         y_label = canvas.get_graphic_by_name("y_label")
-        self.assertEqual(y_label.rotation(), (70, 250, 270))
+        self.assertEqual(y_label.rotation(), (35, 250, 270))
 
 
     @patch("quickplots.series.LineSeries.write_to_canvas")
@@ -837,3 +835,34 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertEqual(len(y_ticks), len(self.chart.y_ticks()))
         for tick in x_ticks + y_ticks:
             self.assertIsInstance(tick, Text)
+
+
+    def test_ticks_in_correct_place(self):
+        canvas = self.chart.create()
+        x_ticks = [g for g in canvas.graphics() if g.name() == "xtick"]
+        y_ticks = [g for g in canvas.graphics() if g.name() == "ytick"]
+        self.assertEqual(
+         [tick.x() for tick in x_ticks],
+         [70, 70 + (560 / 3), 70 + (560 / 1.5), 630]
+        )
+        self.assertEqual(
+         [tick.y() for tick in x_ticks],
+         [462.5] * 4
+        )
+        self.assertEqual(
+         [tick.x() for tick in y_ticks],
+         [52.5] * 10
+        )
+        self.assertEqual(
+         [tick.y() for tick in y_ticks],
+         [450 - ((400 / 9) * n) for n in range(10)]
+        )
+
+
+    def test_ticks_aligned_correctly(self):
+        canvas = self.chart.create()
+        x_ticks = [g for g in canvas.graphics() if g.name() == "xtick"]
+        y_ticks = [g for g in canvas.graphics() if g.name() == "ytick"]
+        for tick in x_ticks + y_ticks:
+            self.assertEqual(tick.horizontal_align(), "center")
+            self.assertEqual(tick.vertical_align(), "center")
