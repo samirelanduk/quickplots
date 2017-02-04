@@ -975,3 +975,11 @@ class AxisChartCanvasTests(AxisChartTest):
              canvas.graphics().index(grid),
              canvas.graphics().index(line)
             )
+
+
+    def test_default_grid_style(self):
+        canvas = self.chart.create()
+        x_grids = [g for g in canvas.graphics() if g.name() == "xgrid"]
+        y_grids = [g for g in canvas.graphics() if g.name() == "ygrid"]
+        for grid in x_grids + y_grids:
+            self.assertEqual(grid.line_style(), "--")

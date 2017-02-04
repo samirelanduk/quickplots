@@ -612,6 +612,8 @@ class AxisChart(Chart):
                 line = canvas.add_line(
                  x_tick_points[index][0], canvas.height() * (1 - self.vertical_padding()),
                  x_tick_points[index][0], canvas.height() * self.vertical_padding(),
+                 line_style="..",
+                 line_color="#333333",
                  name="xgrid"
                 )
                 while canvas.graphics()[0] is not line:
@@ -630,6 +632,8 @@ class AxisChart(Chart):
                 line = canvas.add_line(
                  canvas.width() * self.horizontal_padding(), y_tick_points[index][1],
                  canvas.width() * (1 - self.horizontal_padding()), y_tick_points[index][1],
+                 line_style="..",
+                 line_color="#333333",
                  name="ygrid"
                 )
                 while canvas.graphics()[0] is not line:
