@@ -924,3 +924,41 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertEqual(len(y_grids), len(self.chart.y_ticks()))
         for tick in x_grids + y_grids:
             self.assertIsInstance(tick, Line)
+
+
+    def test_grid_lines_are_in_correct_place(self):
+        canvas = self.chart.create()
+        x_grids = [g for g in canvas.graphics() if g.name() == "xgrid"]
+        y_grids = [g for g in canvas.graphics() if g.name() == "ygrid"]
+        self.assertEqual(
+         [tick.x1() for tick in x_grids],
+         [70, 70 + (560 / 3), 70 + (560 / 1.5), 630]
+        )
+        self.assertEqual(
+         [tick.x2() for tick in x_grids],
+         [70, 70 + (560 / 3), 70 + (560 / 1.5), 630]
+        )
+        self.assertEqual(
+         [tick.y1() for tick in x_grids],
+         [450] * 4
+        )
+        self.assertEqual(
+         [tick.y2() for tick in x_grids],
+         [50] * 4
+        )
+        self.assertEqual(
+         [tick.x1() for tick in y_grids],
+         [70] * 10
+        )
+        self.assertEqual(
+         [tick.x2() for tick in y_grids],
+         [630] * 10
+        )
+        self.assertEqual(
+         [tick.y1() for tick in y_grids],
+         [450 - ((400 / 9) * n) for n in range(10)]
+        )
+        self.assertEqual(
+         [tick.y2() for tick in y_grids],
+         [450 - ((400 / 9) * n) for n in range(10)]
+        )
