@@ -609,11 +609,13 @@ class AxisChart(Chart):
              name="xtick"
             )
             if self.x_grid():
-                canvas.add_line(
+                line = canvas.add_line(
                  x_tick_points[index][0], canvas.height() * (1 - self.vertical_padding()),
                  x_tick_points[index][0], canvas.height() * self.vertical_padding(),
                  name="xgrid"
                 )
+                while canvas.graphics()[0] is not line:
+                    canvas.move_graphic_backward(line)
         y_tick_series = Series(*[(0, tick) for tick in self.y_ticks()])
         y_tick_series._chart = self
         y_tick_points = y_tick_series.canvas_points()
@@ -625,11 +627,13 @@ class AxisChart(Chart):
              name="ytick"
             )
             if self.y_grid():
-                canvas.add_line(
+                line = canvas.add_line(
                  canvas.width() * self.horizontal_padding(), y_tick_points[index][1],
                  canvas.width() * (1 - self.horizontal_padding()), y_tick_points[index][1],
                  name="ygrid"
                 )
+                while canvas.graphics()[0] is not line:
+                    canvas.move_graphic_backward(line)
         return canvas
 
 

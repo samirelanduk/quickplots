@@ -817,6 +817,7 @@ class AxisChartCanvasTests(AxisChartTest):
 
 
     def test_series_are_before_everything_else(self):
+        self.chart.grid(False)
         canvas = self.chart.create()
         line = canvas.get_graphic_by_name("series1")
         self.assertIs(line, canvas.graphics()[0])
@@ -932,11 +933,11 @@ class AxisChartCanvasTests(AxisChartTest):
         y_grids = [g for g in canvas.graphics() if g.name() == "ygrid"]
         self.assertEqual(
          [tick.x1() for tick in x_grids],
-         [70, 70 + (560 / 3), 70 + (560 / 1.5), 630]
+         [70, 70 + (560 / 3), 70 + (560 / 1.5), 630][::-1]
         )
         self.assertEqual(
          [tick.x2() for tick in x_grids],
-         [70, 70 + (560 / 3), 70 + (560 / 1.5), 630]
+         [70, 70 + (560 / 3), 70 + (560 / 1.5), 630][::-1]
         )
         self.assertEqual(
          [tick.y1() for tick in x_grids],
@@ -956,9 +957,21 @@ class AxisChartCanvasTests(AxisChartTest):
         )
         self.assertEqual(
          [tick.y1() for tick in y_grids],
-         [450 - ((400 / 9) * n) for n in range(10)]
+         [450 - ((400 / 9) * n) for n in range(10)][::-1]
         )
         self.assertEqual(
          [tick.y2() for tick in y_grids],
-         [450 - ((400 / 9) * n) for n in range(10)]
+         [450 - ((400 / 9) * n) for n in range(10)][::-1]
         )
+
+
+    def test_grid_lines_are_behind_series(self):
+        canvas = self.chart.create()
+        x_grids = [g for g in canvas.graphics() if g.name() == "xgrid"]
+        y_grids = [g for g in canvas.graphics() if g.name() == "ygrid"]
+        line = canvas.get_graphic_by_name("series1")
+        for grid in x_grids + y_grids:
+            self.assertLess(
+             canvas.graphics().index(grid),
+             canvas.graphics().index(line)
+            )
