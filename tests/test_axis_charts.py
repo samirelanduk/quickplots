@@ -982,4 +982,4 @@ class AxisChartCanvasTests(AxisChartTest):
         x_grids = [g for g in canvas.graphics() if g.name() == "xgrid"]
         y_grids = [g for g in canvas.graphics() if g.name() == "ygrid"]
         for grid in x_grids + y_grids:
-            self.assertEqual(grid.line_style(), "--")
+            self.assertEqual(grid.line_style(), "..")

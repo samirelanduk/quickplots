@@ -95,7 +95,8 @@ class AxisChart(Chart):
     AxisChart can have multiple series associated with it, and they will all be
     drawn onto the chart.
 
-    AxisCharts have the usual properties relating to axes, such as axes labels.
+    AxisCharts have the usual properties relating to axes, such as axes labels
+    and ticks.
 
     :param Series \*series: One or more :py:class:`.Series` objects to be\
     associated with the chart.
@@ -203,6 +204,7 @@ class AxisChart(Chart):
         `OmniCanvas docs <https://omnicanvas.readthedocs.io/en/latest/api/graph\
         ics.html#omnicanvas.graphics.ShapeGraphic.line_style>`_ for acceptable \
         values.
+        :param Number linewidth: The width in pixels of the line.
         :raises ValueError: if the size and length of the data doesn't match\
         either format."""
 
@@ -213,6 +215,17 @@ class AxisChart(Chart):
 
 
     def scatter(self, *args, **kwargs):
+        """Adds a :py:class:`.ScatterSeries` to the chart.
+
+        :param \*data: The data for the series as either (x,y) values or two big\
+        tuples/lists of x and y values respectively.
+        :param str name: The name to be associated with the series.
+        :param str color: The hex colour of the line.
+        :param Number size: The size of each data point - generally the diameter.
+        :param Number linewidth: The width in pixels of the data points' edge.
+        :raises ValueError: if the size and length of the data doesn't match\
+        either format."""
+
         if "color" not in kwargs:
             kwargs["color"] = self.next_color()
         series = ScatterSeries(*args, **kwargs)
@@ -480,6 +493,14 @@ class AxisChart(Chart):
 
 
     def x_ticks(self, *ticks):
+        """The points on the x-axis for which there are markers and grid lines.
+
+        There are default ticks, but you can pass values to this method to
+        override the defaults. Otherwise the method will return the ticks.
+
+        :param \*ticks: if given, these will be chart's x-ticks.
+        :rtype: ``tuple``"""
+
         if ticks:
             for tick in ticks:
                 if not is_numeric(tick):
@@ -493,6 +514,14 @@ class AxisChart(Chart):
 
 
     def y_ticks(self, *ticks):
+        """The points on the y-axis for which there are markers and grid lines.
+
+        There are default ticks, but you can pass values to this method to
+        override the defaults. Otherwise the method will return the ticks.
+
+        :param \*ticks: if given, these will be chart's x-ticks.
+        :rtype: ``tuple``"""
+
         if ticks:
             for tick in ticks:
                 if not is_numeric(tick):
@@ -506,6 +535,14 @@ class AxisChart(Chart):
 
 
     def x_grid(self, grid=None):
+        """The horizontal lines that run accross the chart from the x-ticks.
+
+        If a boolean value is given, these gridlines will be turned on or off.
+        Otherwise, the method will return their current state.
+
+        :param bool grid: Turns the gridlines on or off.
+        :rtype: ``bool``"""
+
         if grid is None:
             return self._x_grid
         else:
@@ -515,6 +552,14 @@ class AxisChart(Chart):
 
 
     def y_grid(self, grid=None):
+        """The vertical lines that run accross the chart from the y-ticks.
+
+        If a boolean value is given, these gridlines will be turned on or off.
+        Otherwise, the method will return their current state.
+
+        :param bool grid: Turns the gridlines on or off.
+        :rtype: ``bool``"""
+
         if grid is None:
             return self._y_grid
         else:
@@ -524,6 +569,10 @@ class AxisChart(Chart):
 
 
     def grid(self, grid):
+        """Turns all gridlines on or off
+
+        :param bool grid: turns the gridlines on if ``True``, off if ``False``"""
+
         if not isinstance(grid, bool):
             raise TypeError("grid must be boolean, not '%s'" % grid)
         self._x_grid = self._y_grid = grid
@@ -643,6 +692,13 @@ class AxisChart(Chart):
 
 
 def determine_ticks(low, high):
+    """The function used to auto-generate ticks for an axis, based on its
+    range of values.
+
+    :param Number low: The lower bound of the axis.
+    :param Number high: The upper bound of the axis.
+    :rtype: ``tuple``"""
+    
     range_ = high - low
     tick_difference = 10 ** math.floor(math.log10(range_ / 1.25))
     low_tick = math.floor(low / tick_difference) * tick_difference
