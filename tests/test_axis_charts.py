@@ -29,6 +29,8 @@ class AxisChartCreationTests(AxisChartTest):
         self.assertEqual(chart._y_upper_limit, None)
         self.assertEqual(chart._x_ticks, None)
         self.assertEqual(chart._y_ticks, None)
+        self.assertEqual(chart._x_grid, True)
+        self.assertEqual(chart._y_grid, True)
 
 
     @patch("quickplots.charts.Chart.__init__")
@@ -93,6 +95,8 @@ class AxisChartBasicPropertyTests(AxisChartTest):
         self.assertEqual(chart.vertical_padding(), chart._vertical_padding)
         self.assertIs(chart.x_label(), chart._x_label)
         self.assertIs(chart.y_label(), chart._y_label)
+        self.assertIs(chart.x_grid(), chart._x_grid)
+        self.assertIs(chart.y_grid(), chart._y_grid)
 
 
     def test_all_series_is_not_directly_modifable(self):

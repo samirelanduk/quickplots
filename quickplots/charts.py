@@ -134,6 +134,8 @@ class AxisChart(Chart):
         self._y_upper_limit = None
         self._x_ticks = None
         self._y_ticks = None
+        self._x_grid = True
+        self._y_grid = True
 
 
     def __repr__(self):
@@ -501,6 +503,14 @@ class AxisChart(Chart):
                 return self._y_ticks
             else:
                 return determine_ticks(self.y_lower_limit(), self.y_upper_limit())
+
+
+    def x_grid(self):
+        return self._x_grid
+
+
+    def y_grid(self):
+        return self._y_grid
 
 
     def create(self):
