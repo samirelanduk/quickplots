@@ -608,6 +608,12 @@ class AxisChart(Chart):
              str(tick[0]),
              name="xtick"
             )
+            if self.x_grid():
+                canvas.add_line(
+                 0, 0,
+                 1, 1,
+                 name="xgrid"
+                )
         y_tick_series = Series(*[(0, tick) for tick in self.y_ticks()])
         y_tick_series._chart = self
         y_tick_points = y_tick_series.canvas_points()
@@ -618,6 +624,12 @@ class AxisChart(Chart):
              str(tick[1]),
              name="ytick"
             )
+            if self.y_grid():
+                canvas.add_line(
+                 0, 0,
+                 1, 1,
+                 name="ygrid"
+                )
         return canvas
 
 

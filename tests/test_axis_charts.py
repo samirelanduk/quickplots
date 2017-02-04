@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch, Mock
 from omnicanvas import Canvas, colors
-from omnicanvas.graphics import Text, Rectangle, Polyline
+from omnicanvas.graphics import Text, Rectangle, Polyline, Line
 from quickplots.charts import AxisChart, Chart, determine_ticks
 from quickplots.series import Series, LineSeries, ScatterSeries
 
@@ -905,3 +905,22 @@ class AxisChartCanvasTests(AxisChartTest):
         for tick in x_ticks + y_ticks:
             self.assertEqual(tick.horizontal_align(), "center")
             self.assertEqual(tick.vertical_align(), "center")
+
+
+    def test_no_grids_if_grid_false(self):
+        self.chart.grid(False)
+        canvas = self.chart.create()
+        x_grid = canvas.get_graphic_by_name("xgrid")
+        y_grid = canvas.get_graphic_by_name("ygrid")
+        self.assertIs(x_grid, None)
+        self.assertIs(y_grid, None)
+
+
+    def test_grids_are_present_when_grid_true(self):
+        canvas = self.chart.create()
+        x_grids = [g for g in canvas.graphics() if g.name() == "xgrid"]
+        y_grids = [g for g in canvas.graphics() if g.name() == "ygrid"]
+        self.assertEqual(len(x_grids), len(self.chart.x_ticks()))
+        self.assertEqual(len(y_grids), len(self.chart.y_ticks()))
+        for tick in x_grids + y_grids:
+            self.assertIsInstance(tick, Line)
