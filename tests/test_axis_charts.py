@@ -827,3 +827,13 @@ class AxisChartCanvasTests(AxisChartTest):
         self.assertEqual(canvas.graphics().index(block2), start_index + 2)
         self.assertEqual(canvas.graphics().index(block3), start_index + 3)
         self.assertEqual(canvas.graphics().index(block4), start_index + 4)
+
+
+    def test_ticks_painted(self):
+        canvas = self.chart.create()
+        x_ticks = [g for g in canvas.graphics() if g.name() == "xtick"]
+        y_ticks = [g for g in canvas.graphics() if g.name() == "ytick"]
+        self.assertEqual(len(x_ticks), len(self.chart.x_ticks()))
+        self.assertEqual(len(y_ticks), len(self.chart.y_ticks()))
+        for tick in x_ticks + y_ticks:
+            self.assertIsInstance(tick, Text)

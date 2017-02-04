@@ -487,7 +487,7 @@ class AxisChart(Chart):
             if self._x_ticks:
                 return self._x_ticks
             else:
-                return determine_ticks(self.smallest_x(), self.largest_x())
+                return determine_ticks(self.x_lower_limit(), self.x_upper_limit())
 
 
     def y_ticks(self, *ticks):
@@ -500,7 +500,7 @@ class AxisChart(Chart):
             if self._y_ticks:
                 return self._y_ticks
             else:
-                return determine_ticks(self.smallest_y(), self.largest_y())
+                return determine_ticks(self.y_lower_limit(), self.y_upper_limit())
 
 
     def create(self):
@@ -571,6 +571,20 @@ class AxisChart(Chart):
              self.y_label(),
              rotation=(y_label_x, canvas.height() * 0.5, 270),
              name="y_label"
+            )
+        for tick in self.x_ticks():
+            canvas.add_text(
+             0,
+             0,
+             str(tick),
+             name="xtick"
+            )
+        for tick in self.y_ticks():
+            canvas.add_text(
+             0,
+             0,
+             str(tick),
+             name="ytick"
             )
         return canvas
 
