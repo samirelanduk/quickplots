@@ -24,5 +24,5 @@ setup(
  ],
  keywords="charts graphs data",
  packages=["quickplots"],
- install_requires=["omnicanvas"]
+ install_requires=["omnicanvas>=0.3", "numerus"]
 )
