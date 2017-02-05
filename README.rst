@@ -74,6 +74,20 @@ add the cosine function to the above chart, you would do the following:
   >>> cosine_data = [(x, cos(radians(x))) for x in range(360)]
   >>> chart.line(*cosine_data, color="#00FF00")
 
+Scatter charts
+##############
+
+``scatter()`` will create a scatter chart. You can set the size of the
+points with the ``size`` argument, as well as their ``color`` and ``linewidth``
+(the width of the points' border).
+
+Charts themselves also have a ``scatter()`` method for
+adding new line series. To add the cosine function to the above chart, you would
+do the following:
+
+  >>> cosine_data = [(x, cos(radians(x))) for x in range(360)]
+  >>> chart.scatter(*cosine_data, color="#00FF00")
+
 Modifying Charts
 ~~~~~~~~~~~~~~~~
 
@@ -87,6 +101,13 @@ like so:
   'A new title'
   >>> chart.x_label("A new x-axis label")
   >>> chart.y_label("A new y-axis label")
+
+Ticks will be automatically generated, but if you want to specify your own you
+can specify your own:
+
+  >>> chart.x_ticks(0, 90, 180, 270, 360)
+  >>> chart.x_ticks()
+  (0, 90, 180, 270, 360)
 
 Charts can have one or more ``Series` objects. The ``series``` property
 will return the first series, and the ``all_series`` will return all the
@@ -110,6 +131,16 @@ or rendered as SVG text.
 
 Changelog
 ---------
+
+Release 2.1.0
+~~~~~~~~~~~~~
+
+`5 February 2017`
+
+* Added Scatter series for scatter plots.
+* Charts now have ticks and grid lines.
+* Added new colour palette and colour generation.
+* Line charts can now set the width of their line.
 
 Release 2.0.0
 ~~~~~~~~~~~~~
