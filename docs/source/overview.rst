@@ -30,11 +30,26 @@ Use the :py:func:`.line` function as above to create line charts. You can pass
 in hex colors to the ``color`` function and line styles (see the full
 documentation for a full list of styles) to the ``linestyle`` argument.
 
-Charts themselves also have a :func:`~charts.AxisChart.line` method for adding new line series. To
-add the cosine function to the above chart, you would do the following:
+Charts themselves also have a :func:`~charts.AxisChart.line` method for adding
+new line series. To add the cosine function to the above chart, you would do the
+following:
 
   >>> cosine_data = [(x, cos(radians(x))) for x in range(360)]
   >>> chart.line(*cosine_data, color="#00FF00")
+
+Scatter charts
+##############
+
+:py:func:`.scatter` will create a scatter chart. You can set the size of the
+points with the ``size`` argument, as well as their ``color`` and ``linewidth``
+(the width of the points' border).
+
+Charts themselves also have a :func:`~charts.AxisChart.scatter` method for
+adding new line series. To add the cosine function to the above chart, you would
+do the following:
+
+  >>> cosine_data = [(x, cos(radians(x))) for x in range(360)]
+  >>> chart.scatter(*cosine_data, color="#00FF00")
 
 Modifying Charts
 ~~~~~~~~~~~~~~~~
@@ -49,6 +64,13 @@ like so:
   'A new title'
   >>> chart.x_label("A new x-axis label")
   >>> chart.y_label("A new y-axis label")
+
+Ticks will be automatically generated, but if you want to specify your own you
+can specify your own:
+
+  >>> chart.x_ticks(0, 90, 180, 270, 360)
+  >>> chart.x_ticks()
+  (0, 90, 180, 270, 360)
 
 Charts can have one or more :py:class:`.Series` objects. The ``series`` property
 will return the first series, and the ``all_series`` will return all the
